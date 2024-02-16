@@ -10,8 +10,8 @@ def find_neighbours(mesh):
 
     Args:
         mesh (nilearn.surface.mesh): surface representation of brain as e.g. read
-        from gifti file with nilearn.surface.load_surf_mesh.
-        mesh.faces will be used to check which vertices are direct neighbours.
+            from gifti file with nilearn.surface.load_surf_mesh.
+            mesh.faces will be used to check which vertices are direct neighbours.
 
     Returns:
         numpy.array: array of the form n_vertices x n_vertices. Symmetric.

@@ -19,7 +19,8 @@ def perform_ccf_analysis(
     """Runs cortical connective field analysis between source and target vertices
         (e.g. V1 and V2) on a surface mesh. Will run a grid search over potential
         cortial connective fields for each target vertex and search non-linearly to
-        optimize solution if model is explaining some variance.
+        optimize solution if model is explaining some variance. Cortical connective
+        fields are defined by their center node v0 and their spread sigma.
 
     Args:
         OPTIMIZE (bool): should model fits be optimized or only gridsearched
@@ -36,11 +37,10 @@ def perform_ccf_analysis(
     Returns:
         dict: keys connfield_weights and best_models.
     """
+    # make connective field for all nodes and all sigmas
     connfield_weights = define_connfield_candidates(distances_along_mesh, sigmas)
 
-    # convolve all basis functions with voxel timecourses
-    # 1 connective field of v0 0 to all other voxels
-    # for each center node of a CF
+    # empty cf timeseries
     timeseries_v0 = np.empty(
         (
             connfield_weights.shape[0],  # n_nodes_v0 x
@@ -48,20 +48,18 @@ def perform_ccf_analysis(
             timeseries_sources.shape[1],  # n_timepoints
         )
     )
-    for v0_i in range(connfield_weights.shape[0]):  # n_nodes_v0
-        # for each sigma value
+    for v0_i in range(connfield_weights.shape[0]):
         for sigma_i in range(connfield_weights.shape[1]):
             timeseries_v0[v0_i, sigma_i, :] = create_cf_timecourse(
                 timeseries_sources,
                 connfield_weights[v0_i, sigma_i, :],
             )
 
-    # fill with v0_i, sigma, RSS
+    # fill with v0_i, sigma, RSS, rsquared
     best_models = np.zeros((timeseries_targets.shape[0], 4))
-    # for every voxel in v2
     for targetvoxel_i, timeseries_targetvoxel in enumerate(timeseries_targets):
-        # compute model fits for previously computed candidate CCFs and this V2 node
-        # v0_i, sigma_i, RSS, rsquared
+
+        # compute model fits for previously computed candidate CCFs and targetvoxel
         best_models[targetvoxel_i, :] = gridsearch_connfield(
             timeseries_targetvoxel, timeseries_v0
         )
