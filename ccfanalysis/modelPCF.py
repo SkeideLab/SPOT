@@ -33,7 +33,8 @@ def make_percent_signal_change(func):
         func (numpy.array): n_vertices(n_voxels) x n_timepoints. Raw signal intensity.
 
     Returns:
-        numpy.array: n_vertices(n_voxels) x n_timepoints. Activation in units of percent signal change.
+        numpy.array: n_vertices(n_voxels) x n_timepoints.
+            Activation in units of percent signal change.
     """
     return (func.T - np.mean(func, axis=1)).T * 100
 
@@ -54,6 +55,15 @@ def save_results(root_dir, sub, ses, hemi, indices_v2, best_models, n_total_node
 
 
 def get_indices_roi(labels_area, visparc):
+    """Get indices of vertices in gifti image that are located in a specific region of interest.
+
+    Args:
+        labels_area (list): labels for the region of interest as used in the parcellation
+        visparc (nibabel.gifti.GiftiImage): parcellation of brain surface into regions, using labels
+
+    Returns:
+        numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
+    """
     indices_area = np.nonzero(
         np.logical_or(
             visparc.agg_data() == labels_area[0], visparc.agg_data() == labels_area[1]
