@@ -1,0 +1,83 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = de_DE
+
+\documentclass[biblatex]{lni}
+\addbibresource{lni-paper-example-de.bib}
+
+%% Schöne Tabellen mittels \toprule, \midrule, \bottomrule
+\usepackage{booktabs}
+
+%% Zu Demonstrationszwecken
+\usepackage[]{blindtext}
+
+\begin{document}
+%%% Mehrere Autoren werden durch \and voneinander getrennt.
+%%% Die Fußnote enthält die Adresse sowie eine E-Mail-Adresse.
+%%% Das optionale Argument (sofern angegeben) wird für die Kopfzeile verwendet.
+\title[Ein Kurztitel]{Cortical Connective Fields}
+%%%\subtitle{Untertitel / Subtitle} % falls benötigt
+ \author[1]{Anne-Sophie Kieslinger}{kieslinger@cbs.mpg.de, anne.kieslinger@gmail.com}{0000-0000-0000-0000}
+\affil[1]{MPI Cognitive and Brain Sciences Leipzig}
+% \affil[2]{University\\Department\\Address\\Country}
+\maketitle
+
+%\begin{abstract}
+Formulation of the Cortical Connective Field model as I understand it and have implemented it. This model was introduced by \cite{haak2013connective} and used in \cite{bock2015resting} to investigate visual cortex connectivity in the absence of retinal input. The formulae in this write-up are based on \cite{haak2013connective}.
+%\end{abstract}
+
+% \begin{keywords}
+% LNI Guidelines \and \LaTeX\ Vorlage
+% \end{keywords}
+
+\section{Introduction}
+Cortical Connective fields are a model of connectivity pattern (based on bold response) between neuronal populations in different brain regions, based on the hierarchy between brain regions. One voxel in the higher brain region (target) is connected to multiple voxels of the lower brain region (source) and its activity can be modelled as a weighted sum of the lower region voxels. The model takes the form of a two-dimensional gaussian distribution over the source population along the cortical surface with one center node $v0$ and spread $\sigma$.
+
+\section{Procedure}
+\subsection{Data preparation}
+The functional BOLD data in voxel space is projected to the cortical surface. The surface is a mesh consisting of nodes or vertices and edges connecting the vertices. In the following, I will use 'voxel' and 'vertex' interchangeably as a unit of spatial measurement for the model.
+
+All voxel timeseries to be used in the computation (higher and lower region, V2 and V1 respectively) are converted to units of percent signal change.
+
+\[\textrm{for all } v \in V1 \cup V2:\quad a_v(t)=(s_v(t)-mean_v)*100\] 
+\[\quad mean_v=\frac{\sum_{t} s_v(t)}{ n}\]
+$a_v(t)$ activity of vertex $v$ at time point $t$ in units of percent signal change \\
+$s_v(t)$ raw signal for vertex $v$ at time point $t$ \\
+$n$ number of time points in timeseries\\
+
+\subsection{Connective field Gaussian model}
+The cortical connective field for each voxel $v$ in the target region consists of weights for each voxel $w$ in the source region with $w_0$ denoting the center voxel of the connective field. Each candidate connective field model is defined by its center voxel $w_0 \in {w}$ and its spread $\sigma$ over the cortical surface.
+
+\[g_{w_0,\sigma}(w)=exp(-\frac{d(w_0,w)^2}{2\sigma^2})\]
+
+$g_{w_0,\sigma}(w)$ connective field weights for all $w$, centered on $w_0$  \\
+$d(w_0,w)$ distance from center voxel $w_0$ to all other voxels $w$ in source region, along cortical surface mesh\\
+
+To compute the cortical connective field, we need the distance $d$ between all $w$ pairs on the cortical surface. This is done using the Dijkstra algorithm to find the shortest path along the edges from vertex to vertex, the edges being weighed by the distance between the neighbouring nodes. 
+
+\subsection{Cortical field activation}
+The weights of the cortical field $g$ are then used to compute the timeseries of the cortical field. Timeseries $a_w(t)$ of all voxels $w$ are weighed by their importance $g_{w_0,\sigma}(w)$ in the cortical field and summed up to constitute the timeseries of the connective field.
+
+\[c_{w_0,\sigma}(t)=\sum_{w} a_w(t)*g_{w_0,\sigma}(w)\]
+
+\subsection{Correlation between connective field timeseries and target vertex timeseries}
+
+Goodness of prediction for each model is quantified as a correlation between the target timeseries and connective field timeseries. Each target timeseries $a_v(t)$ is correlated separately to each connective field timeseries $c_{w_0,\sigma}(t)$. 
+
+The best model for $v$ is defined as the one that maximizes the correlation.
+
+% \[r_{a,c}=\frac{\sum_t (a_t - \bar{a})(c_t - \bar{c})}{(n-1)\sigma_a s_c}\]
+
+% $\bar{a}, \bar{c}$ sample means of timeseries $a$ and $c$ \\
+
+
+% \[a_v(t)=\beta_0 + \beta_1 * c_{w_0,\sigma}(t) + \epsilon\]
+
+% $\beta_0$ intercept \\
+% $\beta_1$ scaling factor \\
+% $\epsilon$ error
+
+%% \bibliography{lni-paper-example-de.tex} ist hier nicht erlaubt: biblatex erwartet dies bei der Preambel
+%% Starten Sie "biber paper", um eine Biliographie zu erzeugen.
+\printbibliography
+
+\end{document}
