@@ -70,8 +70,6 @@ native_data=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_space-T2w_sulc
 # inputs (template)
 template00wk_sphere=$templatespherepath/week-${age}_hemi-%hemi%_space-${templatespherename}_dens-32k_sphere.surf.gii
 template00wk_data=$templatespherepath/week-${age}_hemi-%hemi%_space-${templatespherename}_dens-32k_sulc.shape.gii
-#template40wk_midthickness=$templatespherepath/week-40_hemi-%hemi%_space-${templatespherename}_dens-32k_midthickness.surf.gii
-#template40wk=$templatespherepath/week-40_hemi-%hemi%_space-${templatespherename}_dens-32k_sphere.surf.gii
 
 #outputs
 sub_templatespace_dir=${outdir}/sub-${subjid}/ses-$session/space-${templatespherename}
@@ -92,8 +90,6 @@ for hemi in left right; do
     native_data_hemi=$(echo ${native_data} | sed "s/%hemi%/$hemi_upper/g")
     template00wk_sphere_hemi=$(echo ${template00wk_sphere} | sed "s/%hemi%/$hemi/g")
     template00wk_data_hemi=$(echo ${template00wk_data} | sed "s/%hemi%/$hemi/g")
-    #template40wk_hemi=$(echo ${template40wk} | sed "s/%hemi%/$hemi/g")
-    #template40wk_midthickness_hemi=$(echo ${template40wk_midthickness} | sed "s/%hemi%/$hemi/g")
     native_rot_sphere_hemi=$(echo ${native_rot_sphere} | sed "s/%hemi%/$hemi_upper/g")
     outname_hemi=$(echo ${outname} | sed "s/%hemi%/$hemi_upper/g")
     transformed_sphere_hemi=$(echo ${transformed_sphere} | sed "s/%hemi%/$hemi_upper/g")
@@ -141,69 +137,4 @@ for hemi in left right; do
         cp "$transformed_sphere_hemi" "$nativedir"
 
     fi
-
-    ########## RESAMPLE TEMPLATE TOPOLOGY ON NATIVE SURFACES - OUTPUT IN '${templatespherename}_32k' DIRECTORY ##########
-    # first copy the template sphere to the subjects ${templatespherename}_32k
-    # Each subject's template space sphere IS the template! following HCP form.
-    #cp $template40wk_hemi $sub_templatespace_dir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-${templatespherename}_dens-32k_sphere.surf.gii
-
-    # # resample surfaces
-    # for surf in pial wm midthickness inflated veryinflated; do
-
-    #     ${WB_BIN} -surface-resample \
-    #         $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-T2w_${surf}.surf.gii \
-    #         $transformed_sphere_hemi \
-    #         $template40wk_hemi \
-    #         ADAP_BARY_AREA \
-    #         $sub_templatespace_dir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-${templatespherename}40_${surf}.surf.gii \
-    #         -area-surfs \
-    #         $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii \
-    #         $template40wk_midthickness_hemi
-    # done
-
-    # # resample .shape metrics
-    # for metric in sulc curv thickness; do
-
-    #     ${WB_BIN} -metric-resample \
-    #         $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-T2w_${metric}.shape.gii \
-    #         $transformed_sphere_hemi \
-    #         $template40wk_hemi \
-    #         ADAP_BARY_AREA \
-    #         $sub_templatespace_dir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-${templatespherename}40_${metric}.shape.gii \
-    #         -area-surfs \
-    #         $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii \
-    #         $template40wk_midthickness_hemi
-    # done ### LZJW changed output file name ###
-
-    # #resample metrics with nonstandard names
-    # ${WB_BIN} -metric-resample \
-    #     $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_desc-corr_space-T2w_thickness.shape.gii \
-    #     $transformed_sphere_hemi \
-    #     $template40wk_hemi \
-    #     ADAP_BARY_AREA \
-    #     $sub_templatespace_dir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_desc-corr_space-${templatespherename}40_thickness.shape.gii \
-    #     -area-surfs \
-    #     $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii \
-    #     $template40wk_midthickness_hemi
-
-    # ${WB_BIN} -metric-resample \
-    #     $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
-    #     $transformed_sphere_hemi \
-    #     $template40wk_hemi \
-    #     ADAP_BARY_AREA \
-    #     $sub_templatespace_dir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_desc-medialwall_space-${templatespherename}40_mask.shape.gii \
-    #     -area-surfs \
-    #     $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii \
-    #     $template40wk_midthickness_hemi
-
-    # # resample .label files
-    # ${WB_BIN} -label-resample \
-    #     $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_desc-drawem_space-T2w_dparc.dlabel.gii \
-    #     $transformed_sphere_hemi \
-    #     $template40wk_hemi \
-    #     ADAP_BARY_AREA \
-    #     $sub_templatespace_dir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_desc-drawem_space-${templatespherename}40_dparc.dlabel.gii \
-    #     -area-surfs \
-    #     $nativedir/sub-${subjid}_ses-${session}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii \
-    #     $template40wk_midthickness_hemi
 done
