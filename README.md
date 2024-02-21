@@ -16,6 +16,7 @@
 - MIRTK installation[^7]
 - HCP templates "standard mesh atlases"[^8]
 - fsaverage subject from freesurfer[^9]
+- FSL installation
 
 ## Preparing the individual surfaces
 

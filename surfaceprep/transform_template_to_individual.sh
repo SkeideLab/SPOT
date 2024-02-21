@@ -8,7 +8,8 @@ subject_label="CC00062XX05"
 session_label="13801"
 subject_age_weeks="41"
 #---------------PATHS TO DATA--------------------------------------------
-path_bids_data=/data/p_02495/dhcp_derivatives/dhcp_anat_pipeline
+path_anat_data=/data/p_02495/dhcp_derivatives/dhcp_anat_pipeline
+path_func_data=/data/p_02495/dhcp_derivatives/dhcp_fmri_pipeline
 path_output_data=/data/p_02495/dhcp_derivatives/dhcp_surface
 #---------------PATHS TO TEMPLATES---------------------------------------
 file_volume_template_40wks=/data/p_02495/templates/template_augmentedvolumetricatlas_dhcp/atlas/T2/template-40.nii.gz
@@ -28,7 +29,7 @@ path_script=$(dirname $0)
 ###########################REGISTRATION##############################################
 # Create registration from individual space to surface template space
 $path_script/alignment/align_to_template_2nd_release.sh \
-    $path_bids_data \
+    $path_anat_data \
     $subject_label \
     $session_label \
     $subject_age_weeks \
@@ -43,15 +44,21 @@ $path_script/alignment/align_to_template_2nd_release.sh \
     $path_wbcommand \
     $path_mirtk
 
-###############################RESAMPLING RETINOTOPY#############################
-
+###############################RESAMPLING RETINOTOPY TEMPLATE#############################
 $path_script/make_fsavg_to_native_warp.sh \
     $subject_label \
     $session_label \
-    $path_bids_data \
+    $path_anat_data \
     $path_output_data \
     $path_HCPtemplates_standardmeshatlases \
     $path_surface_template \
     $path_fsaverage
-# $(make_fsavg_to_native_warp.sh)
-# $(hcp_surface.sh)
+
+###############################PROJECTING FUNCTIONAL DATA TO SURFACE##########################
+$path_script/hcp_surface.sh \
+    $subject_label \
+    $session_label \
+    $path_wbcommand \
+    $path_anat_data \
+    $path_func_data \
+    $path_output_data
