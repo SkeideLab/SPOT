@@ -1,6 +1,8 @@
 #!/bin/bash
 # transforms the Wang template to individual subject surface space
 set -x -u -e
+
+########################INPUTS######################################
 #---------------SUBJECT INFO---------------------------------
 subject_label="CC00062XX05"
 session_label="13801"
@@ -13,14 +15,17 @@ file_volume_template_40wks=/data/p_02495/templates/template_augmentedvolumetrica
 name_volume_template_40wks="dhcp40wk"
 path_surface_template=/data/p_02495/templates/template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template
 name_surface_template="dhcpSym"
+path_HCPtemplates_standardmeshatlases="/data/u_kieslinger_software/code/HCPpipelines/global/templates/standard_mesh_atlases"
+path_fsaverage="/data/p_02495/templates/template_fsaverage/fsaverage"
 #--------------PATHS TO SOFTWARE--------------------------------------------------
 path_newmsm="/data/u_kieslinger_software/fsldevdir/bin/newmsm"
 path_wbcommand="/bin/wb_command"
 path_mirtk="/afs/cbs.mpg.de/software/mirtk/0.20231123/debian-bullseye-amd64/bin/mirtk"
 #---------------------------------------------------------------------------------
-
+#######################################################################################
 path_script=$(dirname $0)
 
+###########################REGISTRATION##############################################
 # Create registration from individual space to surface template space
 $path_script/alignment/align_to_template_2nd_release.sh \
     $path_bids_data \
@@ -38,5 +43,15 @@ $path_script/alignment/align_to_template_2nd_release.sh \
     $path_wbcommand \
     $path_mirtk
 
+###############################RESAMPLING RETINOTOPY#############################
+
+$path_script/make_fsavg_to_native_warp.sh \
+    $subject_label \
+    $session_label \
+    $path_bids_data \
+    $path_output_data \
+    $path_HCPtemplates_standardmeshatlases \
+    $path_surface_template \
+    $path_fsaverage
 # $(make_fsavg_to_native_warp.sh)
 # $(hcp_surface.sh)
