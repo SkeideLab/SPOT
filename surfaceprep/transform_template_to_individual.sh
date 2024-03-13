@@ -45,7 +45,7 @@ $path_script/alignment/align_to_template_2nd_release.sh \
     $path_mirtk
 
 ###############################RESAMPLING RETINOTOPY TEMPLATE#############################
-$path_script/make_fsavg_to_native_warp.sh \
+$path_script/warp_templates_to_native.sh \
     $subject_label \
     $session_label \
     $path_anat_data \
