@@ -94,23 +94,22 @@ for hemi in left right; do
     outname_hemi=$(echo ${outname} | sed "s/%hemi%/$hemi_upper/g")
     transformed_sphere_hemi=$(echo ${transformed_sphere} | sed "s/%hemi%/$hemi_upper/g")
 
-    ########## ROTATE LEFT AND RIGHT HEMISPHERES INTO APPROXIMATE ALIGNMENT WITH MNI SPACE ##########
-    $path_script/pre_rotation.sh \
-        $native_volume \
-        $native_sphere_hemi \
-        $templatevolume \
-        $pre_rotation_hemi \
-        $sub_templatespace_dir/volume_dofs/${subjid}-${session}_space-$templatevolumename.dof \
-        $native_rot_sphere_hemi \
-        $mirtk_BIN $WB_BIN
-
-    ########## RUN MSM NON-LINEAR ALIGNMENT TO TEMPLATE FOR LEFT AND RIGHT HEMISPHERES ##########
-    indata=$native_data_hemi
-    inmesh=$native_rot_sphere_hemi
-    refmesh=$template00wk_sphere_hemi
-    refdata=$template00wk_data_hemi
-
     if [ ! -f ${transformed_sphere_hemi} ]; then
+        ########## ROTATE LEFT AND RIGHT HEMISPHERES INTO APPROXIMATE ALIGNMENT WITH MNI SPACE ##########
+        $path_script/pre_rotation.sh \
+            $native_volume \
+            $native_sphere_hemi \
+            $templatevolume \
+            $pre_rotation_hemi \
+            $sub_templatespace_dir/volume_dofs/${subjid}-${session}_space-$templatevolumename.dof \
+            $native_rot_sphere_hemi \
+            $mirtk_BIN $WB_BIN
+
+        ########## RUN MSM NON-LINEAR ALIGNMENT TO TEMPLATE FOR LEFT AND RIGHT HEMISPHERES ##########
+        indata=$native_data_hemi
+        inmesh=$native_rot_sphere_hemi
+        refmesh=$template00wk_sphere_hemi
+        refdata=$template00wk_data_hemi
 
         ${MSMBIN} \
             --inmesh=${inmesh} \
