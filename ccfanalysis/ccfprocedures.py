@@ -1,10 +1,10 @@
 import numpy as np
 from scipy.optimize import minimize
 from ccflogic import (
-    fit_model,
     create_cf_fit,
     define_connfield_candidates,
     create_cf_timecourse,
+    calc_correlation,
 )
 
 
@@ -98,16 +98,16 @@ def gridsearch_connfield(timeseries_targetvoxel, timeseries_v0):
     """
 
     # fill with v0_i, sigma_i, RSS, rsquared
-    model_rss = [None, None, np.inf, None]
+    model_rss = [None, None, -np.inf, None]
 
     # try all possible models
     for v0_i in range(timeseries_v0.shape[0]):
         for sigma_i in range(timeseries_v0.shape[1]):
-            modelfit = fit_model(
+            modelfit = calc_correlation(
                 timeseries_targetvoxel, timeseries_v0[v0_i, sigma_i, :]
             )
-            if modelfit["rss"] < model_rss[2]:
-                model_rss = [v0_i, sigma_i, modelfit["rss"], modelfit["rsquared"]]
+            if modelfit > model_rss[2]:
+                model_rss = [v0_i, sigma_i, modelfit, modelfit**2]
 
     return np.array(model_rss)
 
@@ -158,6 +158,6 @@ def optimize_connfield(
         distances[[int(v0_i)], :],
         timeseries_sources,
         return_modelfit=True,
-    )["rsquared"]
+    )
 
     return (v0_i, sigma, rss, rsquared)

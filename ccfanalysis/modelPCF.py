@@ -48,9 +48,18 @@ def save_results(root_dir, sub, ses, hemi, indices_v2, best_models, n_total_node
     parameters = ("v0i", "sigma", "rss", "rsquared")
     for i, param in enumerate(parameters):
         param_full_mesh[indices_v2] = best_models[:, i]
-        params_img = nib.gifti.GiftiImage(
-            darrays=[nib.gifti.GiftiDataArray(np.float32(param_full_mesh))]
-        )
+        if param == "v0i":
+            params_img = nib.gifti.GiftiImage(
+                darrays=[
+                    nib.gifti.GiftiDataArray(
+                        np.int32(param_full_mesh), intent="NIFTI_INTENT_LABEL"
+                    )
+                ]
+            )
+        else:
+            params_img = nib.gifti.GiftiImage(
+                darrays=[nib.gifti.GiftiDataArray(np.float32(param_full_mesh))]
+            )
         nib.save(params_img, f"{save_file}_{param}.gii")
 
 

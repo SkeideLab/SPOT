@@ -89,27 +89,10 @@ def create_cf_fit(
     timeseries_cf = create_cf_timecourse(timeseries_sources, np.squeeze(weights_cf))
 
     if return_modelfit:
-        return fit_model(timeseries_targetvoxel, np.squeeze(timeseries_cf))
-    else:
-        return fit_model(timeseries_targetvoxel, np.squeeze(timeseries_cf))["rss"]
+        return calc_correlation(timeseries_targetvoxel, np.squeeze(timeseries_cf))
+    return 1 - calc_correlation(timeseries_targetvoxel, np.squeeze(timeseries_cf))
 
 
-def fit_model(timeseries_targetvoxel, timeseries_cf):
-    """Fits a linear model with timeseries of the connective filed as X and
-    timeseries of the target voxel as Y. Includes intercept.
-
-    Args:
-        timeseries_targetvoxel (numpy.array): n_timepoints. Timeseries of voxel to be explained.
-        timeseries_cf (numpy.array): n_timepoints. Timeseries of connective field
-            that is supposed to explain the target voxel timeseries.
-
-    Returns:
-        dict: keys 'rss' and 'rsquared'. Model fit of the model.
-            Residual sum of squares and r squared.
-    """
-    dm = sm.tools.add_constant(timeseries_cf)
-    model = sm.OLS(timeseries_targetvoxel, dm)
-    results = model.fit()
-    rss = results.ssr  # Sum of squared (whitened) residuals
-    rsquared = results.rsquared
-    return {"rss": rss, "rsquared": rsquared}
+def calc_correlation(timeseries_targetvoxel, timeseries_cf):
+    r = np.corrcoef(timeseries_targetvoxel, timeseries_cf)[0, 1]
+    return r
