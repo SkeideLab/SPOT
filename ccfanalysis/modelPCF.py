@@ -42,7 +42,11 @@ def make_percent_signal_change(func):
 def save_results(root_dir, sub, ses, hemi, indices_v2, best_models, n_total_nodes):
     save_path = Path(root_dir) / "ccfmodel" / f"sub-{sub}" / f"ses-{ses}"
     save_path.mkdir(exist_ok=True, parents=True)
-    save_file = save_path / f"sub-{sub}_ses-{ses}_hemi-{hemi}_desc-test"
+    if SIMULATED:
+        # results from local correlations simulation
+        save_file = save_path / f"sub-{sub}_ses-{ses}_hemi-{hemi}_desc-lc"
+    else:
+        save_file = save_path / f"sub-{sub}_ses-{ses}_hemi-{hemi}_desc-ccf"
 
     param_full_mesh = np.zeros(n_total_nodes)
     parameters = ("v0i", "sigma", "rss", "rsquared")
@@ -83,9 +87,13 @@ def get_indices_roi(labels_area, visparc):
 
 def main():
     # -------------OPTIONS-----------------------------------
+    global DEBUG, OPTIMIZE, VISUALIZE, SIMULATED
     DEBUG = False
     OPTIMIZE = True
     VISUALIZE = False
+    # should we use original subjects data or simulated data for this subject based on
+    # local spatial correlations
+    SIMULATED = True
     sub = "CC00058XX09"
     ses = "11300"
     hemi = "left"
@@ -95,7 +103,10 @@ def main():
     # default values
     n_sigma = 10  # number of different sigma values for spread of CCF to try
     optimize_threshold = 0.1  # model rsquared threshold for optimization
-    func_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/space-func/func/func_hemi-{hemi}_mesh-native.func.gii"
+    if SIMULATED:
+        func_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/space-func/func/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_space-T2w_desc-simulated_bold.func.gii"
+    else:
+        func_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/space-func/func/func_hemi-{hemi}_mesh-native.func.gii"
     visparc_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/space-T2w/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
     wm_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/space-func/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_mesh-native_space-func_wm.surf.gii"
     curv_path = "{root_dir}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_space-T2w_curv.shape.gii"
@@ -106,7 +117,9 @@ def main():
     # -----------------LOAD DATA-----------------------------------
     hemi_upper = hemi[0].upper()
     func = surface.load_surf_data(
-        func_path.format(root_dir=root_dir, sub=sub, ses=ses, hemi=hemi)
+        func_path.format(
+            root_dir=root_dir, sub=sub, ses=ses, hemi=hemi, hemi_upper=hemi_upper
+        )
     )
     visparc = nib.load(
         visparc_path.format(root_dir=root_dir, sub=sub, ses=ses, hemi_upper=hemi_upper)
