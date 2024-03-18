@@ -94,6 +94,6 @@ nib.save(
 )
 print(f"Saving simulated image in {path_thissim.replace('_tmp', '')}.")
 
-# delete intermediary images
-for p in Path(path_thissim).parent.glob("*_tmp.*"):
-    p.unlink()
+# # delete intermediary images
+# for p in Path(path_thissim).parent.glob("*_tmp.*"):
+#     p.unlink()

@@ -4,8 +4,8 @@ set -x -u -e
 
 ########################INPUTS######################################
 #---------------SUBJECT INFO---------------------------------
-subject_label="CC00062XX05"
-session_label="13801"
+subject_label="CC00058XX09"
+session_label="11300"
 subject_age_weeks="41"
 #---------------PATHS TO DATA--------------------------------------------
 path_anat_data=/data/p_02495/dhcp_derivatives/dhcp_anat_pipeline
