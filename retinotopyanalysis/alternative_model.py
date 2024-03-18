@@ -57,10 +57,10 @@ nib.save(
     path_thissim,
 )
 
+sigma = 30
+fwhm = 2.354820 * sigma
 # smooth surface with AFNI
-cmd_surfsmooth = (
-    f"AFNI SurfSmooth -i {path_thissurf} -met HEAT_05 -input {path_thissim} -fwhm 30"
-)
+cmd_surfsmooth = f"AFNI SurfSmooth -i {path_thissurf} -met HEAT_05 -input {path_thissim} -fwhm {fwhm:.0f}"
 path_intermed = path_thissim.replace(".func", ".func_sm") + ".dset"
 path_smoothed = path_thissim.replace("desc-simulated", "desc-simulatedsmoothed")
 cmd_convertdset = (
