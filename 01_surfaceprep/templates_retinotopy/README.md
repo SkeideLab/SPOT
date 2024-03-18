@@ -1,7 +1,7 @@
 # Maps of the visual system from Wang et al.[^1]
 
-- `hemi-{hemi}_space-fsaverage_dens-164k_desc-visualtopographywang2015_label-maxprob_seg.label.gii`: maximum probability map on fsaverage. Created by `transform_wang_to_gifti.py`. Can be used directly.
-- `transform_wang_to_gifti.py`: Transforms Wang atlas from .mgz format to gifti file format. Uses atlas downloaded from [^3].
+- `hemi-{hemi}_space-fsaverage_dens-164k_desc-visualtopographywang2015_label-maxprob_seg.label.gii`: maximum probability map on fsaverage. Created by `transform_templatemgz_to_gifti.py`. Can be used directly.
+- `transform_templatemgz_to_gifti.py`: Transforms Wang atlas from .mgz format to gifti file format. Uses atlas downloaded from [^3].
 - `ROIfiles_Labeling.txt`[^2]: region labels as used in the atlas and corresponding region names
 - `labeltable`: Freesurfer look-up table. File with region labels, corresponding names and randomly chosen colors. Created manually
 
