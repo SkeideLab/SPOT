@@ -55,7 +55,7 @@ $path_script/warp_templates_to_native.sh \
     $path_fsaverage
 
 ###############################PROJECTING FUNCTIONAL DATA TO SURFACE##########################
-$path_script/hcp_surface.sh \
+$path_script/project_bold_to_surface.sh \
     $subject_label \
     $session_label \
     $path_wbcommand \
