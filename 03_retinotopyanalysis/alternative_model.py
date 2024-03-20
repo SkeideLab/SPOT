@@ -57,11 +57,11 @@ nib.save(
     path_thissim,
 )
 
-sigma = 30
+sigma = 20
 fwhm = 2.354820 * sigma
 # smooth surface with AFNI
-cmd_surfsmooth = f"AFNI SurfSmooth -i {path_thissurf} -met HEAT_05 -input {path_thissim} -fwhm {fwhm:.0f}"
-path_intermed = path_thissim.replace(".func", ".func_sm") + ".dset"
+cmd_surfsmooth = f"AFNI SurfSmooth -i {path_thissurf} -met HEAT_07 -input {path_thissim} -target_fwhm {fwhm:.0f}"
+path_intermed = path_thissim.replace(".func", ".func_smh7") + ".dset"
 path_smoothed = path_thissim.replace("desc-simulated", "desc-simulatedsmoothed")
 cmd_convertdset = (
     f"AFNI ConvertDset -o_gii -input {path_intermed} -prefix {path_smoothed}"
@@ -94,6 +94,6 @@ nib.save(
 )
 print(f"Saving simulated image in {path_thissim.replace('_tmp', '')}.")
 
-# # delete intermediary images
-# for p in Path(path_thissim).parent.glob("*_tmp.*"):
-#     p.unlink()
+# delete intermediary images
+for p in Path(path_thissim).parent.glob("*_tmp.*"):
+    p.unlink()
