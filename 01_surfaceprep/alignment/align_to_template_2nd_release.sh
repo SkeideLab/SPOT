@@ -134,6 +134,8 @@ for hemi in left right; do
 
         # the output sphere represents the full warp from Native to 40 week template space - save this
         cp "$transformed_sphere_hemi" "$nativedir"
+    else
+        echo "Transformed sphere $transformed_sphere_hemi already exists, skipping..."
 
     fi
 done
