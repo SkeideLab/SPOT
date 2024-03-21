@@ -20,7 +20,8 @@ for hemi in left right; do
         hemi_upper="R"
     fi
 
-    wang_template=$path_script/templates_retinotopy/hemi-${hemi_upper}_space-fsaverage_dens-164k_desc-visualtopographywang2015_label-maxprob_seg.label.gii
+    visareas_wang_template=$path_script/templates_retinotopy/hemi-${hemi_upper}_space-fsaverage_dens-164k_desc-visualtopographywang2015_label-maxprob_seg.label.gii
+    visareas_benson_template=$path_script/templates_retinotopy/hemi-${hemi_upper}_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii
     ecc_template=$path_script/templates_retinotopy/hemi-${hemi_upper}_space-fsaverage_dens-164k_desc-eccentretinotbenson2014_seg.shape.gii
     angl_template=$path_script/templates_retinotopy/hemi-${hemi_upper}_space-fsaverage_dens-164k_desc-angleretinotbenson2014_seg.shape.gii
 
@@ -48,11 +49,21 @@ for hemi in left right; do
     # 4. Resample retinotopy templates onto native
     mkdir -p $path_output_data/sub-$sub/ses-$ses/space-T2w/anat/
     wb_command -label-resample \
-        $wang_template `# label-in: wang_template` \
+        $visareas_wang_template `# label-in: visareas_wang_template` \
         $path_HCPtemplates_standardmeshatlases/resample_fsaverage/fsaverage_std_sphere.${hemi_upper}.164k_fsavg_${hemi_upper}.surf.gii `# current sphere: fsavg 164k ` \
         $path_output_data/sub-$sub/ses-$ses/space-dhcpSym/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii `# new sphere: sphere in register with current sphere and desired mesh` \
         ADAP_BARY_AREA \
         $path_output_data/sub-$sub/ses-$ses/space-T2w/anat/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii \
+        -area-surfs \
+        $path_fsaverage/surf/${hemi:0:1}h_midthickness_surf.gii \
+        $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii
+
+    wb_command -label-resample \
+        $visareas_benson_template `# label-in: visareas_wang_template` \
+        $path_HCPtemplates_standardmeshatlases/resample_fsaverage/fsaverage_std_sphere.${hemi_upper}.164k_fsavg_${hemi_upper}.surf.gii `# current sphere: fsavg 164k ` \
+        $path_output_data/sub-$sub/ses-$ses/space-dhcpSym/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii `# new sphere: sphere in register with current sphere and desired mesh` \
+        ADAP_BARY_AREA \
+        $path_output_data/sub-$sub/ses-$ses/space-T2w/anat/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc.label.gii \
         -area-surfs \
         $path_fsaverage/surf/${hemi:0:1}h_midthickness_surf.gii \
         $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii
