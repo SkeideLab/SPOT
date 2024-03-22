@@ -54,6 +54,12 @@ $path_script/warp_templates_to_native.sh \
     $path_surface_template \
     $path_fsaverage
 
+##############################DEFINING ROIS###########################################
+python $path_script/divide_rois_into_subregions.py \
+    -o $path_output_data \
+    -sub $subject_label \
+    -ses $session_label
+
 ###############################PROJECTING FUNCTIONAL DATA TO SURFACE##########################
 $path_script/project_bold_to_surface.sh \
     $subject_label \
