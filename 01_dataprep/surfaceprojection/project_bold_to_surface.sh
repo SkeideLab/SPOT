@@ -39,10 +39,7 @@ set -u -x -e
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # --------------------------------------------
-
-######## MODIFY #######
 # NOTE the second release of dhcp uses dhcp40wk, not extdhcp40wk as template
-
 subid=$1
 sesid=$2
 path_wbcommand=$3
@@ -51,46 +48,32 @@ func_dir=$5
 work_dir=$6
 WORKBENCHDIR=$(dirname $path_wbcommand)
 export WORKBENCHDIR
-#dhcpdir="/data/u_kieslinger_software/code/dhcp-neonatal-fmri-pipeline/dhcp"
-#surface_template_dir="/data/p_02495/templates/template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template"
-# surface registration from native to surf template - output of previous step
-#reg_sphere_dir="/data/p_02495/dhcp_derivatives/dhcp_surface/sub-${subid}/ses-${sesid}/space-dhcpSym_32k/surface_transforms"
 
 # inputs
 sub_anat="${anat_dir}/sub-${subid}/ses-${sesid}"
 sub_func="${func_dir}/sub-${subid}/ses-${sesid}"
-#resources="${dhcpdir}/resources"
-#surface_transform="from-native_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii"
 func="${sub_func}/func/sub-${subid}_ses-${sesid}_task-rest_desc-preproc_bold.nii.gz"
 
 # warps to templates
 struct2func_xfm="${sub_func}/xfm/sub-${subid}_ses-${sesid}_from-T2w_to-bold_mode-image.mat"
-#struct2template_warp="${sub_anat}/xfm/sub-${subid}_ses-${sesid}_from-T2w_to-template40wk_mode-image.nii.gz"
-#struct2template_invwarp="${sub_anat}/xfm/sub-${subid}_ses-${sesid}_from-template40wk_to-T2w_mode-image.nii.gz"
-#func2template_warp="${sub_func}/xfm/sub-${subid}_ses-${sesid}_from-bold_to-template40wk_mode-image.nii.gz"
 
 #-------------------- outputs -----------------------------------------------#
 
 func_space_dir="${work_dir}/sub-${subid}/ses-${sesid}/space-func"
 mkdir -p "${func_space_dir}/anat" "${func_space_dir}/work" "${func_space_dir}/func"
 ref_volume="${sub_func}/func/sub-${subid}_ses-${sesid}_task-rest_desc-firstvol_bold.nii.gz"
-
+func_on_surf="${func_space_dir}/func/sub-${subid}_ses-${sesid}_hemi-{hemi_upper}_mesh-native_bold.func.gii"
 #-----------------parameters------------------------------#
-#BrainOrdinatesResolution="1.5"
 NeighborhoodSmoothing="5"
 Factor="0.5"
 LeftGreyRibbonValue="1"
 RightGreyRibbonValue="1"
-# SmoothingFWHM=2
-# SurfaceSigma=0.84925690021231426 # (FWHM divided by 2.355)
-# SmoothingFWHM=3
-# SurfaceSigma=1.2738853503184713 # (FWHM divided by 2.355)
-#SmoothingFWHM=4
-#SurfaceSigma=1.6985138004246285 # (FWHM divided by 2.355)
-#VolumeSigma=${SurfaceSigma}
 
 ###############
-
+if [[ -f "${func_on_surf/\{hemi_upper/}\/L}" && -f "${func_on_surf/\{hemi_upper\}/R}" ]]; then
+  echo "Functional data on surface already exist at ${func_on_surf}. Skipping..."
+  exit 0
+fi
 if [ ! -f "$ref_volume" ]; then
   #create nifti with only first volume to serve as ref_volume
   fslroi "${func}" \
@@ -250,7 +233,7 @@ for hemi in left right; do
   $path_wbcommand -volume-to-surface-mapping \
     ${func} \
     ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
-    ${func_space_dir}/func/func_hemi-${hemi}_mesh-native.func.gii \
+    "${func_on_surf/\{hemi_upper/}\/$hemi_upper}" \
     -ribbon-constrained \
     ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
     ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii \
@@ -258,15 +241,16 @@ for hemi in left right; do
     ${func_space_dir}/work/goodvoxels.nii.gz
 
   $path_wbcommand -metric-dilate \
-    ${func_space_dir}/func/func_hemi-${hemi}_mesh-native.func.gii \
+    "${func_on_surf/\{hemi_upper/}\/$hemi_upper}" \
     ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
     10 \
-    ${func_space_dir}/func/func_hemi-${hemi}_mesh-native.func.gii \
+    "${func_on_surf/\{hemi_upper/}\/$hemi_upper}" \
     -nearest
 
   $path_wbcommand -metric-mask \
-    ${func_space_dir}/func/func_hemi-${hemi}_mesh-native.func.gii \
-    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
-    ${func_space_dir}/func/func_hemi-${hemi}_mesh-native.func.gii
+    "${func_on_surf/\{hemi_upper/}\/$hemi_upper}" \
+    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii
 
 done
+
+rm -rf "${func_space_dir}/work"
