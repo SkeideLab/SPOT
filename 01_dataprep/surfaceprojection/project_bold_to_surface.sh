@@ -70,7 +70,7 @@ LeftGreyRibbonValue="1"
 RightGreyRibbonValue="1"
 
 ###############
-if [[ -f "${func_on_surf/\{hemi_upper/}\/L}" && -f "${func_on_surf/\{hemi_upper\}/R}" ]]; then
+if [[ -f "${func_on_surf/\{hemi_upper\}/L}" && -f "${func_on_surf/\{hemi_upper\}/R}" ]]; then
   echo "Functional data on surface already exist at ${func_on_surf}. Skipping..."
   exit 0
 fi
@@ -233,7 +233,7 @@ for hemi in left right; do
   $path_wbcommand -volume-to-surface-mapping \
     ${func} \
     ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
-    "${func_on_surf/\{hemi_upper/}\/$hemi_upper}" \
+    "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
     -ribbon-constrained \
     ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
     ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii \
@@ -241,15 +241,16 @@ for hemi in left right; do
     ${func_space_dir}/work/goodvoxels.nii.gz
 
   $path_wbcommand -metric-dilate \
-    "${func_on_surf/\{hemi_upper/}\/$hemi_upper}" \
+    "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
     ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
     10 \
-    "${func_on_surf/\{hemi_upper/}\/$hemi_upper}" \
+    "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
     -nearest
 
   $path_wbcommand -metric-mask \
-    "${func_on_surf/\{hemi_upper/}\/$hemi_upper}" \
-    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii
+    "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
+    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
+    "${func_on_surf/\{hemi_upper\}/$hemi_upper}"
 
 done
 
