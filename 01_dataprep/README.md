@@ -17,3 +17,5 @@ The main analysis is being conducted in native surface space of each participant
 `simulation_alternativemodel`: code to produce simulated surface data based on a model of random data and local spatial correlations.
 
 `surfaceprojection`: code to project functional data to the surface.
+
+`run_surfaceprep.sh`: code to run everything in this directory and prepare all the data. 
