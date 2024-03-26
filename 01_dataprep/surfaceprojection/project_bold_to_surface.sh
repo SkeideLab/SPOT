@@ -59,10 +59,10 @@ struct2func_xfm="${sub_func}/xfm/sub-${subid}_ses-${sesid}_from-T2w_to-bold_mode
 
 #-------------------- outputs -----------------------------------------------#
 
-func_space_dir="${work_dir}/sub-${subid}/ses-${sesid}/space-func"
-mkdir -p "${func_space_dir}/anat" "${func_space_dir}/work" "${func_space_dir}/func"
+output_dir="${work_dir}/sub-${subid}/ses-${sesid}"
+mkdir -p "${output_dir}/anat" "${output_dir}/work" "${output_dir}/func"
 ref_volume="${sub_func}/func/sub-${subid}_ses-${sesid}_task-rest_desc-firstvol_bold.nii.gz"
-func_on_surf="${func_space_dir}/func/sub-${subid}_ses-${sesid}_hemi-{hemi_upper}_mesh-native_bold.func.gii"
+func_on_surf="${output_dir}/func/sub-${subid}_ses-${sesid}_hemi-{hemi_upper}_mesh-native_bold.func.gii"
 #-----------------parameters------------------------------#
 NeighborhoodSmoothing="5"
 Factor="0.5"
@@ -101,7 +101,7 @@ for hemi in left right; do
     $path_wbcommand -surface-apply-affine \
       "${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_space-T2w_${surface}.surf.gii" \
       "${struct2func_xfm}" \
-      "${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_${surface}.surf.gii" \
+      "${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_${surface}.surf.gii" \
       -flirt \
       "${sub_anat}/anat/sub-${subid}_ses-${sesid}_desc-restore_T2w.nii.gz" \
       "$ref_volume"
@@ -113,53 +113,53 @@ for hemi in left right; do
   # ################
 
   $path_wbcommand -create-signed-distance-volume \
-    "${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii" \
+    "${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii" \
     "${ref_volume}" \
-    "${func_space_dir}/work/${hemi}.white.native.nii.gz"
+    "${output_dir}/work/${hemi}.white.native.nii.gz"
 
   $path_wbcommand -create-signed-distance-volume \
-    "${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii" \
+    "${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii" \
     "${ref_volume}" \
-    "${func_space_dir}/work/${hemi}.pial.native.nii.gz"
+    "${output_dir}/work/${hemi}.pial.native.nii.gz"
 
   # create ribbon mask between white and pial mask and fill it with GreyRibbonValue
-  fslmaths "${func_space_dir}/work/${hemi}.white.native.nii.gz" -thr 0 -bin -mul 255 "${func_space_dir}/work/${hemi}.white_thr0.native.nii.gz"
-  fslmaths "${func_space_dir}/work/${hemi}.white_thr0.native.nii.gz" -bin "${func_space_dir}/work/${hemi}.white_thr0.native.nii.gz"
-  fslmaths "${func_space_dir}/work/${hemi}.pial.native.nii.gz" -uthr 0 -abs -bin -mul 255 "${func_space_dir}/work/${hemi}.pial_uthr0.native.nii.gz"
-  fslmaths "${func_space_dir}/work/${hemi}.pial_uthr0.native.nii.gz" -bin "${func_space_dir}/work/${hemi}.pial_uthr0.native.nii.gz"
-  fslmaths "${func_space_dir}/work/${hemi}.pial_uthr0.native.nii.gz" -mas "${func_space_dir}/work/${hemi}.white_thr0.native.nii.gz" -mul 255 "${func_space_dir}/work/${hemi}.ribbon.nii.gz"
-  fslmaths "${func_space_dir}/work/${hemi}.ribbon.nii.gz" -bin -mul "$GreyRibbonValue" "${func_space_dir}/work/${hemi}.ribbon.nii.gz"
-  rm "${func_space_dir}/work/${hemi}.white.native.nii.gz" "${func_space_dir}/work/${hemi}.white_thr0.native.nii.gz" "${func_space_dir}/work/${hemi}.pial.native.nii.gz" "${func_space_dir}/work/${hemi}.pial_uthr0.native.nii.gz"
+  fslmaths "${output_dir}/work/${hemi}.white.native.nii.gz" -thr 0 -bin -mul 255 "${output_dir}/work/${hemi}.white_thr0.native.nii.gz"
+  fslmaths "${output_dir}/work/${hemi}.white_thr0.native.nii.gz" -bin "${output_dir}/work/${hemi}.white_thr0.native.nii.gz"
+  fslmaths "${output_dir}/work/${hemi}.pial.native.nii.gz" -uthr 0 -abs -bin -mul 255 "${output_dir}/work/${hemi}.pial_uthr0.native.nii.gz"
+  fslmaths "${output_dir}/work/${hemi}.pial_uthr0.native.nii.gz" -bin "${output_dir}/work/${hemi}.pial_uthr0.native.nii.gz"
+  fslmaths "${output_dir}/work/${hemi}.pial_uthr0.native.nii.gz" -mas "${output_dir}/work/${hemi}.white_thr0.native.nii.gz" -mul 255 "${output_dir}/work/${hemi}.ribbon.nii.gz"
+  fslmaths "${output_dir}/work/${hemi}.ribbon.nii.gz" -bin -mul "$GreyRibbonValue" "${output_dir}/work/${hemi}.ribbon.nii.gz"
+  rm "${output_dir}/work/${hemi}.white.native.nii.gz" "${output_dir}/work/${hemi}.white_thr0.native.nii.gz" "${output_dir}/work/${hemi}.pial.native.nii.gz" "${output_dir}/work/${hemi}.pial_uthr0.native.nii.gz"
 done
 
 # Combine ribbon masks for both hemispheres
-fslmaths ${func_space_dir}/work/left.ribbon.nii.gz -add ${func_space_dir}/work/right.ribbon.nii.gz ${func_space_dir}/work/ribbon_only.nii.gz
-rm ${func_space_dir}/work/left.ribbon.nii.gz ${func_space_dir}/work/right.ribbon.nii.gz
+fslmaths ${output_dir}/work/left.ribbon.nii.gz -add ${output_dir}/work/right.ribbon.nii.gz ${output_dir}/work/ribbon_only.nii.gz
+rm ${output_dir}/work/left.ribbon.nii.gz ${output_dir}/work/right.ribbon.nii.gz
 
 # compute mean and standard deviation of functional image
-fslmaths ${func} -Tmean ${func_space_dir}/work/mean -odt float
-fslmaths ${func} -Tstd ${func_space_dir}/work/std -odt float
-fslmaths ${func_space_dir}/work/std -div ${func_space_dir}/work/mean ${func_space_dir}/work/cov
-fslmaths ${func_space_dir}/work/cov -mas ${func_space_dir}/work/ribbon_only.nii.gz ${func_space_dir}/work/cov_ribbon
+fslmaths ${func} -Tmean ${output_dir}/work/mean -odt float
+fslmaths ${func} -Tstd ${output_dir}/work/std -odt float
+fslmaths ${output_dir}/work/std -div ${output_dir}/work/mean ${output_dir}/work/cov
+fslmaths ${output_dir}/work/cov -mas ${output_dir}/work/ribbon_only.nii.gz ${output_dir}/work/cov_ribbon
 
 #TODO what and why is being smoothed here?
-fslmaths ${func_space_dir}/work/cov_ribbon -div $(fslstats ${func_space_dir}/work/cov_ribbon -M) ${func_space_dir}/work/cov_ribbon_norm
-fslmaths ${func_space_dir}/work/cov_ribbon_norm -bin -s $NeighborhoodSmoothing ${func_space_dir}/work/SmoothNorm
-fslmaths ${func_space_dir}/work/cov_ribbon_norm -s $NeighborhoodSmoothing -div ${func_space_dir}/work/SmoothNorm -dilD ${func_space_dir}/work/cov_ribbon_norm_s$NeighborhoodSmoothing
-fslmaths ${func_space_dir}/work/cov -div $(fslstats ${func_space_dir}/work/cov_ribbon -M) -div ${func_space_dir}/work/cov_ribbon_norm_s$NeighborhoodSmoothing ${func_space_dir}/work/cov_norm_modulate
-fslmaths ${func_space_dir}/work/cov_norm_modulate -mas ${func_space_dir}/work/ribbon_only.nii.gz ${func_space_dir}/work/cov_norm_modulate_ribbon
+fslmaths ${output_dir}/work/cov_ribbon -div $(fslstats ${output_dir}/work/cov_ribbon -M) ${output_dir}/work/cov_ribbon_norm
+fslmaths ${output_dir}/work/cov_ribbon_norm -bin -s $NeighborhoodSmoothing ${output_dir}/work/SmoothNorm
+fslmaths ${output_dir}/work/cov_ribbon_norm -s $NeighborhoodSmoothing -div ${output_dir}/work/SmoothNorm -dilD ${output_dir}/work/cov_ribbon_norm_s$NeighborhoodSmoothing
+fslmaths ${output_dir}/work/cov -div $(fslstats ${output_dir}/work/cov_ribbon -M) -div ${output_dir}/work/cov_ribbon_norm_s$NeighborhoodSmoothing ${output_dir}/work/cov_norm_modulate
+fslmaths ${output_dir}/work/cov_norm_modulate -mas ${output_dir}/work/ribbon_only.nii.gz ${output_dir}/work/cov_norm_modulate_ribbon
 
-STD=$(fslstats ${func_space_dir}/work/cov_norm_modulate_ribbon -S)
+STD=$(fslstats ${output_dir}/work/cov_norm_modulate_ribbon -S)
 echo $STD
-MEAN=$(fslstats ${func_space_dir}/work/cov_norm_modulate_ribbon -M)
+MEAN=$(fslstats ${output_dir}/work/cov_norm_modulate_ribbon -M)
 echo $MEAN
 Lower=$(echo "$MEAN - ($STD * $Factor)" | bc -l)
 echo $Lower
 Upper=$(echo "$MEAN + ($STD * $Factor)" | bc -l)
 echo $Upper
 
-fslmaths ${func_space_dir}/work/mean -bin ${func_space_dir}/work/mask
-fslmaths ${func_space_dir}/work/cov_norm_modulate -thr $Upper -bin -sub ${func_space_dir}/work/mask -mul -1 ${func_space_dir}/work/goodvoxels
+fslmaths ${output_dir}/work/mean -bin ${output_dir}/work/mask
+fslmaths ${output_dir}/work/cov_norm_modulate -thr $Upper -bin -sub ${output_dir}/work/mask -mul -1 ${output_dir}/work/goodvoxels
 
 # --------------------------------- PROJECT FUNCTIONAL DATA TO SURF --------------------------------------------------------
 for hemi in left right; do
@@ -176,73 +176,73 @@ for hemi in left right; do
     # -volume-to-surface-mapping WITH -volume-roi
     # NAME: ${map}_hemi-${hemi}_mesh-native.func.gii
     $path_wbcommand -volume-to-surface-mapping \
-      ${func_space_dir}/work/${map}.nii.gz \
-      ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
-      ${func_space_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii \
+      ${output_dir}/work/${map}.nii.gz \
+      ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+      ${output_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii \
       -ribbon-constrained \
-      ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
-      ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii \
+      ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
+      ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii \
       -volume-roi \
-      ${func_space_dir}/work/goodvoxels.nii.gz
+      ${output_dir}/work/goodvoxels.nii.gz
 
     $path_wbcommand -metric-dilate \
-      ${func_space_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii \
-      ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+      ${output_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii \
+      ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
       10 \
-      ${func_space_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii \
+      ${output_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii \
       -nearest
 
     $path_wbcommand -metric-mask \
-      ${func_space_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii \
+      ${output_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii \
       ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
-      ${func_space_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii
+      ${output_dir}/work/${map}_hemi-${hemi}_mesh-native.func.gii
 
     # -volume-to-surface-mapping WITHOUT -volume-roi
     # NAME: ${map}_all_hemi-${hemi}_mesh-native.func.gii
     $path_wbcommand -volume-to-surface-mapping \
-      ${func_space_dir}/work/${map}.nii.gz \
-      ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
-      ${func_space_dir}/work/${map}_all_hemi-${hemi}_mesh-native.func.gii \
+      ${output_dir}/work/${map}.nii.gz \
+      ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+      ${output_dir}/work/${map}_all_hemi-${hemi}_mesh-native.func.gii \
       -ribbon-constrained \
-      ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
-      ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii
+      ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
+      ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii
 
     $path_wbcommand -metric-mask \
-      ${func_space_dir}/work/${map}_all_hemi-${hemi}_mesh-native.func.gii \
+      ${output_dir}/work/${map}_all_hemi-${hemi}_mesh-native.func.gii \
       ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
-      ${func_space_dir}/work/${map}_all_hemi-${hemi}_mesh-native.func.gii
+      ${output_dir}/work/${map}_all_hemi-${hemi}_mesh-native.func.gii
   done
 
   # mapping GOODVOXELS
   # NAME: goodvoxels_hemi-${hemi}_mesh-native.shape.gii
   $path_wbcommand -volume-to-surface-mapping \
-    ${func_space_dir}/work/goodvoxels.nii.gz \
-    ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
-    ${func_space_dir}/work/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
+    ${output_dir}/work/goodvoxels.nii.gz \
+    ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+    ${output_dir}/work/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
     -ribbon-constrained \
-    ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
-    ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii
+    ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
+    ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii
 
   $path_wbcommand -metric-mask \
-    ${func_space_dir}/work/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
+    ${output_dir}/work/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
     ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
-    ${func_space_dir}/work/goodvoxels_hemi-${hemi}_mesh-native.shape.gii
+    ${output_dir}/work/goodvoxels_hemi-${hemi}_mesh-native.shape.gii
 
   #  ribbon constrained mapping of fMRI volume to native anatomical surface (in func space)
   # NAME: func_hemi-${hemi}_mesh-native.func.gii
   $path_wbcommand -volume-to-surface-mapping \
     ${func} \
-    ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+    ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
     "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
     -ribbon-constrained \
-    ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
-    ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii \
+    ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
+    ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii \
     -volume-roi \
-    ${func_space_dir}/work/goodvoxels.nii.gz
+    ${output_dir}/work/goodvoxels.nii.gz
 
   $path_wbcommand -metric-dilate \
     "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
-    ${func_space_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+    ${output_dir}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
     10 \
     "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
     -nearest
@@ -254,4 +254,4 @@ for hemi in left right; do
 
 done
 
-rm -rf "${func_space_dir}/work"
+rm -rf "${output_dir}/work"

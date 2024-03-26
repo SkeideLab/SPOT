@@ -10,7 +10,7 @@ from numpy import random
 
 from nilearn import surface
 
-PREFIX_FUNC = "{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/space-func/func/sub-{sub}_ses-{ses}_hemi-{hemi}"
+PREFIX_FUNC = "{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-{hemi}"
 PATH_SURFPIAL = "{derivatives_path}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_pial.surf.gii"
 PATH_FUNC = "{prefix_func}_mesh-native_bold.func.gii"
 PATH_SIMIMG = "{prefix_func}_space-T2w_desc-simulated_bold.func.gii"
