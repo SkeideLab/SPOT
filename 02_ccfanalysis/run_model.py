@@ -1,3 +1,5 @@
+import importlib
+import sys
 from pathlib import Path
 
 import nibabel as nib
@@ -5,8 +7,24 @@ import numpy as np
 
 from nilearn import plotting, surface
 
-from ccfprocedures import perform_ccf_analysis
-from meshgraph import calc_shortestpath
+# HACK
+# ---------------------------import workarounds to make repo structure work --------------------------#
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+sys.path.append(str(root))
+
+# Additionally remove the current file's directory from sys.path
+try:
+    sys.path.remove(str(parent))
+except ValueError:  # Already removed
+    pass
+
+ccfanalysis = importlib.import_module("02_ccfanalysis")
+perform_ccf_analysis = ccfanalysis.ccf_model.ccfprocedures.perform_ccf_analysis
+calc_shortestpath = ccfanalysis.ccf_model.meshgraph.calc_shortestpath
+# HACKEND
+# ------------------------------------------------------------------------#
+
 
 
 def visualize_connective_field(mesh, v1_indices, connective_fields, curv):

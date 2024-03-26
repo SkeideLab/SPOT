@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.optimize import minimize
-from ccflogic import (
+from .ccflogic import (
     create_cf_fit,
     define_connfield_candidates,
     create_cf_timecourse,
