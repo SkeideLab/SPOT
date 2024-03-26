@@ -71,8 +71,10 @@ def main():
             hemi=hemi,
             derivatives_path=args.derivatives_directory,
         )
-        path_thisfunc = PATH_FUNC.format(prefix_func)
-        path_thissim = PATH_SIMIMG.format(prefix_func).replace("bold", "bold_tmp")
+        path_thisfunc = PATH_FUNC.format(prefix_func=prefix_func)
+        path_thissim = PATH_SIMIMG.format(prefix_func=prefix_func).replace(
+            "bold", "bold_tmp"
+        )
 
         # load surface and functional data
         surf = surface.load_surf_mesh(path_thissurf)
@@ -93,7 +95,7 @@ def main():
         ##############################PRODUCING LOCAL CORRELATIONS #######################################################
         print("Smoothing the data over the surface to produce local correlations...")
 
-        sigma = 20
+        sigma = 20  # target sigma from Bock 2015
         fwhm = 2.354820 * sigma
         path_intermed = path_thissim.replace(".func", ".func_smh7") + ".dset"
         path_smoothed = path_thissim.replace("desc-simulated", "desc-simulatedsmoothed")
@@ -123,3 +125,7 @@ def main():
         # delete intermediary images
         for p in Path(path_thissim).parent.glob("*_tmp.*"):
             p.unlink()
+
+
+if __name__ == "__main__":
+    main()
