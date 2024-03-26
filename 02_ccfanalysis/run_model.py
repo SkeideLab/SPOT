@@ -108,7 +108,7 @@ def main():
     else:
         func_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/func/func_hemi-{hemi}_mesh-native.func.gii"
     visparc_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
-    wm_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_mesh-native_space-func_wm.surf.gii"
+    wm_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_mesh-native_space-bold_wm.surf.gii"
     curv_path = "{root_dir}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_space-T2w_curv.shape.gii"
     distancefile_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_space-T2w_desc-V1_dijkstra.npy"
     labels_v1 = [1, 2]  # see `ROIfiles_Labeling.txt` in this directory

@@ -102,7 +102,7 @@ for hemi in left right; do
     $path_wbcommand -surface-apply-affine \
       "${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_space-T2w_${surface}.surf.gii" \
       "${struct2func_xfm}" \
-      "${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_${surface}.surf.gii" \
+      "${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_${surface}.surf.gii" \
       -flirt \
       "${sub_anat}/anat/sub-${subid}_ses-${sesid}_desc-restore_T2w.nii.gz" \
       "$ref_volume"
@@ -114,12 +114,12 @@ for hemi in left right; do
   # ################
 
   $path_wbcommand -create-signed-distance-volume \
-    "${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii" \
+    "${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii" \
     "${ref_volume}" \
     "$work_dir/${hemi}.white.native.nii.gz"
 
   $path_wbcommand -create-signed-distance-volume \
-    "${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii" \
+    "${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii" \
     "${ref_volume}" \
     "${work_dir}/${hemi}.pial.native.nii.gz"
 
@@ -178,17 +178,17 @@ for hemi in left right; do
     # NAME: ${map}_hemi-${hemi}_mesh-native.func.gii
     $path_wbcommand -volume-to-surface-mapping \
       ${work_dir}/${map}.nii.gz \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
       ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
       -ribbon-constrained \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii \
       -volume-roi \
       ${work_dir}/goodvoxels.nii.gz
 
     $path_wbcommand -metric-dilate \
       ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
       10 \
       ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
       -nearest
@@ -202,11 +202,11 @@ for hemi in left right; do
     # NAME: ${map}_all_hemi-${hemi}_mesh-native.func.gii
     $path_wbcommand -volume-to-surface-mapping \
       ${work_dir}/${map}.nii.gz \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
       ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii \
       -ribbon-constrained \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii
 
     $path_wbcommand -metric-mask \
       ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii \
@@ -218,11 +218,11 @@ for hemi in left right; do
   # NAME: goodvoxels_hemi-${hemi}_mesh-native.shape.gii
   $path_wbcommand -volume-to-surface-mapping \
     ${work_dir}/goodvoxels.nii.gz \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
     ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
     -ribbon-constrained \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii
+    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
+    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii
 
   $path_wbcommand -metric-mask \
     ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
@@ -233,17 +233,17 @@ for hemi in left right; do
   # NAME: func_hemi-${hemi}_mesh-native.func.gii
   $path_wbcommand -volume-to-surface-mapping \
     ${func} \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
     "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
     -ribbon-constrained \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_wm.surf.gii \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_pial.surf.gii \
+    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
+    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii \
     -volume-roi \
     ${work_dir}/goodvoxels.nii.gz
 
   $path_wbcommand -metric-dilate \
     "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-func_midthickness.surf.gii \
+    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
     10 \
     "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
     -nearest
