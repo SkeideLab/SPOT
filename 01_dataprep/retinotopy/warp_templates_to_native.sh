@@ -14,7 +14,7 @@ path_surfacetemplate=$6
 path_fsaverage=$7
 
 # prepare output directory for subject in T2w space
-path_out_native=$path_output_data/sub-$sub/ses-$ses/space-T2w/anat
+path_out_native=$path_output_data/sub-$sub/ses-$ses/anat
 mkdir -p $path_out_native
 
 for hemi in left right; do

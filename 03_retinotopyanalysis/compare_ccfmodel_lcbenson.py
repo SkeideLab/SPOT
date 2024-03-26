@@ -37,9 +37,9 @@ def calc_msd(param_area1, param_area2):
 
 root_dir = "/data/p_02495/dhcp_derivatives"
 # file_ccf_v0 = "/data/p_02495/dhcp_derivatives/ccfmodel/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}_desc-test_v0i.gii"
-file_eccentricitybenson = "/data/p_02495/dhcp_derivatives/dhcp_surface/sub-{sub}/ses-{ses}/space-T2w/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-eccentretinotbenson2014_seg.shape.gii"
-file_anglebenson = "/data/p_02495/dhcp_derivatives/dhcp_surface/sub-{sub}/ses-{ses}/space-T2w/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-angleretinotbenson2014_seg.shape.gii"
-file_visparc = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/space-T2w/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+file_eccentricitybenson = "/data/p_02495/dhcp_derivatives/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-eccentretinotbenson2014_seg.shape.gii"
+file_anglebenson = "/data/p_02495/dhcp_derivatives/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-angleretinotbenson2014_seg.shape.gii"
+file_visparc = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
 file_eccccf = "/data/p_02495/dhcp_derivatives/ccfmodel/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}_label-eccentricity_desc-ccf_roi-v2_metric.gii"
 file_angleccf = "/data/p_02495/dhcp_derivatives/ccfmodel/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}_label-angle_desc-ccf_roi-v2_metric.gii"
 file_ecclc = "/data/p_02495/dhcp_derivatives/ccfmodel/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}_label-eccentricity_desc-lc_roi-v2_metric.gii"

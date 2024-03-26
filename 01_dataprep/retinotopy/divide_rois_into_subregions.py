@@ -21,7 +21,7 @@ import numpy as np
 
 from nilearn import surface
 
-PREFIX_ALLDATA = "{path_output_data}/sub-{sub}/ses-{ses}/space-T2w/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_mesh-native_dens-native"
+PREFIX_ALLDATA = "{path_output_data}/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_mesh-native_dens-native"
 
 BENSON_ECC = "_desc-angleretinotbenson2014_seg.shape.gii"
 BENSON_ANGLE = "_desc-angleretinotbenson2014_seg.shape.gii"
