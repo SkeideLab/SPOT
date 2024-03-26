@@ -13,26 +13,24 @@ out_doftxt=$(echo $out_dof | sed 's/\.dof/\.txt/g')
 
 echo newnames $out_dof $out_doftxt $intermediate_sphere
 
-echo mirtk register $vol_template $in_volume  -model Rigid -sim NMI -bins 64 -dofout $out_dof
+echo mirtk register $vol_template $in_volume -model Rigid -sim NMI -bins 64 -dofout $out_dof
 
 if [ ! -f $out_doftxt ]; then
-    $mirtk register $vol_template $in_volume  -model Rigid -sim NMI -bins 64 -dofout $out_dof
+    $mirtk register $vol_template $in_volume -model Rigid -sim NMI -bins 64 -dofout $out_dof
 
-    $mirtk convert-dof $out_dof  $out_doftxt -target $vol_template -source $in_volume -output-format flirt
+    $mirtk convert-dof $out_dof $out_doftxt -target $vol_template -source $in_volume -output-format flirt
+    rm $out_dof
 else
     echo "dof exists!"
 fi
-
 
 intermediate_sphere=$(echo $in_sphere | sed 's/.surf.gii/tmp_rot.surf.gii/g')
 
 $wb_command -surface-apply-affine $in_sphere $out_doftxt $intermediate_sphere
 
-$wb_command -surface-modify-sphere  $intermediate_sphere 100 $intermediate_sphere -recenter
+$wb_command -surface-modify-sphere $intermediate_sphere 100 $intermediate_sphere -recenter
 
-$wb_command -surface-apply-affine $intermediate_sphere  $surf_transform  $out_sphere
+$wb_command -surface-apply-affine $intermediate_sphere $surf_transform $out_sphere
 
-$wb_command -surface-modify-sphere  $out_sphere 100 $out_sphere -recenter
+$wb_command -surface-modify-sphere $out_sphere 100 $out_sphere -recenter
 rm $intermediate_sphere
-
-

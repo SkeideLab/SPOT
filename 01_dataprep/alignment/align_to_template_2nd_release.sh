@@ -72,10 +72,10 @@ template00wk_sphere=$templatespherepath/week-${age}_hemi-%hemi%_space-${template
 template00wk_data=$templatespherepath/week-${age}_hemi-%hemi%_space-${templatespherename}_dens-32k_sulc.shape.gii
 
 #outputs
-sub_templatespace_dir=${outdir}/sub-${subjid}/ses-$session/space-${templatespherename}
-mkdir -p $sub_templatespace_dir/volume_dofs $sub_templatespace_dir/surface_transforms $sub_templatespace_dir/anat
+sub_output_dir=${outdir}/sub-${subjid}/ses-$session
+mkdir -p $sub_output_dir/volume_dofs $sub_output_dir/surface_transforms
 native_rot_sphere=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_space-fslr_sphere.rot.surf.gii
-outname=$sub_templatespace_dir/surface_transforms/sub-${subjid}_ses-${session}_hemi-%hemi%_from-native_to-${templatespherename}40_dens-32k_mode-
+outname=$sub_output_dir/surface_transforms/sub-${subjid}_ses-${session}_hemi-%hemi%_from-native_to-${templatespherename}40_dens-32k_mode-
 transformed_sphere=${outname}sphere.reg40.surf.gii
 
 for hemi in left right; do
@@ -101,7 +101,7 @@ for hemi in left right; do
             $native_sphere_hemi \
             $templatevolume \
             $pre_rotation_hemi \
-            $sub_templatespace_dir/volume_dofs/${subjid}-${session}_space-$templatevolumename.dof \
+            $sub_output_dir/volume_dofs/sub-${subjid}_ses-${session}_from-T2w_to-${templatevolumename}_affine.dof \
             $native_rot_sphere_hemi \
             $mirtk_BIN $WB_BIN
 

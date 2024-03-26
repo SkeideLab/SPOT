@@ -27,11 +27,11 @@ for hemi in left right; do
     # registrations necessary to make the transformation from fsaverage to native
     # will be created if they don't exist already
     registration_from_dhcpSym_to_fsaverage="$path_script/standard_registrations/hemi-${hemi_upper}_from-dhcpSym_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii"
-    registration_from_native_to_fsaverage="$path_output_data/sub-$sub/ses-$ses/space-dhcpSym/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii"
+    registration_from_native_to_fsaverage="$path_output_data/sub-$sub/ses-$ses/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii"
 
     # output of previous step, see alignment folder
     # check if this exists, terminate otherwise
-    registration_from_native_to_dhcpSym="$path_output_data/sub-$sub/ses-$ses/space-dhcpSym/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii"
+    registration_from_native_to_dhcpSym="$path_output_data/sub-$sub/ses-$ses/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii"
     if [ ! -f $registration_from_native_to_dhcpSym ]; then
         echo "Registration from native to dhcpSym is missing. Please execute alignment folder main script first."
         echo "Terminating..."
