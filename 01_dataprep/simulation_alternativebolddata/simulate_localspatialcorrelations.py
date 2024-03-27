@@ -1,5 +1,14 @@
-# alternative model of local spatial correlations
-# in subject space for now
+"""Generate artificial functional data on the surface (native space).
+Simulated data will have the same number of timepoints as our resting-state data. 
+
+Data are simulated based on:
+
+1) Draw values from a random normal distribution for each volume/vertex datapoint
+2) Smooth over the surface with a 30mm Gaussian kernel
+3) Add random noise with amplitude 200x that of the random normal distribution
+
+This results in data that show a pattern of local spatial correlations."""
+
 import subprocess
 from argparse import ArgumentParser
 from pathlib import Path
@@ -10,8 +19,14 @@ from numpy import random
 
 from nilearn import surface
 
-PREFIX_FUNC = "{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-{hemi}"
-PATH_SURFPIAL = "{derivatives_path}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_pial.surf.gii"
+PREFIX_FUNC = (
+    "{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}"
+)
+PATH_SURFPIAL = (
+    "{derivatives_path}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_pial.surf.gii"
+)
 PATH_FUNC = "{prefix_func}_mesh-native_bold.func.gii"
 PATH_SIMIMG = "{prefix_func}_space-T2w_desc-simulated_bold.func.gii"
 
@@ -41,16 +56,26 @@ def parse_args():
 
 
 def save_gifti_timeseries(data, out_path):
-    # n_nodes x n_timepoints
-    # save it as nifti with 1 data array per timepoint
-    gifti_arrays = [
-        nib.gifti.GiftiDataArray(
-            np.float32(data[:, i]),
-            datatype="NIFTI_TYPE_FLOAT32",
-        )
-        for i in range(data.shape[1])
-    ]
-    img = nib.gifti.GiftiImage(darrays=gifti_arrays)
+    """Save timeseries in gifti file format.
+
+    Args:
+        data (numpy.array): n_vertices x n_timepoints. Timeseries data.
+        out_path (str): full path to output file for saving.
+    """
+
+    # save data as nifti with 1 data array with all vertices per timepoint
+    # list of timepoint activation arrays
+    timepoint_arrays = [data[:, i_timepoint] for i_timepoint in range(data.shape[1])]
+
+    # convert normal arrays into gifti arrays and collect in gifti image
+    img = nib.gifti.GiftiImage(
+        darrays=[
+            nib.gifti.GiftiDataArray(
+                np.float32(timepoint_array), datatype="NIFTI_TYPE_FLOAT32"
+            )
+            for timepoint_array in timepoint_arrays
+        ]
+    )
     nib.save(img, out_path)
 
 
@@ -72,6 +97,8 @@ def main():
             derivatives_path=args.derivatives_directory,
         )
         path_thisfunc = PATH_FUNC.format(prefix_func=prefix_func)
+
+        # save intermediary files as 'tmp'
         path_thissim = PATH_SIMIMG.format(prefix_func=prefix_func).replace(
             "bold", "bold_tmp"
         )
@@ -95,6 +122,8 @@ def main():
         ##############################PRODUCING LOCAL CORRELATIONS #######################################################
         print("Smoothing the data over the surface to produce local correlations...")
 
+        # TODO check if we should use afni flag -sigma directly? takes ~1day just to run this!
+        # TODO check resulting sigma spread and correlation results of ccf model
         sigma = 20  # target sigma from Bock 2015
         fwhm = 2.354820 * sigma
         path_intermed = path_thissim.replace(".func", ".func_smh7") + ".dset"
@@ -117,7 +146,7 @@ def main():
         # add noise with amplitude 200
         sim_data = sim_data + random.default_rng().normal(size=sim_data.shape) * 200
 
-        # save it as nifti with 1 data array per timepoint
+        # save final data
         save_gifti_timeseries(sim_data, path_thissim.replace("_tmp", ""))
 
         print(f"Saving simulated image in {path_thissim.replace('_tmp', '')}.")
