@@ -38,7 +38,7 @@ The functional BOLD data in voxel space is projected to the cortical surface. Th
 
 All voxel timeseries to be used in the computation (higher and lower region, V2 and V1 respectively) are converted to units of percent signal change.
 
-\[\textrm{for all } v \in V1 \cup V2:\quad a_v(t)=(s_v(t)-mean_v)*100\] 
+\[\textrm{for all } v \in V1 \cup V2:\quad a_v(t)=(s_v(t)-mean_v) \cdot 100\] 
 \[\quad mean_v=\frac{\sum_{t} s_v(t)}{ n}\]
 $a_v(t)$ activity of vertex $v$ at time point $t$ in units of percent signal change \\
 $s_v(t)$ raw signal for vertex $v$ at time point $t$ \\
@@ -57,7 +57,7 @@ To compute the cortical connective field, we need the distance $d$ between all $
 \subsection{Cortical field activation}
 The weights of the cortical field $g$ are then used to compute the timeseries of the cortical field. Timeseries $a_w(t)$ of all voxels $w$ are weighed by their importance $g_{w_0,\sigma}(w)$ in the cortical field and summed up to constitute the timeseries of the connective field.
 
-\[c_{w_0,\sigma}(t)=\sum_{w} a_w(t)*g_{w_0,\sigma}(w)\]
+\[c_{w_0,\sigma}(t)=\sum_{w} a_w(t) \cdot g_{w_0,\sigma}(w)\]
 
 \subsection{Correlation between connective field timeseries and target vertex timeseries}
 
