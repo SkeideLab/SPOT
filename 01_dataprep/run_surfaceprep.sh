@@ -74,7 +74,7 @@ echo "Redirecting outputs to logfile $logfile..."
         $path_output_data
 
     ########################SIMULATING ALTERNATIVE DATA###################################
-    python $path_script/simulation_alternativemodel/alternative_model.py \
+    python $path_script/simulation_alternativebolddata/simulate_localspatialcorrelations.py \
         -d $path_derivatives \
         -sub $subject_label \
         -ses $session_label
