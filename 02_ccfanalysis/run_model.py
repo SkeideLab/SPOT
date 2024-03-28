@@ -1,3 +1,11 @@
+"""Runs cortical connective field modelling. 
+For exact model description, see SPOT/documentation/CorticalConnectiveFields.pdf.
+
+# v_0: center voxel of connective field in V1
+# sigma: SD (mm) along cortical surface
+
+"""
+
 import importlib
 import sys
 from argparse import ArgumentParser
@@ -29,7 +37,8 @@ calc_shortestpath = ccfanalysis.ccf_model.meshgraph.calc_shortestpath
 
 VISPARC_PATH = (
     "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
-    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_"
+    "desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
 )
 WM_PATH = (
     "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
@@ -56,6 +65,14 @@ LABELS_V2 = (3, 4)
 
 
 def visualize_connective_field(mesh, v1_indices, connective_fields, curv):
+    """Make a visualization of the weight of one cortical connective field.
+
+    Args:
+        mesh (named tuple): keys coordinates and faces
+        v1_indices (numpy.array): indices of v1 vertices into whole hemisphere mesh
+        connective_fields (numpy.array): n_vertices_center x n_sigmas x n_vertices_weights
+        curv (str): path to curv map on hemisphere
+    """
     voxel_to_plot = np.random.randint(0, connective_fields.shape[0])
     sigmai_to_plot = 0
     cf_voxelseries = connective_fields[voxel_to_plot, sigmai_to_plot, :]
@@ -86,6 +103,14 @@ def make_percent_signal_change(func):
 
 
 def save_results(indices_v2, best_models, n_total_nodes, out_prefix):
+    """Save model results to gifti files.
+
+    Args:
+        indices_v2 (numpy.array): indices of V2 vertices in whole hemisphere
+        best_models (numpy.array): n_vertices_v2 x (v0i, sigma, rss, r)
+        n_total_nodes (int): size of total hemispheres
+        out_prefix (str): path prefix for result files
+    """
 
     Path(out_prefix).parent.mkdir(exist_ok=True, parents=True)
 
@@ -187,6 +212,16 @@ def parse_args():
 
 
 def fetch_distancematrix(indices_v1, wm, distance_file):
+    """Get the distances between nodes in V1 along the mesh. Either load it or compute it.
+
+    Args:
+        indices_v1 (numpy.array): indices to V1 nodes
+        wm (namedtuple): keys coordinates and faces
+        distance_file (str): path to distance file if it exists
+
+    Returns:
+        numpy.array: distances between nodes
+    """
 
     if Path(distance_file).exists():
 
@@ -208,10 +243,6 @@ def fetch_distancematrix(indices_v1, wm, distance_file):
 def main():
 
     args = parse_args()
-
-    # sub = "CC00069XX12"
-    # ses = "26300"
-    # root_dir = "/data/p_02495/dhcp_derivatives"  # bids derivatives directory
 
     optimize_threshold = args.threshold  # model rsquared threshold for optimization
     sigmas = np.linspace(3, 25, num=args.nsigma)  # ccf spreads to try in grid search
@@ -249,13 +280,14 @@ def main():
 
         for datasource in ["real", "simulated"]:
             print(f"Modeling {datasource} data on hemisphere {hemi}.")
+
             # get bold data for V1 and V2
             simulated = "_desc-simulated" if datasource == "simulated" else ""
             func = surface.load_surf_data(FUNC_PATH.format(**ids, simulated=simulated))
 
             func_v2 = func[indices_v2, :].astype(np.float64)
             func_v1 = func[indices_v1, :].astype(np.float64)
-            # ----------------------MODELING------------------------------------------------------------
+            # ----------------------MODELING-------------------------------------------------------
             # prepare functional data for timeseries computation
             func_v1 = make_percent_signal_change(func_v1)
             func_v2 = make_percent_signal_change(func_v2)
@@ -279,26 +311,6 @@ def main():
                 n_total_nodes=wm.coordinates.shape[0],
                 out_prefix=OUTPUT_PREFIX.format(**ids, datasource=datasource),
             )
-
-
-# TODO transform this info into info text string
-# g: connective field of V2 seed voxel, v: voxel within V1,
-# v_0: center voxel of connective field, d: shortest distance along the cortical surface mesh
-# sigma: SD (mm) along cortical surface
-# g(v_0,sigma) = exp - [d(v,v_0)²/ 2*sigma²]
-
-# -------------------------Questions-----------------------------------
-# what is SD along cortical surface?
-# --> " For each v0 value, we created 10 basis functions, using σ values linearly spaced between 3 and 25 mm"
-# which cortical surface mesh? midthickness, white, pial?
-# --> grey/white matter border so maybe white
-# how to understand the exp and sigma² in equation?
-# What is v_0?
-# --> "center v0 corresponding to the surface vertex closest to that V1 voxel at the gray/white matter border"
-# how to get predicted time course?
-# --> "taking the linear sum of all V1 time courses convolved with all possible basis functions"
-# convolve connective field g(v_0,sigma) for different v0 and sigma with v timecourses + sum up linearly
-# -------------------------Questions end------------------------------------
 
 
 if __name__ == "__main__":
