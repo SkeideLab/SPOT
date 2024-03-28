@@ -8,8 +8,9 @@ import numpy as np
 
 from nilearn import plotting, surface
 
+# -d /data/p_02495/dhcp_derivatives -sub CC00069XX12 -ses 26300
 # HACK
-# ---------------------------import workarounds to make repo structure work --------------------------#
+# ---------------------import workarounds to make repo structure work --------------------------#
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
 sys.path.append(str(root))
@@ -26,19 +27,38 @@ calc_shortestpath = ccfanalysis.ccf_model.meshgraph.calc_shortestpath
 # HACKEND
 # ------------------------------------------------------------------------#
 
-VISPARC_PATH = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
-WM_PATH = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_space-bold_wm.surf.gii"
-CURV_PATH = "{root_dir}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_curv.shape.gii"
-DISTANCEFILE_PATH = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_desc-V1_dijkstra.npy"
-func_path = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native{simulated}_bold.func.gii"
+VISPARC_PATH = (
+    "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+)
+WM_PATH = (
+    "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_space-bold_wm.surf.gii"
+)
+CURV_PATH = (
+    "{root_dir}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_curv.shape.gii"
+)
+DISTANCEFILE_PATH = (
+    "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_desc-V1_dijkstra.npy"
+)
+FUNC_PATH = (
+    "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/func/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native{simulated}_bold.func.gii"
+)
+OUTPUT_PREFIX = (
+    "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_desc-{datasource}"
+)
 LABELS_V1 = (1, 2)
 LABELS_V2 = (3, 4)
 
 
 def visualize_connective_field(mesh, v1_indices, connective_fields, curv):
-    voxel_to_plot = 1000
-    sigma_to_plot = 0
-    cf_voxelseries = connective_fields[voxel_to_plot, sigma_to_plot, :]
+    voxel_to_plot = np.random.randint(0, connective_fields.shape[0])
+    sigmai_to_plot = 0
+    cf_voxelseries = connective_fields[voxel_to_plot, sigmai_to_plot, :]
     cf_map = np.zeros(mesh.coordinates.shape[0])
     cf_map[v1_indices] = cf_voxelseries
 
@@ -65,35 +85,29 @@ def make_percent_signal_change(func):
     return (func.T - np.mean(func, axis=1)).T * 100
 
 
-def save_results(
-    root_dir, sub, ses, hemi, indices_v2, best_models, n_total_nodes, model
-):
-    save_path = (
-        Path(root_dir)
-        / "ccfmodel"
-        / f"sub-{sub}"
-        / f"ses-{ses}"
-        / f"sub-{sub}_ses-{ses}_hemi-{hemi}_desc-{model}"
-    )
-    save_path.parent.mkdir(exist_ok=True, parents=True)
+def save_results(indices_v2, best_models, n_total_nodes, out_prefix):
 
+    Path(out_prefix).parent.mkdir(exist_ok=True, parents=True)
+
+    # empty mesh of whole hemi
+    # will be filled at V2 indices
     param_full_mesh = np.zeros(n_total_nodes)
-    parameters = ("v0i", "sigma", "rss", "rsquared")
+    parameters = ("v0i", "sigma", "rss", "r")
+
     for i, param in enumerate(parameters):
+
         param_full_mesh[indices_v2] = best_models[:, i]
+
         if param == "v0i":
-            params_img = nib.gifti.GiftiImage(
-                darrays=[
-                    nib.gifti.GiftiDataArray(
-                        np.int32(param_full_mesh), intent="NIFTI_INTENT_LABEL"
-                    )
-                ]
+            darray = nib.gifti.GiftiDataArray(
+                np.int32(param_full_mesh), intent="NIFTI_INTENT_LABEL"
             )
         else:
-            params_img = nib.gifti.GiftiImage(
-                darrays=[nib.gifti.GiftiDataArray(np.float32(param_full_mesh))]
-            )
-        nib.save(params_img, f"{save_path}_{param}.gii")
+            darray = nib.gifti.GiftiDataArray(np.float32(param_full_mesh))
+
+        params_img = nib.gifti.GiftiImage(darrays=[darray])
+        print(f"Saving results in {out_prefix}_{param}.gii...")
+        nib.save(params_img, f"{out_prefix}_{param}.gii")
 
 
 def get_indices_roi(labels_area, visparc):
@@ -159,12 +173,13 @@ def parse_args():
             "Use only a few vertices from the input dataset and 1 sigma value "
             "for quick execution during debug"
         ),
+        action="store_true",
     )
     parser.add_argument(
-        "--optimize",
-        required=False,
-        default=True,
-        help="Run nonlinear search for best sigma spread value of each vertex ccf after grid search",
+        "--no-optimization",
+        dest="optimize",
+        action="store_false",
+        help="Don't run nonlinear search for best sigma spread value of each vertex ccf after grid search",
     )
 
     args = parser.parse_args()
@@ -182,6 +197,8 @@ def fetch_distancematrix(indices_v1, wm, distance_file):
 
         print("Distances between surface vertices are being calculated...")
         distances_along_mesh = calc_shortestpath(wm, indices_v1)
+
+        Path(distance_file).parent.mkdir(exist_ok=True, parents=True)
         with open(distance_file, "wb") as f:
             np.save(f, distances_along_mesh)
 
@@ -206,7 +223,7 @@ def main():
             "sub": args.sub,
             "ses": args.ses,
             "hemi": hemi,
-            "root_dir": args.root_dir,
+            "root_dir": args.derivatives_directory,
         }
 
         # load retinotopy data
@@ -222,24 +239,22 @@ def main():
         distance_file = DISTANCEFILE_PATH.format(**ids)
         distances_along_mesh = fetch_distancematrix(indices_v1, wm, distance_file)
 
-        for model in ["ccf", "lc"]:
+        # small toy example for debugging
+        if args.debug:
+            indices_v1 = indices_v1[:10]
+            indices_v2 = indices_v2[:10]
+            distances_along_mesh = distances_along_mesh[:10, :10]
+            sigmas = sigmas[[0]]
+            optimize_threshold = 0
 
+        for datasource in ["real", "simulated"]:
+            print(f"Modeling {datasource} data on hemisphere {hemi}.")
             # get bold data for V1 and V2
-            simulated = "_desc-simulated" if model == "lc" else ""
-            func = surface.load_surf_data(func_path.format(**ids, simulated=simulated))
+            simulated = "_desc-simulated" if datasource == "simulated" else ""
+            func = surface.load_surf_data(FUNC_PATH.format(**ids, simulated=simulated))
+
             func_v2 = func[indices_v2, :].astype(np.float64)
             func_v1 = func[indices_v1, :].astype(np.float64)
-
-            # small toy example for debugging
-            if args.debug:
-                func_v1 = func_v1[:10, :]
-                func_v2 = func_v2[:10, :]
-                indices_v1 = indices_v1[:10]
-                indices_v2 = indices_v2[:10]
-                distances_along_mesh = distances_along_mesh[:10, :10]
-                sigmas = sigmas[[0]]
-                optimize_threshold = 0
-
             # ----------------------MODELING------------------------------------------------------------
             # prepare functional data for timeseries computation
             func_v1 = make_percent_signal_change(func_v1)
@@ -259,11 +274,10 @@ def main():
                 )
 
             save_results(
-                **ids,
                 indices_v2=indices_v2,
                 best_models=connfields["best_models"],
                 n_total_nodes=wm.coordinates.shape[0],
-                model=model,
+                out_prefix=OUTPUT_PREFIX.format(**ids, datasource=datasource),
             )
 
 

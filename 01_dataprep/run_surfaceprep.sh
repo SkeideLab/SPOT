@@ -1,14 +1,13 @@
 #!/bin/bash
 # transforms the Wang template to individual subject surface space
 set -x -u -e
-
+echo "$0" "$@" # print function call
+subject_label=$1
+session_label=$2
+subject_age_weeks=$3
+path_derivatives=$4
 ########################INPUTS######################################
-#---------------SUBJECT INFO---------------------------------
-subject_label="CC00066XX09"
-session_label="19200"
-subject_age_weeks="42"
 #---------------PATHS TO DATA--------------------------------------------
-path_derivatives="/data/p_02495/dhcp_derivatives"
 path_anat_data="$path_derivatives/dhcp_anat_pipeline"
 path_func_data="$path_derivatives/dhcp_fmri_pipeline"
 path_output_data="$path_derivatives/dhcp_surface"
