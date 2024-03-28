@@ -28,7 +28,7 @@ PATH_SURFPIAL = (
     "sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_pial.surf.gii"
 )
 PATH_FUNC = "{prefix_func}_mesh-native_bold.func.gii"
-PATH_SIMIMG = "{prefix_func}_space-T2w_desc-simulated_bold.func.gii"
+PATH_SIMIMG = "{prefix_func}_mesh-native_desc-simulated_bold.func.gii"
 
 
 def parse_args():
