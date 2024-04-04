@@ -1,6 +1,53 @@
+from argparse import ArgumentParser
+
 import nibabel as nib
-from nilearn import surface
 import numpy as np
+
+from nilearn import surface
+
+# FIXED INPUT AND OUTPUT STRUCTURE
+PREFIX_MODEL = "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}"
+PREFIX_SUB_TEMPLATE = (
+    "{root_dir}/dhcp_surface/"
+    "sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native"
+)
+
+PATH_v0 = "{prefix_model}_desc-{model}_v0i.gii"
+OUTPUT_ECC = "{prefix_model}_label-eccentricity_desc-{model}_roi-v2_metric.gii"
+OUTPUT_PANGLE = "{prefix_model}_label-polarangle_desc-{model}_roi-v2_metric.gii"
+
+PATH_ECCENTRICITY = "{prefix_sub_template}_desc-eccentretinotbenson2014_seg.shape.gii"
+PATH_ANGLE = "{prefix_sub_template}_desc-angleretinotbenson2014_seg.shape.gii"
+PATH_VISPARC = (
+    "{prefix_sub_template}_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+)
+LABELS_V1 = (1, 2)
+LABELS_V2 = (3, 4)
+
+
+def parse_args():
+    """Parses arguments from the command line."""
+
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-d",
+        "--derivatives_directory",
+        required=True,
+        help="Superdirectory for top-level dhcp derivatives datasets ",
+    )
+    parser.add_argument(
+        "-sub",
+        required=True,
+        help="Subject being processed",
+    )
+    parser.add_argument(
+        "-ses",
+        required=True,
+        help="Session being processed",
+    )
+
+    args = parser.parse_args()
+    return args
 
 
 def get_indices_roi(labels_area, visparc_array):
@@ -19,54 +66,93 @@ def get_indices_roi(labels_area, visparc_array):
     return indices_area
 
 
-model = "lc"  # 'lc' or 'ccf'
-root_dir = "/data/p_02495/dhcp_derivatives"
-file_v0 = "/data/p_02495/dhcp_derivatives/ccfmodel/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}_desc-{model}_v0i.gii"
-file_eccentricity = "/data/p_02495/dhcp_derivatives/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-eccentretinotbenson2014_seg.shape.gii"
-file_angle = "/data/p_02495/dhcp_derivatives/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-angleretinotbenson2014_seg.shape.gii"
-file_visparc = "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
-output_ecc = "/data/p_02495/dhcp_derivatives/ccfmodel/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}_label-eccentricity_desc-{model}_roi-v2_metric.gii"
-output_angle = "/data/p_02495/dhcp_derivatives/ccfmodel/sub-{sub}/ses-{ses}/sub-{sub}_ses-{ses}_hemi-{hemi}_label-angle_desc-{model}_roi-v2_metric.gii"
+def main():
+    args = parse_args()
+    # -d /data/p_02495/dhcp_derivatives -sub CC00065XX08 -ses 18600
+    # TODO restrict to voxels r>0.1 here
 
-sub = "CC00058XX09"
-ses = "11300"
+    for model in ["real", "simulated"]:
 
-labels_v1 = [1, 2]  # see `ROIfiles_Labeling.txt` in this directory
-labels_v2 = [3, 4]
-for hemi in ["L"]:
-    visparc = surface.load_surf_data(
-        file_visparc.format(root_dir=root_dir, sub=sub, ses=ses, hemi=hemi)
-    )
-    indices_v1 = get_indices_roi(labels_v1, visparc)
-    indices_v2 = get_indices_roi(labels_v2, visparc)
-    ccf_v0 = surface.load_surf_data(
-        file_v0.format(sub=sub, ses=ses, hemi=hemi, model=model)
-    ).astype(int, copy=False)
+        for hemi in ["L", "R"]:
 
-    centers_v2 = ccf_v0[indices_v2]
+            # FORMAT PATHS FOR INPUT AND OUTPUT
+            prefix_model = PREFIX_MODEL.format(
+                root_dir=args.derivatives_directory,
+                sub=args.sub,
+                ses=args.ses,
+                hemi=hemi,
+            )
+            prefix_sub_template = PREFIX_SUB_TEMPLATE.format(
+                root_dir=args.derivatives_directory,
+                sub=args.sub,
+                ses=args.ses,
+                hemi=hemi,
+            )
 
-    in_out = [
-        (
-            file_eccentricity.format(sub=sub, ses=ses, hemi=hemi),
-            output_ecc.format(sub=sub, ses=ses, hemi=hemi, model=model),
-        ),
-        (
-            file_angle.format(sub=sub, ses=ses, hemi=hemi),
-            output_angle.format(sub=sub, ses=ses, hemi=hemi, model=model),
-        ),
-    ]
+            # list of corresponding input/output transformations
+            in_out = [
+                (
+                    PATH_ECCENTRICITY.format(prefix_sub_template=prefix_sub_template),
+                    OUTPUT_ECC.format(prefix_model=prefix_model, model=model),
+                ),
+                (
+                    PATH_ANGLE.format(prefix_sub_template=prefix_sub_template),
+                    OUTPUT_PANGLE.format(prefix_model=prefix_model, model=model),
+                ),
+            ]
 
-    # indices to voxels in v1 array that are the centers for each v2 voxel
-    # indexv1_centers_v2 = indices_v1[centers_v2]
-    for retinotopy_in, retinotopy_out in in_out:
-        ret = surface.load_surf_data(retinotopy_in)
-        ret_v1 = ret[indices_v1]
-        ret_v2 = ret_v1[centers_v2]
-        ret_wholeb = np.zeros(ret.shape)
-        ret_wholeb[indices_v2] = ret_v2
+            # LOAD DATA
+            visparc = surface.load_surf_data(
+                PATH_VISPARC.format(prefix_sub_template=prefix_sub_template)
+            )
 
-        img_gifti = nib.gifti.GiftiImage(
-            darrays=[nib.gifti.GiftiDataArray(np.float32(np.squeeze(ret_wholeb)))]
-        )
-        nib.save(img_gifti, retinotopy_out)
-        print(f"Saving {retinotopy_out}...")
+            try:
+                ccf_v0 = surface.load_surf_data(
+                    PATH_v0.format(prefix_model=prefix_model, model=model)
+                ).astype(int, copy=False)
+            except ValueError:
+                print(
+                    f"No model results found under {PATH_v0.format(prefix_model=prefix_model, model=model)}."
+                )
+                print(" Skipping this...", flush=True)
+                continue
+
+            indices_v1 = get_indices_roi(LABELS_V1, visparc)
+            indices_v2 = get_indices_roi(LABELS_V2, visparc)
+
+            # get indices into V1 for each area V2 vertex
+            # indices refer to V1 vertex index inside V1, not whole brain!
+            centers_v2 = ccf_v0[indices_v2]
+
+            # indices to voxels in v1 array that are the centers for each v2 voxel
+            # indexv1_centers_v2 = indices_v1[centers_v2]
+            for retinotopy_in, retinotopy_out in in_out:
+
+                # load template data in sub space
+                ret = surface.load_surf_data(retinotopy_in)
+
+                # restrict to V1
+                ret_v1 = ret[indices_v1]
+
+                # project data from V1 vertices to V2
+                ret_v2 = ret_v1[centers_v2]
+
+                # make empty wholebrain
+                ret_wholeb = np.zeros(ret.shape)
+
+                # fill retinotopy values into v2
+                ret_wholeb[indices_v2] = ret_v2
+
+                # save as gifti
+                img_gifti = nib.gifti.GiftiImage(
+                    darrays=[
+                        nib.gifti.GiftiDataArray(np.float32(np.squeeze(ret_wholeb)))
+                    ]
+                )
+
+                nib.save(img_gifti, retinotopy_out)
+                print(f"Saving {retinotopy_out}...")
+
+
+if __name__ == "__main__":
+    main()
