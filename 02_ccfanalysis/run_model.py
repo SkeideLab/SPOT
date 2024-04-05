@@ -58,7 +58,7 @@ FUNC_PATH = (
 )
 OUTPUT_PREFIX = (
     "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
-    "sub-{sub}_ses-{ses}_hemi-{hemi}_desc-{datasource}"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-{datasource}"
 )
 LABELS_V1 = (1, 2)
 LABELS_V2 = (3, 4)
