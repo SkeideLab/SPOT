@@ -37,7 +37,7 @@ script_dir = Path(__file__).resolve().parent
 surfaceprep_script = str(script_dir / "01_dataprep" / "run_surfaceprep.sh")
 ccfmodel_script = str(script_dir / "02_ccfanalysis" / "run_model.py")
 fillretinotopy_script = str(
-    script_dir / "03_retinotopyanalysis" / "fill_ccfmodel_with_retinotopydata.py"
+    script_dir / "03_retinotopyanalysis" / "analyse_retinotopy.py"
 )
 
 for sub, ses in sub_ses_todo:
