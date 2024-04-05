@@ -224,7 +224,12 @@ def main():
         # can these two datasets be compared then?
         # 'inactive' vertices get filled with 0, this could bias the msd
         # use intersection of active vertices instead?
-        print_differences(retinotopy_dict, hemi, indices_v2)
+        try:
+            print_differences(retinotopy_dict, hemi, indices_v2)
+        except KeyError:
+            print(
+                f"Data missing for hemisphere {hemi}, not calculating differences for this..."
+            )
 
 
 if __name__ == "__main__":
