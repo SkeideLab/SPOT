@@ -61,6 +61,9 @@ ccfmodel_script = str(script_dir / "02_ccfanalysis" / "run_model.py")
 fillretinotopy_script = str(
     script_dir / "03_retinotopyanalysis" / "analyse_retinotopy.py"
 )
+project_results_script = str(
+    script_dir / "03_retinotopyanalysis" / "project_ccf_to_fsaverage.sh"
+)
 
 for sub, ses in sub_ses_todo:
 
@@ -113,5 +116,16 @@ for sub, ses in sub_ses_todo:
         "-ses",
         ses,
     ]
-
     subprocess.run(cmd_fillretinotopy, check=True)
+
+    cmd_project_results = [
+        project_results_script,
+        sub,
+        ses,
+        str(path_anat_data),
+        str(path_derivatives),
+        str(path_HCPtemplates_standardmeshatlases),
+        str(path_fsaverage),
+        str(path_wbcommand),
+    ]
+    subprocess.run(cmd_project_results, check=True)
