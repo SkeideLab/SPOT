@@ -1,8 +1,8 @@
 # Registrations between standard surface spaces
 
-- dHCP_HCP-YA.MSMStrain.sphere.reg.surf.gii: from https://github.com/metrics-lab/CorticalAsymmetry/blob/main/dHCP_HCP-YA/dHCP_HCP-YA.MSMStrain.sphere.reg.surf.gii[^1]. 
+- `dHCP_HCP-YA.MSMStrain.sphere.reg.surf.gii`: from https://github.com/metrics-lab/CorticalAsymmetry/blob/main/dHCP_HCP-YA/dHCP_HCP-YA.MSMStrain.sphere.reg.surf.gii[^1]. 
     Registration from dhcpSym to HCP surface template
-- hemi-L_from-dhcpSym_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii, hemi-R_from-dhcpSym_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii: ???
+- `hemi-<hemi>_from-dhcpSym_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii`: created by `01_dataprep/retinotopy/warp_templates_to_native.sh` from registrations from dhcpSym to hcp surface and hcp surface to fsaverage
 
 
 
