@@ -124,9 +124,7 @@ def save_results(indices_v2, best_models, n_total_nodes, out_prefix):
         param_full_mesh[indices_v2] = best_models[:, i]
 
         if param == "v0i":
-            darray = nib.gifti.GiftiDataArray(
-                np.int32(param_full_mesh), intent="NIFTI_INTENT_LABEL"
-            )
+            darray = nib.gifti.GiftiDataArray(np.int32(param_full_mesh))
         else:
             darray = nib.gifti.GiftiDataArray(np.float32(param_full_mesh))
 
