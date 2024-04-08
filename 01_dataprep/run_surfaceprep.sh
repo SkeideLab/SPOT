@@ -2,27 +2,24 @@
 # transforms the Wang template to individual subject surface space
 set -x -u -e
 echo "$0" "$@" # print function call
+
 subject_label=$1
 session_label=$2
 subject_age_weeks=$3
 path_derivatives=$4
-########################INPUTS######################################
-#---------------PATHS TO DATA--------------------------------------------
-path_anat_data="$path_derivatives/dhcp_anat_pipeline"
-path_func_data="$path_derivatives/dhcp_fmri_pipeline"
-path_output_data="$path_derivatives/dhcp_surface"
-#---------------PATHS TO TEMPLATES---------------------------------------
-file_volume_template_40wks="/data/p_02495/templates/template_augmentedvolumetricatlas_dhcp/atlas/T2/template-40.nii.gz"
-name_volume_template_40wks="dhcp40wk"
-path_surface_template="/data/p_02495/templates/template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template"
-name_surface_template="dhcpSym"
-path_HCPtemplates_standardmeshatlases="/data/u_kieslinger_software/code/HCPpipelines/global/templates/standard_mesh_atlases"
-path_fsaverage="/data/p_02495/templates/template_fsaverage/fsaverage"
-#--------------PATHS TO SOFTWARE--------------------------------------------------
-path_newmsm="/data/u_kieslinger_software/fsldevdir/bin/newmsm"
-path_wbcommand="/bin/wb_command"
-path_mirtk="/afs/cbs.mpg.de/software/mirtk/0.20231123/debian-bullseye-amd64/bin/mirtk"
-#---------------------------------------------------------------------------------
+path_anat_data=$5
+path_func_data=$6
+path_output_data=$7
+file_volume_template_40wks=$8
+name_volume_template_40wks=$9
+path_surface_template=${10}
+name_surface_template=${11}
+path_HCPtemplates_standardmeshatlases=${12}
+path_fsaverage=${13}
+path_newmsm=${14}
+path_wbcommand=${15}
+path_mirtk=${16}
+
 #######################################################################################
 path_script=$(dirname $0)
 logfile=$path_output_data/sub-${subject_label}/ses-${session_label}/logs/surfaceprep_$(date +%Y-%m-%dT%H%M).log

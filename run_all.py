@@ -16,6 +16,28 @@ path_derivatives = Path("/data/p_02495/dhcp_derivatives")
 path_anat_data = path_derivatives / "dhcp_anat_pipeline"
 path_func_data = path_derivatives / "dhcp_fmri_pipeline"
 path_output_data = path_derivatives / "dhcp_surface"
+path_templates = Path("/data/p_02495/templates")
+
+# templates
+name_volume_template_40wks = "dhcp40wk"
+file_volume_template_40wks = (
+    path_templates
+    / "template_augmentedvolumetricatlas_dhcp/atlas/T2/template-40.nii.gz"
+)
+name_surface_template = "dhcpSym"
+path_surface_template = (
+    path_templates
+    / "template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template"
+)
+path_fsaverage = path_templates / "template_fsaverage/fsaverage"
+path_HCPtemplates_standardmeshatlases = (
+    "/data/u_kieslinger_software/code/HCPpipelines/"
+    "global/templates/standard_mesh_atlases"
+)
+# --------------PATHS TO SOFTWARE--------------------------------------------------
+path_newmsm = "/data/u_kieslinger_software/fsldevdir/bin/newmsm"
+path_wbcommand = "/bin/wb_command"
+path_mirtk = "/afs/cbs.mpg.de/software/mirtk/0.20231123/debian-bullseye-amd64/bin/mirtk"
 
 sub_ses_anat = {
     (
@@ -45,7 +67,28 @@ for sub, ses in sub_ses_todo:
     path_scaninfo = path_anat_data / f"sub-{sub}" / f"sub-{sub}_sessions.tsv"
     age = get_age(ses, path_scaninfo)
 
-    cmd_surfaceprep = [surfaceprep_script, sub, ses, age, str(path_derivatives)]
+    cmd_surfaceprep = [
+        str(option)
+        for option in [
+            surfaceprep_script,
+            sub,
+            ses,
+            age,
+            path_derivatives,
+            path_anat_data,
+            path_func_data,
+            path_output_data,
+            file_volume_template_40wks,
+            name_volume_template_40wks,
+            path_surface_template,
+            name_surface_template,
+            path_HCPtemplates_standardmeshatlases,
+            path_fsaverage,
+            path_newmsm,
+            path_wbcommand,
+            path_mirtk,
+        ]
+    ]
     subprocess.run(cmd_surfaceprep, check=True)
 
     cmd_ccfmodel = [
