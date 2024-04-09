@@ -60,7 +60,6 @@ mirtk_BIN=$1
 shift
 
 ########## DEFINE PATHS TO VARIABLES ##########
-# TODO define mesh and space suffixes for all surfaces
 #inputs
 nativedir=${topdir}/sub-${subjid}/ses-$session/anat
 native_volume=${nativedir}/sub-${subjid}_ses-${session}_desc-restore_T2w.nii.gz

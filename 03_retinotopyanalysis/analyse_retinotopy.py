@@ -189,7 +189,6 @@ def main():
                     threshold=str(args.threshold).replace(".", ""),
                 )
 
-                # TODO check if these really are the indices into just  v1
                 # restrict to V1
                 ret_v1 = retinotopy_dict[(hemi, "benson", param)][indices_v1]
 
