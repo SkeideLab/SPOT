@@ -23,7 +23,7 @@ from nilearn import surface
 
 PREFIX_ALLDATA = "{path_output_data}/sub-{sub}/ses-{ses}/anat/sub-{sub}_ses-{ses}_hemi-{hemi_upper}_mesh-native_dens-native"
 
-BENSON_ECC = "_desc-angleretinotbenson2014_seg.shape.gii"
+BENSON_ECC = "_desc-eccentretinotbenson2014_seg.shape.gii"
 BENSON_ANGLE = "_desc-angleretinotbenson2014_seg.shape.gii"
 BENSON_VISAREAS = "_desc-retinotbenson2014_label-visarea_dparc.label.gii"
 
@@ -79,7 +79,7 @@ def main():
         visareas = surface.load_surf_data(prefix_thisdata + BENSON_VISAREAS)
 
         # restrict all masks to only V2 vertices
-        mask_v2 = visareas == 2  # | (visareas == 3)  # 2 is code for V2
+        mask_v2 = visareas == 2 # | (visareas == 3)  # 2 is code for V2
         mask_foveal = (ecc > 0) & (ecc <= boundaries[hemi][0]) & mask_v2
         mask_middle = (
             (ecc > boundaries[hemi][0]) & (ecc <= boundaries[hemi][1]) & mask_v2

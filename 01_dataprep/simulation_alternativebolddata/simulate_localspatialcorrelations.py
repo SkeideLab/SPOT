@@ -12,7 +12,7 @@ This results in data that show a pattern of local spatial correlations."""
 import subprocess
 from argparse import ArgumentParser
 from pathlib import Path
-
+import os
 import nibabel as nib
 import numpy as np
 from numpy import random
@@ -24,8 +24,8 @@ PREFIX_FUNC = (
     "sub-{sub}_ses-{ses}_hemi-{hemi}"
 )
 PATH_SURFPIAL = (
-    "{derivatives_path}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
-    "sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_pial.surf.gii"
+    "{derivatives_path}/sub-{sub}/ses-{ses}/anat/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_pial.surf.gii"
 )
 PATH_FUNC = "{prefix_func}_mesh-native_bold.func.gii"
 PATH_SIMIMG = "{prefix_func}_mesh-native_desc-simulated_bold.func.gii"
@@ -35,6 +35,12 @@ def parse_args():
     """Parses arguments from the command line."""
 
     parser = ArgumentParser()
+    parser.add_argument(
+        "-da",
+        "--anat_directory",
+        required=True,
+        help="Superdirectory for top-level dhcp derivatives datasets ",
+    )
     parser.add_argument(
         "-d",
         "--derivatives_directory",
@@ -83,6 +89,10 @@ def main():
     args = parse_args()
 
     for hemi in ["L", "R"]:
+        if hemi == "L":
+            hemi_lower = "left"
+        elif hemi =="R":
+            hemi_lower = "right"
 
         prefix_func = PREFIX_FUNC.format(
             sub=args.sub,
@@ -93,8 +103,8 @@ def main():
         path_thissurf = PATH_SURFPIAL.format(
             sub=args.sub,
             ses=args.ses,
-            hemi=hemi,
-            derivatives_path=args.derivatives_directory,
+            hemi=hemi_lower,
+            derivatives_path=args.anat_directory,
         )
         path_thisfunc = PATH_FUNC.format(prefix_func=prefix_func)
 
@@ -156,5 +166,13 @@ def main():
             p.unlink()
 
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
+#    main()
+
+# Check if the files exist
+if os.path.exists("{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-L_mesh-native_desc-simulated_bold.func.gii") and os.path.exists("{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-R_mesh-native_desc-simulated_bold.func.gii"):
+    print("Files already exist. Skipping the process.")
+else:
+    # Process to be executed if the files don't exist
+    print("Files do not exist. Proceeding with the process...")
     main()

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# script for third data release
 # script to align native surfaces with template space
 set -x -u -e
 Usage() {
@@ -64,8 +64,8 @@ shift
 #inputs
 nativedir=${topdir}/sub-${subjid}/ses-$session/anat
 native_volume=${nativedir}/sub-${subjid}_ses-${session}_desc-restore_T2w.nii.gz
-native_sphere=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_space-T2w_sphere.surf.gii
-native_data=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_space-T2w_sulc.shape.gii
+native_sphere=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_sphere.surf.gii
+native_data=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_sulc.shape.gii
 
 # inputs (template)
 template00wk_sphere=$templatespherepath/week-${age}_hemi-%hemi%_space-${templatespherename}_dens-32k_sphere.surf.gii
@@ -86,8 +86,8 @@ for hemi in left right; do
 
     # swap in correct hemisphere label
     pre_rotation_hemi=$(echo ${pre_rotation} | sed "s/%hemi%/$hemi_upper/g")
-    native_sphere_hemi=$(echo ${native_sphere} | sed "s/%hemi%/$hemi_upper/g")
-    native_data_hemi=$(echo ${native_data} | sed "s/%hemi%/$hemi_upper/g")
+    native_sphere_hemi=$(echo ${native_sphere} | sed "s/%hemi%/$hemi/g")
+    native_data_hemi=$(echo ${native_data} | sed "s/%hemi%/$hemi/g")
     template00wk_sphere_hemi=$(echo ${template00wk_sphere} | sed "s/%hemi%/$hemi/g")
     template00wk_data_hemi=$(echo ${template00wk_data} | sed "s/%hemi%/$hemi/g")
     native_rot_sphere_hemi=$(echo ${native_rot_sphere} | sed "s/%hemi%/$hemi_upper/g")

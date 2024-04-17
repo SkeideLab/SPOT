@@ -45,8 +45,8 @@ WM_PATH = (
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_space-bold_wm.surf.gii"
 )
 CURV_PATH = (
-    "{root_dir}/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
-    "sub-{sub}_ses-{ses}_hemi-{hemi}_space-T2w_curv.shape.gii"
+    "/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi_down}_curv.shape.gii"
 )
 DISTANCEFILE_PATH = (
     "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
@@ -247,11 +247,16 @@ def main():
 
     # model both data sources (resting-state and simulated) per hemisphere
     for hemi in ["L", "R"]:
+        if hemi == "L":
+            hemi_down = "left"
+        elif hemi == "R":
+            hemi_down = "right"
 
         ids = {
             "sub": args.sub,
             "ses": args.ses,
             "hemi": hemi,
+            "hemi_down": hemi_down,            
             "root_dir": args.derivatives_directory,
         }
 

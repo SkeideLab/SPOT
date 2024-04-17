@@ -55,7 +55,13 @@ sub_func="${func_dir}/sub-${subid}/ses-${sesid}"
 func="${sub_func}/func/sub-${subid}_ses-${sesid}_task-rest_desc-preproc_bold.nii.gz"
 
 # warps to templates
-struct2func_xfm="${sub_func}/xfm/sub-${subid}_ses-${sesid}_from-T2w_to-bold_mode-image.mat"
+func2struct_xfm="${sub_func}/xfm/sub-${subid}_ses-${sesid}_from-bold_to-T2w_mode-image.mat"
+struct2func_xfm="${output_dir}/sub-${subid}/ses-${sesid}/sub-${subid}_ses-${sesid}_from-T2_to-bold_mode-image.mat"
+FSL convert_xfm \
+      -omat \
+      "${struct2func_xfm}" \
+      -inverse \
+      "${func2struct_xfm}" 
 
 #-------------------- outputs -----------------------------------------------#
 
@@ -63,7 +69,7 @@ output_dir_sub="${output_dir}/sub-${subid}/ses-${sesid}"
 work_dir="${output_dir_sub}/work"
 mkdir -p "${output_dir_sub}/anat" "$work_dir" "${output_dir_sub}/func"
 ref_volume="${sub_func}/func/sub-${subid}_ses-${sesid}_task-rest_desc-firstvol_bold.nii.gz"
-func_on_surf="${output_dir_sub}/func/sub-${subid}_ses-${sesid}_hemi-{hemi_upper}_mesh-native_bold.func.gii"
+
 #-----------------parameters------------------------------#
 NeighborhoodSmoothing="5"
 Factor="0.5"
@@ -71,16 +77,14 @@ LeftGreyRibbonValue="1"
 RightGreyRibbonValue="1"
 
 ###############
-if [[ -f "${func_on_surf/\{hemi_upper\}/L}" && -f "${func_on_surf/\{hemi_upper\}/R}" ]]; then
-  echo "Functional data on surface already exist at ${func_on_surf}. Skipping..."
-  exit 0
-fi
+
 if [ ! -f "$ref_volume" ]; then
   #create nifti with only first volume to serve as ref_volume
   fslroi "${func}" \
     "$ref_volume" \
     0 1
 fi
+
 
 # ################
 # warp native surface from struct space to func space
@@ -95,12 +99,18 @@ for hemi in left right; do
     GreyRibbonValue="$RightGreyRibbonValue"
     hemi_upper="R"
   fi
+  func_on_surf="${output_dir_sub}/func/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_bold.func.gii"
+  if [[ -f "${func_on_surf/\{hemi_upper\}/L}" && -f "${func_on_surf/\{hemi_upper\}/R}" ]]; then
+  echo "Functional data on surface already exist at ${func_on_surf}. Skipping..."
+  exit 0
+  fi
+
 
   # move all surfaces into func space
-  for surface in wm pial midthickness inflated veryinflated; do
+  for surface in wm pial midthickness inflated vinflated; do
     # transform native anatomical surfaces: T2w space --> func space
     $path_wbcommand -surface-apply-affine \
-      "${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_space-T2w_${surface}.surf.gii" \
+      "${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_${surface}.surf.gii" \
       "${struct2func_xfm}" \
       "${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_${surface}.surf.gii" \
       -flirt \
@@ -170,7 +180,7 @@ for hemi in left right; do
   elif [ $hemi = "right" ]; then
     hemi_upper="R"
   fi
-
+  func_on_surf="${output_dir_sub}/func/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_bold.func.gii"
   # mapping MEAN and COV
   for map in mean cov; do
 
@@ -195,7 +205,7 @@ for hemi in left right; do
 
     $path_wbcommand -metric-mask \
       ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
-      ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
+      ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
       ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii
 
     # -volume-to-surface-mapping WITHOUT -volume-roi
@@ -210,7 +220,7 @@ for hemi in left right; do
 
     $path_wbcommand -metric-mask \
       ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii \
-      ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
+      ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
       ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii
   done
 
@@ -226,7 +236,7 @@ for hemi in left right; do
 
   $path_wbcommand -metric-mask \
     ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
-    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
+    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
     ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii
 
   #  ribbon constrained mapping of fMRI volume to native anatomical surface (in func space)
@@ -250,7 +260,7 @@ for hemi in left right; do
 
   $path_wbcommand -metric-mask \
     "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
-    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_desc-medialwall_mask.shape.gii \
+    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
     "${func_on_surf/\{hemi_upper\}/$hemi_upper}"
 
 done

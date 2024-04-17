@@ -1,22 +1,23 @@
 import re
 import subprocess
 from pathlib import Path
-
+import sys
 import pandas as pd
 
 
 # /data/u_kieslinger_software/miniconda3/bin/conda run -n fmritools --live-stream python /data/u_kieslinger_software/code/spot/run_prep_and_ccf.py
-def get_age(ses, path_scaninfo):
-    scaninfo = pd.read_csv(str(path_scaninfo), sep="\t")
-    age = scaninfo.query(f"session_id=={ses}").at[0, "scan_age"]
+def get_age(index, subject_info):
+    age = subject_info.at[index, "scan_age"]
+    if age > 44:
+        age = 44
     return f"{age:.0f}"  # round to whole week
 
 
-path_derivatives = Path("/data/p_02495/dhcp_derivatives")
-path_anat_data = path_derivatives / "dhcp_anat_pipeline"
-path_func_data = path_derivatives / "dhcp_fmri_pipeline"
+path_derivatives = Path("/data/p_02915/dhcp_derivatives_SPOT")
+path_anat_data = Path("/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline")  # path_derivatives / "dhcp_anat_pipeline"
+path_func_data = Path("/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_fmri_pipeline") # path_derivatives / "dhcp_fmri_pipeline"
 path_output_data = path_derivatives / "dhcp_surface"
-path_templates = Path("/data/p_02495/templates")
+path_templates = Path("/data/p_02915/templates")
 
 # templates
 name_volume_template_40wks = "dhcp40wk"
@@ -31,29 +32,32 @@ path_surface_template = (
 )
 path_fsaverage = path_templates / "template_fsaverage/fsaverage"
 path_HCPtemplates_standardmeshatlases = (
-    "/data/u_kieslinger_software/code/HCPpipelines/"
+    "/data/u_yoos_software/HCPpipelines/"
     "global/templates/standard_mesh_atlases"
 )
 # --------------PATHS TO SOFTWARE--------------------------------------------------
-path_newmsm = "/data/u_kieslinger_software/fsldevdir/bin/newmsm"
+path_newmsm = "/data/u_yoos_software/fsl/bin/msm-env/bin/newmsm"
 path_wbcommand = "/bin/wb_command"
 path_mirtk = "/afs/cbs.mpg.de/software/mirtk/0.20231123/debian-bullseye-amd64/bin/mirtk"
 
-sub_ses_anat = {
-    (
-        re.search(r"(?<=sub-)[^_/]*", str(anat_file)).group(),
-        re.search(r"(?<=ses-)[^_/]*", str(anat_file)).group(),
-    )
-    for anat_file in path_anat_data.glob("*/*/*/sub-*ses-*.gii")
-}
-sub_ses_func = {
-    (
-        re.search(r"(?<=sub-)[^_/]*", str(anat_file)).group(),
-        re.search(r"(?<=ses-)[^_/]*", str(anat_file)).group(),
-    )
-    for anat_file in path_func_data.glob("*/*/*/sub-*ses-*.nii.gz")
-}
-sub_ses_todo = sub_ses_anat.intersection(sub_ses_func)
+subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT.csv')
+sub_num = int(sys.argv[1])
+
+#sub_ses_anat = {
+#    (
+#        re.search(r"(?<=sub-)[^_/]*", str(anat_file)).group(),
+#       re.search(r"(?<=ses-)[^_/]*", str(anat_file)).group(),
+#    )
+#    for anat_file in path_anat_data.glob("*/*/*/sub-*ses-*.gii")
+#}
+#sub_ses_func = {
+#    (
+#        re.search(r"(?<=sub-)[^_/]*", str(anat_file)).group(),
+#        re.search(r"(?<=ses-)[^_/]*", str(anat_file)).group(),
+#    )
+#    for anat_file in path_func_data.glob("*/*/*/sub-*ses-*.nii.gz")
+#}
+#sub_ses_todo = sub_ses_anat.intersection(sub_ses_func)
 
 script_dir = Path(__file__).resolve().parent
 surfaceprep_script = str(script_dir / "01_dataprep" / "run_surfaceprep.sh")
@@ -64,11 +68,17 @@ fillretinotopy_script = str(
 project_results_script = str(
     script_dir / "03_retinotopyanalysis" / "project_ccf_to_fsaverage.sh"
 )
-
-for sub, ses in sub_ses_todo:
+for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
+    sub_id = subject_info.at[index, "sub_id"]
+    sess_id = subject_info.at[index, "sess_id"]
+    sub = sub_id.replace('sub-','')
+    ses = sess_id.replace('ses-','')
+# for sub, ses in sub_ses_todo:
 
     path_scaninfo = path_anat_data / f"sub-{sub}" / f"sub-{sub}_sessions.tsv"
-    age = get_age(ses, path_scaninfo)
+    age = get_age(index, subject_info)
+    
+
 
     cmd_surfaceprep = [
         str(option)
