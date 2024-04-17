@@ -95,7 +95,7 @@ script = "python3 /data/p_02915/SPOT/run_all.py"
 
 
 # Iterate over the index array using a for loop
-for index in range(34,41): 
+for index in range(61,71): 
     subj_num = index
     args = [script, subj_num]
     job_id = submit_job(
