@@ -91,11 +91,11 @@ def submit_job(
 # Define directory for SLURM batch job log files
 log_dir = Path("/data/p_02915/dhcp_derivatives_SPOT/")
 
-script = "python3 /data/p_02915/SPOT/run_all.py"
+script = "python3 /data/p_02915/SPOT/run_all_real_only.py"
 
 
 # Iterate over the index array using a for loop
-for index in range(71,81): 
+for index in range(81,100): 
     subj_num = index
     args = [script, subj_num]
     job_id = submit_job(
@@ -107,4 +107,4 @@ for index in range(71,81):
              )
 
 
-#job_name="dhcp_preprocessing" 9-21
+#from 81 real data only
