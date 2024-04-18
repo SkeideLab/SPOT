@@ -1,0 +1,37 @@
+import numpy as np
+from nilearn import plotting, surface
+import nibabel as nib
+
+FUNC_PATH = (
+    "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-{simulated}_r.gii"
+)
+
+for hemi in ["L", "R"]:
+        if hemi == "L": 
+            hemi_down = "left"
+        elif hemi == "R":
+            hemi_down = "right"
+        ids = {
+            "sub": "CC00218AN12",
+            "ses": "74801",
+            "hemi": hemi,
+            "root_dir": "/data/p_02915/dhcp_derivatives_SPOT"
+            }
+
+        # load retinotopy data
+        
+        for datasource in ["real", "simulated"]:
+            print(f"Modeling {datasource} data on hemisphere {hemi}.")
+
+            # get bold data for V1 and V2
+            simulated = "simulated" if datasource == "simulated" else "real"
+            surface_data = surface.load_surf_data(FUNC_PATH.format(**ids, simulated=simulated))
+            num_vertices = surface_data.shape
+            surface_data = surface_data.astype(float)
+            surface_data = surface_data[surface_data != 0]
+            print(surface_data.shape)
+            #surface_data = surface_data[surface_data > 0.1]
+            #print(surface_data.shape)
+            median_correlation = np.median(surface_data)
+            print(median_correlation)
