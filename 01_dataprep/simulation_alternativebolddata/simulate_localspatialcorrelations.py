@@ -169,7 +169,7 @@ def main():
 #if __name__ == "__main__":
 #    main()
 
- Check if the files exist
+ #Check if the files exist
 if os.path.exists("{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-L_mesh-native_desc-simulated_bold.func.gii") and os.path.exists("{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-R_mesh-native_desc-simulated_bold.func.gii"):
     print("Files already exist. Skipping the process.")
 else:
