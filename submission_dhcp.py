@@ -95,16 +95,16 @@ script = "python3 /data/p_02915/SPOT/run_all_real_only.py"
 
 
 # Iterate over the index array using a for loop
-for index in range(81,100): 
+for index in range(0, 41): 
     subj_num = index
     args = [script, subj_num]
     job_id = submit_job(
              args,
-             mem=320000,
+             mem=640000,
              cpus=2,
              log_dir=log_dir,
              job_name="dhcp_retinotopy"
              )
 
 
-#from 81 real data only
+#from 81 real data only ~140

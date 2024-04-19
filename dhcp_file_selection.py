@@ -40,6 +40,8 @@ for index, row in subject_column.iterrows():
                 subject_info.at[index + counter, "sub_id"] = file_name
                 subject_info.at[index + counter, "birth_age"] = row["birth_age"]
                 subject_info.at[index + counter, "scan_age"] = sess_if.at[idx,"scan_age"]
+                if subject_info.at[index + counter, "scan_age"] < 34:
+                    subject_info.at[index + counter, "scan_age"] = np.nan
                 subject_info.at[index + counter, "sess_id"] = sess_id
                 file_path_xfm = os.path.join(folder_path, sess_id, "xfm")
                 if os.path.exists(file_path_xfm):
@@ -96,6 +98,8 @@ for index, row in subject_column.iterrows():
             subject_info.at[index + counter, "sub_id"] = file_name
             subject_info.at[index + counter, "birth_age"] = row["birth_age"]
             subject_info.at[index + counter, "scan_age"] = sess_if.at[ses_row,"scan_age"]
+            if subject_info.at[index + counter, "scan_age"] < 34:
+                subject_info.at[index + counter, "scan_age"] = np.nan
             sess_id = "ses-" + str(sess_ids[0])
             subject_info.at[index + counter, "sess_id"] = sess_id
             file_path_xfm = os.path.join(folder_path, sess_id, "xfm")
@@ -146,17 +150,17 @@ for index, row in subject_column.iterrows():
                     elif anat_file.endswith("left_desc-medialwall_mask.shape.gii"):
                         subject_info.at[index + counter, "mesl"] = file_path_anat2   
            
-
 subject_info.dropna(subset=['func_path'], inplace=True)
 subject_info.dropna(subset=['T2w'], inplace=True)
 subject_info.dropna(subset=['vsr'], inplace=True)
 subject_info.dropna(subset=['xfm'], inplace=True)
 subject_info.dropna(subset=['wsr'], inplace=True)
+subject_info.dropna(subset=['scan_age'], inplace=True)
 subject_info.reset_index(drop=True, inplace=True)
 nan_locations = np.where(subject_info.isna())
 print("Row indices with NaN values:", nan_locations[0])
 print("Column indices with NaN values:", nan_locations[1])
-
+#check the number of vertices are same in pial and wm
 for index, row in subject_info.iterrows():
     white_surf_right=nib.load(subject_info.at[index, "wsr"])
     white_surf_left=nib.load(subject_info.at[index, "wsl"])
