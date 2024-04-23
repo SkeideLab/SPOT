@@ -168,9 +168,12 @@ def main():
 
 #if __name__ == "__main__":
 #    main()
-
+args = parse_args()
+derivatives_path = args.derivatives_directory
+sub = args.sub
+ses = args. ses
  #Check if the files exist
-if os.path.exists("{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-L_mesh-native_desc-simulated_bold.func.gii") and os.path.exists("{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-R_mesh-native_desc-simulated_bold.func.gii"):
+if os.path.exists(f"{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-L_mesh-native_desc-simulated_bold.func.gii") and os.path.exists(f"{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-R_mesh-native_desc-simulated_bold.func.gii"):
     print("Files already exist. Skipping the process.")
 else:
     # Process to be executed if the files don't exist
