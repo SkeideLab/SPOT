@@ -28,17 +28,25 @@ for index, row in subject_info.iterrows():
                 }
 
             # load retinotopy data
-            #for datasource in ["real", "simulated"]:
-            datasource = "real"
-            print(f"Modeling {datasource} data on hemisphere {hemi}.")
+            for datasource in ["real", "simulated"]:
+                print(f"Modeling {datasource} data on hemisphere {hemi}.")
+                simulated = "simulated" if datasource == "simulated" else "real"
+                try:
+                    surface_data = surface.load_surf_data(FUNC_PATH.format(**ids, simulated=simulated))
+                    num_vertices = surface_data.shape
+                    surface_data = surface_data.astype(float)
+                    surface_data = surface_data[surface_data != 0]
+                    median_correlation = np.median(surface_data)
+                    median_r.at[index, f"{hemi_down}_{datasource}"] = median_correlation
+                except ValueError:
+                    print(
+                        f"No model results found under {datasource}."
+                    )
+                    print(" Skipping this...", flush=True)
+                    continue
 
             # get bold data for V1 and V2
-            simulated = "simulated" if datasource == "simulated" else "real"
-            surface_data = surface.load_surf_data(FUNC_PATH.format(**ids, simulated=simulated))
-            num_vertices = surface_data.shape
-            surface_data = surface_data.astype(float)
-            surface_data = surface_data[surface_data != 0]
-            median_correlation = np.median(surface_data)
-            median_r.at[index, f"{hemi_down}_{datasource}"] = median_correlation
+            
+            
             
 median_r.to_csv('/data/p_02915/SPOT/median_r.csv')
