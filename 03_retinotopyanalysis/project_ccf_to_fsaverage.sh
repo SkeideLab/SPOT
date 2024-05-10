@@ -9,7 +9,7 @@ path_HCPtemplates_standardmeshatlases=$5
 path_fsaverage=$6
 path_wbcommand=$7
 
-threshold="01"
+threshold="00"
 
 for hemi in L R; do
     if [ $hemi = "L" ]; then
