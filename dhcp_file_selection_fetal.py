@@ -39,7 +39,7 @@ for index, row in enumerate(seven_folders):
                 #print(ses_row)
                 subject_info.at[index + counter, "sub_id"] = file_name
                 subject_info.at[index + counter, "scan_age"] = sess_if.at[idx,"scan_age"]
-                if subject_info.at[index + counter, "scan_age"] < 30:
+                if subject_info.at[index + counter, "scan_age"] < 34:
                     subject_info.at[index + counter, "scan_age"] = np.nan
                 subject_info.at[index + counter, "sess_id"] = sess_id
                 file_path_xfm = os.path.join(folder_path, sess_id, "xfm")
@@ -96,7 +96,7 @@ for index, row in enumerate(seven_folders):
             #print(ses_row)
             subject_info.at[index + counter, "sub_id"] = file_name
             subject_info.at[index + counter, "scan_age"] = sess_if.at[ses_row,"scan_age"]
-            if subject_info.at[index + counter, "scan_age"] < 30:
+            if subject_info.at[index + counter, "scan_age"] < 34:
                 subject_info.at[index + counter, "scan_age"] = np.nan
             sess_id = "ses-" + str(sess_ids[0])
             subject_info.at[index + counter, "sess_id"] = sess_id

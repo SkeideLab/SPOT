@@ -13,9 +13,9 @@ def get_age(index, subject_info):
     return f"{age:.0f}"  # round to whole week
 
 
-path_derivatives = Path("/data/p_02915/dhcp_derivatives_SPOT")
-path_anat_data = Path("/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline")  # path_derivatives / "dhcp_anat_pipeline"
-path_func_data = Path("/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_fmri_pipeline") # path_derivatives / "dhcp_fmri_pipeline"
+path_derivatives = Path("/data/p_02915/dhcp_derivatives_SPOT/fetal")
+path_anat_data = Path("/data/pt_02880/Package_1225541/fmriresults01/dhcp_anat_pipeline")  # path_derivatives / "dhcp_anat_pipeline"
+path_func_data = Path("/data/pt_02880/Package_1225541/fmriresults01/dhcp_fmri_pipeline/") # path_derivatives / "dhcp_fmri_pipeline"
 path_output_data = path_derivatives / "dhcp_surface"
 path_templates = Path("/data/p_02915/templates")
 
@@ -40,7 +40,7 @@ path_newmsm = "/data/u_yoos_software/fsl/bin/msm-env/bin/newmsm"
 path_wbcommand = "/bin/wb_command"
 path_mirtk = "/afs/cbs.mpg.de/software/mirtk/0.20231123/debian-bullseye-amd64/bin/mirtk"
 
-subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT.csv')
+subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal.csv')
 sub_num = int(sys.argv[1])
 
 script_dir = Path(__file__).resolve().parent
@@ -99,3 +99,30 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         ses,
     ]
     subprocess.run(cmd_ccfmodel, check=True)
+
+    cmd_fillretinotopy = [
+        "python",
+        fillretinotopy_script,
+        "-d",
+        str(path_derivatives),
+        "-sub",
+        sub,
+        "-ses",
+        ses,
+        "-th",
+        '00',
+    ]
+    subprocess.run(cmd_fillretinotopy, check=True)
+
+    cmd_project_results = [
+        project_results_script,
+        sub,
+        ses,
+        str(path_anat_data),
+        str(path_derivatives),
+        str(path_HCPtemplates_standardmeshatlases),
+        str(path_fsaverage),
+        str(path_wbcommand),
+    ]
+    subprocess.run(cmd_project_results, check=True)
+
