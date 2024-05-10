@@ -8,6 +8,7 @@ for hemi in ["left", "right"]:
         
     datasource = "real"
     median_correlation = np.median(df[f"{hemi}_{datasource}"])
+    mean_median = np.mean(df[f"{hemi}_{datasource}"])
     print(f"Median correlation of {datasource} data on hemisphere {hemi} is {median_correlation}.")
     num_bins = len(df[f"{hemi}_{datasource}"])
 
@@ -18,6 +19,6 @@ for hemi in ["left", "right"]:
 
     ax.set_xlabel('Median correlation')
     ax.set_ylabel('Number of subject')
-    ax.set_title(f"Histogram of {datasource} data on hemisphere {hemi}: median correlation = {median_correlation}.")
+    ax.set_title(f"Histogram of {datasource} on {hemi} hemi: median correlation = {median_correlation}.")
     
     plt.show()

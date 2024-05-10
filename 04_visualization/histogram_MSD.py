@@ -6,8 +6,8 @@ msd_value = pd.read_csv("/data/p_02915/SPOT/MSD.csv")
 
 for hemi in ["L", "R"]:
     for param in ["eccentricity", "polarangle"]:
-        Benson = msd_value.loc[:30,f"{hemi}_{param}_real_benson"]
-        Simulated = msd_value.loc[:30,f"{hemi}_{param}_real_simulated"]
+        Benson = msd_value.loc[:,f"{hemi}_{param}_real_benson"]
+        Simulated = msd_value.loc[:,f"{hemi}_{param}_real_simulated"]
         differences = Benson - Simulated
         num_bins = len(differences)
 
