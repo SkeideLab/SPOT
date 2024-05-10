@@ -1,12 +1,12 @@
 import numpy as np
-from nilearn import plotting, surface
+from nilearn import surface
 import pandas as pd
 
 FUNC_PATH = (
     "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
-    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-{simulated}_r.gii"
+    "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-{simulated}_rss.gii"
 )
-subject_info = pd.read_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT.csv")
+subject_info = pd.read_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal.csv")
 median_r = pd.DataFrame(columns=["sub_id", "left_real", "right_real", "left_simulated", "right_simulated"])
 path_derivatives = "/data/p_02915/dhcp_derivatives_SPOT"
 for index, row in subject_info.iterrows():
@@ -24,7 +24,7 @@ for index, row in subject_info.iterrows():
                 "sub": sub,
                 "ses": ses,
                 "hemi": hemi,
-                "root_dir": "/data/p_02915/dhcp_derivatives_SPOT"
+                "root_dir": "/data/p_02915/dhcp_derivatives_SPOT/fetal"
                 }
 
             # load retinotopy data
@@ -49,4 +49,4 @@ for index, row in subject_info.iterrows():
             
             
             
-median_r.to_csv('/data/p_02915/SPOT/median_r.csv')
+median_r.to_csv('/data/p_02915/SPOT/median_r_fetal.csv')

@@ -16,7 +16,7 @@ import numpy as np
 
 from nilearn import plotting, surface
 
-# -d /data/p_02495/dhcp_derivatives -sub CC00069XX12 -ses 26300
+# python /data/p_02915/SPOT/02_ccfanalysis/run_model_simulated_only.py -d /data/p_02915/dhcp_derivatives_SPOT -sub CC00060XX03 -ses 12501
 # HACK
 # ---------------------import workarounds to make repo structure work --------------------------#
 file = Path(__file__).resolve()

@@ -60,7 +60,7 @@ sub_num = int(sys.argv[1])
 #sub_ses_todo = sub_ses_anat.intersection(sub_ses_func)
 
 script_dir = Path(__file__).resolve().parent
-surfaceprep_script = str(script_dir / "01_dataprep" / "simulation_alternativebolddata" / "simulate_localspatialcorrelations.py")
+surfaceprep_script = str(script_dir / "01_dataprep" / "simulation_alternativebolddata" / "simulated_model_smooth_surf.py")
 ccfmodel_script = str(script_dir / "02_ccfanalysis" / "run_model_simulated_only.py")
 fillretinotopy_script = str(
     script_dir / "03_retinotopyanalysis" / "analyse_retinotopy.py"
@@ -105,3 +105,30 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         ses,
     ]
     subprocess.run(cmd_ccfmodel, check=True)
+
+
+    cmd_fillretinotopy = [
+        "python",
+        fillretinotopy_script,
+        "-d",
+        str(path_derivatives),
+        "-sub",
+        sub,
+        "-ses",
+        ses,
+        "-th",
+        '00',
+    ]
+    subprocess.run(cmd_fillretinotopy, check=True)
+
+    cmd_project_results = [
+        project_results_script,
+        sub,
+        ses,
+        str(path_anat_data),
+        str(path_derivatives),
+        str(path_HCPtemplates_standardmeshatlases),
+        str(path_fsaverage),
+        str(path_wbcommand),
+    ]
+    subprocess.run(cmd_project_results, check=True)
