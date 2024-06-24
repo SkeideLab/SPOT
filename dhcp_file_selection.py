@@ -13,12 +13,12 @@ def get_folders_in_directory(directory):
 
 file = '/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_fmri_pipeline/participants.tsv'
 df = pd.read_csv(file, sep='\t')
-subject_column = df[['participant_id', "birth_age"]]
+subject_column = df[['participant_id', "birth_age", "sex"]]
 
 base_folder = '/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_fmri_pipeline/'
 seven_folders = os.listdir(base_folder)
 
-subject_info = pd.DataFrame(columns=["sub_id", "birth_age","scan_age", "sess_id", "func_path", "xfm", "T2w", "wsr", "wsl", "psr", "psl", "msr", "msl", "isr", "isl", "vsr", "vsl", "ssr", "ssl", "mesr", "mesl"])
+subject_info = pd.DataFrame(columns=["sub_id", "birth_age","scan_age", "sex","sess_id", "func_path", "xfm", "T2w", "wsr", "wsl", "psr", "psl", "msr", "msl", "isr", "isl", "vsr", "vsl", "ssr", "ssl", "mesr", "mesl"])
 # Iterate over each subject ID and each of the seven folders
 
 counter = 0
@@ -39,9 +39,12 @@ for index, row in subject_column.iterrows():
                 #print(ses_row)
                 subject_info.at[index + counter, "sub_id"] = file_name
                 subject_info.at[index + counter, "birth_age"] = row["birth_age"]
+                subject_info.at[index + counter, "sex"] = row["sex"]
                 subject_info.at[index + counter, "scan_age"] = sess_if.at[idx,"scan_age"]
                 if subject_info.at[index + counter, "scan_age"] < 34:
                     subject_info.at[index + counter, "scan_age"] = np.nan
+                if subject_info.at[index + counter, "birth_age"] >= 37:
+                    subject_info.at[index + counter, "birth_age"] = np.nan
                 subject_info.at[index + counter, "sess_id"] = sess_id
                 file_path_xfm = os.path.join(folder_path, sess_id, "xfm")
                 if os.path.exists(file_path_xfm):
@@ -97,9 +100,12 @@ for index, row in subject_column.iterrows():
             #print(ses_row)
             subject_info.at[index + counter, "sub_id"] = file_name
             subject_info.at[index + counter, "birth_age"] = row["birth_age"]
+            subject_info.at[index + counter, "sex"] = row["sex"]
             subject_info.at[index + counter, "scan_age"] = sess_if.at[ses_row,"scan_age"]
             if subject_info.at[index + counter, "scan_age"] < 34:
                 subject_info.at[index + counter, "scan_age"] = np.nan
+            if subject_info.at[index + counter, "birth_age"] >= 37:
+                subject_info.at[index + counter, "birth_age"] = np.nan
             sess_id = "ses-" + str(sess_ids[0])
             subject_info.at[index + counter, "sess_id"] = sess_id
             file_path_xfm = os.path.join(folder_path, sess_id, "xfm")
@@ -156,6 +162,7 @@ subject_info.dropna(subset=['vsr'], inplace=True)
 subject_info.dropna(subset=['xfm'], inplace=True)
 subject_info.dropna(subset=['wsr'], inplace=True)
 subject_info.dropna(subset=['scan_age'], inplace=True)
+subject_info.dropna(subset=['birth_age'], inplace=True)
 subject_info.reset_index(drop=True, inplace=True)
 nan_locations = np.where(subject_info.isna())
 print("Row indices with NaN values:", nan_locations[0])
@@ -179,8 +186,16 @@ for index, row in subject_info.iterrows():
 
 subject_info = subject_info[subject_info["wsr"] != "INVALID"]
 subject_info = subject_info[subject_info["wsl"] != "INVALID"]
+subjects_to_delete = ['sub-CC00305XX08', 'sub-CC01093AN14', 'sub-CC01176XX14']
+
+# Find rows with the subject names to delete
+rows_to_delete = subject_info['sub_id'].isin(subjects_to_delete)
+
+# Drop rows with the subject names to delete
+subject_info = subject_info[~rows_to_delete]
+
 subject_info.reset_index(drop=True, inplace=True)
 
 print(subject_info)            # Perform actions with the folder as needed
 
-subject_info.to_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT.csv")
+subject_info.to_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37.csv")

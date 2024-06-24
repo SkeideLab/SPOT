@@ -1,11 +1,6 @@
 """Generate artificial functional data on the surface (native space).
 Simulated data will have the same number of timepoints as our resting-state data. 
-
-Data are simulated based on:
-
-1) Draw values from a random normal distribution for each volume/vertex datapoint
-2) Smooth over the surface with a 30mm Gaussian kernel
-3) Add random noise with amplitude 200x that of the random normal distribution
+Simulated data will have the same local correlation coefficients as our resting-state data in V1-V2
 
 This results in data that show a pattern of local spatial correlations."""
 # python /data/p_02915/SPOT/01_dataprep/simulation_alternativebolddata/simulated_model.py -da /data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline -d /data/p_02915/dhcp_derivatives_SPOT -sub CC00060XX03 -ses 12501

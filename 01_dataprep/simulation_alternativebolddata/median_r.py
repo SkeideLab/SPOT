@@ -6,7 +6,7 @@ FUNC_PATH = (
     "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-{simulated}_rss.gii"
 )
-subject_info = pd.read_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal.csv")
+subject_info = pd.read_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv")
 median_r = pd.DataFrame(columns=["sub_id", "left_real", "right_real", "left_simulated", "right_simulated"])
 path_derivatives = "/data/p_02915/dhcp_derivatives_SPOT"
 for index, row in subject_info.iterrows():
@@ -35,7 +35,9 @@ for index, row in subject_info.iterrows():
                     surface_data = surface.load_surf_data(FUNC_PATH.format(**ids, simulated=simulated))
                     num_vertices = surface_data.shape
                     surface_data = surface_data.astype(float)
+                    print(surface_data.shape)
                     surface_data = surface_data[surface_data != 0]
+                    print(surface_data.shape)
                     median_correlation = np.median(surface_data)
                     median_r.at[index, f"{hemi_down}_{datasource}"] = median_correlation
                 except ValueError:
@@ -49,4 +51,4 @@ for index, row in subject_info.iterrows():
             
             
             
-median_r.to_csv('/data/p_02915/SPOT/median_r_fetal.csv')
+#median_r.to_csv('/data/p_02915/SPOT/median_r_fetal_young.csv')

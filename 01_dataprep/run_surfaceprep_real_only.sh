@@ -1,5 +1,6 @@
 #!/bin/bash
 # transforms the Wang template to individual subject surface space
+# for run only emperical dataset.
 set -x -u -e
 echo "$0" "$@" # print function call
 

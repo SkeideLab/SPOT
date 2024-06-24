@@ -1,4 +1,4 @@
-"""Runs cortical connective field modelling. 
+"""Runs cortical connective field modelling. (only for simulated dataset)
 For exact model description, see SPOT/documentation/CorticalConnectiveFields.pdf.
 
 # v_0: center voxel of connective field in V1
@@ -45,7 +45,7 @@ WM_PATH = (
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_space-bold_wm.surf.gii"
 )
 CURV_PATH = (
-    "/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
+    "/data/pt_02880/Package_1225541/fmriresults01/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
     "sub-{sub}_ses-{ses}_hemi-{hemi_down}_curv.shape.gii"
 )
 DISTANCEFILE_PATH = (

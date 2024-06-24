@@ -152,7 +152,7 @@ def main():
             PATH_ANGLE.format(prefix_sub_template=prefix_sub_template)
         )
 
-        for model in ["simulated"]:
+        for model in ["real", "simulated"]:
 
             try:
                 ccf_v0 = surface.load_surf_data(

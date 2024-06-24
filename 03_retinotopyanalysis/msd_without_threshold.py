@@ -1,8 +1,5 @@
 """
-Project V1 retinotopy template values to V2 based on cortico-connective field results. 
-Print the mean square differences between 
-ccf results from real vs simulated data and between 
-ccf results from real data vs benson template data.
+Cacluate MSD values
 """
 
 from argparse import ArgumentParser
@@ -104,8 +101,8 @@ def calc_msd(param_area1, param_area2):
 
 # Now `results` dictionary contains the output of `calc_msd` organized by subject, hemisphere, model combination, and parameter
 # You can access the results using appropriate keys corresponding to each level of the nested structure
-subject_info = pd.read_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT.csv")
-path_derivatives = "/data/p_02915/dhcp_derivatives_SPOT"
+subject_info = pd.read_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv")
+path_derivatives = "/data/p_02915/dhcp_derivatives_SPOT/fetal"
 columns = ["Subject_ID",
            "L_eccentricity_real_benson", 
            "R_eccentricity_real_benson", 
@@ -228,4 +225,4 @@ for index, row in subject_info.iterrows():
                 f"Data missing for hemisphere {hemi}, not calculating differences for this..."
             )        
        
-msd_value.to_csv('/data/p_02915/SPOT/MSD.csv')
+msd_value.to_csv('/data/p_02915/SPOT/MSD_fetal_young.csv')

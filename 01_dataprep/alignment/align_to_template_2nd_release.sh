@@ -67,16 +67,20 @@ native_volume=${nativedir}/sub-${subjid}_ses-${session}_desc-restore_T2w.nii.gz
 native_sphere=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_sphere.surf.gii
 native_data=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_sulc.shape.gii
 
-# inputs (template)
-template00wk_sphere=$templatespherepath/week-${age}_hemi-%hemi%_space-${templatespherename}_dens-32k_sphere.surf.gii
-template00wk_data=$templatespherepath/week-${age}_hemi-%hemi%_space-${templatespherename}_dens-32k_sulc.shape.gii
+# inputs (template)fetal.week21.left.sulc.shape.gii
+template00wk_sphere=$templatespherepath/fetal.week${age}.%hemi%.sphere.surf.gii
+template00wk_data=$templatespherepath/fetal.week${age}.%hemi%.sulc.shape.gii
+template40wk_sphere=/data/p_02915/templates/template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template/week-40_hemi-%hemi%_space-dhcpSym_dens-32k_sphere.surf.gii
+template40wk_data=/data/p_02915/templates/template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template/week-40_hemi-%hemi%_space-dhcpSym_dens-32k_sulc.shape.gii
 
 #outputs
 sub_output_dir=${outdir}/sub-${subjid}/ses-$session
 mkdir -p $sub_output_dir/volume_dofs $sub_output_dir/surface_transforms
 native_rot_sphere=${nativedir}/sub-${subjid}_ses-${session}_hemi-%hemi%_space-fslr_sphere.rot.surf.gii
+registration_from_fetal_to_dhcp=$sub_output_dir/surface_transforms/sub-${subjid}_ses-${session}_hemi-%hemi%_from-fetal_to-${templatespherename}40_dens-32k_mode-
 outname=$sub_output_dir/surface_transforms/sub-${subjid}_ses-${session}_hemi-%hemi%_from-native_to-${templatespherename}40_dens-32k_mode-
 transformed_sphere=${outname}sphere.reg40.surf.gii
+transformed_sphere_fetal=${registration_from_fetal_to_dhcp}sphere.reg40.surf.gii
 
 for hemi in left right; do
 
@@ -90,52 +94,60 @@ for hemi in left right; do
     native_data_hemi=$(echo ${native_data} | sed "s/%hemi%/$hemi/g")
     template00wk_sphere_hemi=$(echo ${template00wk_sphere} | sed "s/%hemi%/$hemi/g")
     template00wk_data_hemi=$(echo ${template00wk_data} | sed "s/%hemi%/$hemi/g")
+    template40wk_sphere_hemi=$(echo ${template40wk_sphere} | sed "s/%hemi%/$hemi/g")
+    template40wk_data_hemi=$(echo ${template40wk_data} | sed "s/%hemi%/$hemi/g")
     native_rot_sphere_hemi=$(echo ${native_rot_sphere} | sed "s/%hemi%/$hemi_upper/g")
     outname_hemi=$(echo ${outname} | sed "s/%hemi%/$hemi_upper/g")
+    registration_from_fetal_to_dhcp=$(echo ${registration_from_fetal_to_dhcp} | sed "s/%hemi%/$hemi_upper/g")
     transformed_sphere_hemi=$(echo ${transformed_sphere} | sed "s/%hemi%/$hemi_upper/g")
+    transformed_sphere_fetal_hemi=$(echo ${transformed_sphere_fetal} | sed "s/%hemi%/$hemi_upper/g")
 
-    if [ ! -f ${transformed_sphere_hemi} ]; then
         ########## ROTATE LEFT AND RIGHT HEMISPHERES INTO APPROXIMATE ALIGNMENT WITH MNI SPACE ##########
-        $path_script/pre_rotation.sh \
-            $native_volume \
-            $native_sphere_hemi \
-            $templatevolume \
-            $pre_rotation_hemi \
-            $sub_output_dir/volume_dofs/sub-${subjid}_ses-${session}_from-T2w_to-${templatevolumename}_affine.dof \
-            $native_rot_sphere_hemi \
-            $mirtk_BIN $WB_BIN
+    $path_script/pre_rotation.sh \
+        $native_volume \
+        $native_sphere_hemi \
+        $templatevolume \
+        $pre_rotation_hemi \
+        $sub_output_dir/volume_dofs/sub-${subjid}_ses-${session}_from-T2w_to-${templatevolumename}_affine.dof \
+        $native_rot_sphere_hemi \
+        $mirtk_BIN $WB_BIN
 
-        ########## RUN MSM NON-LINEAR ALIGNMENT TO TEMPLATE FOR LEFT AND RIGHT HEMISPHERES ##########
-        indata=$native_data_hemi
-        inmesh=$native_rot_sphere_hemi
-        refmesh=$template00wk_sphere_hemi
-        refdata=$template00wk_data_hemi
+    ########## RUN MSM NON-LINEAR ALIGNMENT TO TEMPLATE FOR LEFT AND RIGHT HEMISPHERES ##########
+    indata=$native_data_hemi
+    inmesh=$native_rot_sphere_hemi
+    refmesh=$template00wk_sphere_hemi
+    refdata=$template00wk_data_hemi
+    ref2mesh=$template40wk_sphere_hemi
+    ref2data=$template40wk_data_hemi
+    
 
-        ${MSMBIN} \
-            --inmesh=${inmesh} \
-            --refmesh=${refmesh} \
-            --indata=${indata} \
-            --refdata=${refdata} \
-            -o ${outname_hemi} \
-            --conf=${config} \
-            --verbose
+    ${MSMBIN} \
+        --inmesh=${inmesh} \
+        --refmesh=${refmesh} \
+        --indata=${indata} \
+        --refdata=${refdata} \
+        -o ${outname_hemi} \
+        --conf=${config} \
+        --verbose
+    
+    ${MSMBIN} \
+        --inmesh=${refmesh} \
+        --refmesh=${ref2mesh} \
+        --indata=${refdata} \
+        --refdata=${ref2data} \
+        -o ${registration_from_fetal_to_dhcp} \
+        --conf=${config} \
+        --verbose
 
-        if [ "$age" == "40" ]; then
-            # rename to emphasize registration to 40 (sphere.reg40.surf.gii)
-            mv ${outname_hemi}sphere.reg.surf.gii ${transformed_sphere_hemi}
-        else
-            # need to concatenate msm warp to local template with warp from local template to 40 week template
-            ${WB_BIN} -surface-sphere-project-unproject \
-                ${outname_hemi}sphere.reg.surf.gii \
-                $refmesh \
-                $templatespherepath/week-to-40-registrations/${hemi}.${age}-to-40/${hemi}.${age}-to-40sphere.reg.surf.gii \
-                $transformed_sphere_hemi ### LZJW added hemi and changed filepath for between template ###
-        fi
-
-        # the output sphere represents the full warp from Native to 40 week template space - save this
-        cp "$transformed_sphere_hemi" "$nativedir"
+    if [ "$age" == "40" ]; then
+        # rename to emphasize registration to 40 (sphere.reg40.surf.gii)
+        mv ${outname_hemi}sphere.reg.surf.gii ${transformed_sphere_hemi}
     else
-        echo "Transformed sphere $transformed_sphere_hemi already exists, skipping..."
-
+        # need to concatenate msm warp to local template with warp from local template to 40 week template
+        ${WB_BIN} -surface-sphere-project-unproject \
+            ${outname_hemi}sphere.reg.surf.gii \
+            $refmesh \
+            ${registration_from_fetal_to_dhcp}sphere.reg.surf.gii \
+            $transformed_sphere_fetal_hemi ### LZJW added hemi and changed filepath for between template ###
     fi
 done

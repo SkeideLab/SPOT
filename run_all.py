@@ -8,14 +8,14 @@ import pandas as pd
 # /data/u_kieslinger_software/miniconda3/bin/conda run -n fmritools --live-stream python /data/u_kieslinger_software/code/spot/run_prep_and_ccf.py
 def get_age(index, subject_info):
     age = subject_info.at[index, "scan_age"]
-    if age > 44:
-        age = 44
+    if age > 36:
+        age = 36
     return f"{age:.0f}"  # round to whole week
 
 
-path_derivatives = Path("/data/p_02915/dhcp_derivatives_SPOT")
-path_anat_data = Path("/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline")  # path_derivatives / "dhcp_anat_pipeline"
-path_func_data = Path("/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_fmri_pipeline") # path_derivatives / "dhcp_fmri_pipeline"
+path_derivatives = Path("/data/p_02915/dhcp_derivatives_SPOT/fetal")
+path_anat_data = Path("/data/pt_02880/Package_1225541/fmriresults01/dhcp_anat_pipeline")  # path_derivatives / "dhcp_anat_pipeline"
+path_func_data = Path("/data/pt_02880/Package_1225541/fmriresults01/dhcp_fmri_pipeline/") # path_derivatives / "dhcp_fmri_pipeline"
 path_output_data = path_derivatives / "dhcp_surface"
 path_templates = Path("/data/p_02915/templates")
 
@@ -28,7 +28,7 @@ file_volume_template_40wks = (
 name_surface_template = "dhcpSym"
 path_surface_template = (
     path_templates
-    / "template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template"
+    / "/data/p_02915/templates/template_corticalsurfacefetal_dhcp/atlas"
 )
 path_fsaverage = path_templates / "template_fsaverage/fsaverage"
 path_HCPtemplates_standardmeshatlases = (
@@ -40,24 +40,8 @@ path_newmsm = "/data/u_yoos_software/fsl/bin/msm-env/bin/newmsm"
 path_wbcommand = "/bin/wb_command"
 path_mirtk = "/afs/cbs.mpg.de/software/mirtk/0.20231123/debian-bullseye-amd64/bin/mirtk"
 
-subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT.csv')
+subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_3.csv')
 sub_num = int(sys.argv[1])
-
-#sub_ses_anat = {
-#    (
-#        re.search(r"(?<=sub-)[^_/]*", str(anat_file)).group(),
-#       re.search(r"(?<=ses-)[^_/]*", str(anat_file)).group(),
-#    )
-#    for anat_file in path_anat_data.glob("*/*/*/sub-*ses-*.gii")
-#}
-#sub_ses_func = {
-#    (
-#        re.search(r"(?<=sub-)[^_/]*", str(anat_file)).group(),
-#        re.search(r"(?<=ses-)[^_/]*", str(anat_file)).group(),
-#    )
-#    for anat_file in path_func_data.glob("*/*/*/sub-*ses-*.nii.gz")
-#}
-#sub_ses_todo = sub_ses_anat.intersection(sub_ses_func)
 
 script_dir = Path(__file__).resolve().parent
 surfaceprep_script = str(script_dir / "01_dataprep" / "run_surfaceprep.sh")
@@ -125,6 +109,8 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         sub,
         "-ses",
         ses,
+        "-th",
+        '00',
     ]
     subprocess.run(cmd_fillretinotopy, check=True)
 
@@ -139,3 +125,4 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         str(path_wbcommand),
     ]
     subprocess.run(cmd_project_results, check=True)
+

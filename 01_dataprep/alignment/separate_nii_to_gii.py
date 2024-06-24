@@ -1,10 +1,12 @@
-import numpy as np
-import nibabel as nib
+"""
+Convert Cifti file to gifti (for prenatal dataset)
+"""
+
 import pandas as pd
 import subprocess
 
 path_wbcommand = "/bin/wb_command"
-subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal.csv')
+subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv')
 
 for index, row in subject_info.iterrows():
     sub_id = subject_info.at[index, "sub_id"]

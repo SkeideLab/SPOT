@@ -39,7 +39,7 @@ for index, row in enumerate(seven_folders):
                 #print(ses_row)
                 subject_info.at[index + counter, "sub_id"] = file_name
                 subject_info.at[index + counter, "scan_age"] = sess_if.at[idx,"scan_age"]
-                if subject_info.at[index + counter, "scan_age"] < 34:
+                if subject_info.at[index + counter, "scan_age"]  >= 26:
                     subject_info.at[index + counter, "scan_age"] = np.nan
                 subject_info.at[index + counter, "sess_id"] = sess_id
                 file_path_xfm = os.path.join(folder_path, sess_id, "xfm")
@@ -96,7 +96,7 @@ for index, row in enumerate(seven_folders):
             #print(ses_row)
             subject_info.at[index + counter, "sub_id"] = file_name
             subject_info.at[index + counter, "scan_age"] = sess_if.at[ses_row,"scan_age"]
-            if subject_info.at[index + counter, "scan_age"] < 34:
+            if subject_info.at[index + counter, "scan_age"] >= 26:
                 subject_info.at[index + counter, "scan_age"] = np.nan
             sess_id = "ses-" + str(sess_ids[0])
             subject_info.at[index + counter, "sess_id"] = sess_id
@@ -179,6 +179,16 @@ subject_info = subject_info[subject_info["wsr"] != "INVALID"]
 subject_info = subject_info[subject_info["wsl"] != "INVALID"]
 subject_info.reset_index(drop=True, inplace=True)
 
+#subjects_to_delete = ['sub-CC01184XX14'] #old fetal
+subjects_to_delete = ['sub-CC00996XX24'] #young fetal
+
+# Find rows with the subject names to delete
+rows_to_delete = subject_info['sub_id'].isin(subjects_to_delete)
+# Drop rows with the subject names to delete
+subject_info = subject_info[~rows_to_delete]
+
+subject_info.reset_index(drop=True, inplace=True)
+
 print(subject_info)            # Perform actions with the folder as needed
 
-subject_info.to_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal.csv")
+subject_info.to_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_6.csv")

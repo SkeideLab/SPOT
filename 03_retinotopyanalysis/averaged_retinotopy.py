@@ -1,24 +1,40 @@
+"""
+Average ccf results
+"""
+
 import pandas as pd
 from nilearn import surface
 import nibabel as nib
 import numpy as np
 
 PREFIX_MODEL = (
-    "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/sub-{sub}/ses-{ses}/"
+    "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k"
 )
-#sub-CC00056XX07_ses-10700_hemi-L_mesh-fsaverage_dens-164k_label-polarangle_desc-real_roi-v2th00_metric
 INPUT = (
     "{prefix_model}_label-{parm}_desc-{model}_roi-v2th00_metric.gii"
 )
+#INPUT = (
+#    "{prefix_model}_desc-{model}_{param}.gii"
+#)
 OUTPUT = (
-    "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/Averaged_{hemi}_label-{parm}_desc-{model}_roi-v2th00_metric.gii"
+    "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/Averaged_younger_fetal_{hemi}_label-{param}_desc-{model}_roi-v2th00_metric.gii"
 )
-subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT.csv')
+#OUTPUT = (
+#    "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/Averaged_younger_fetal_{hemi}_desc-{model}_{param}.gii"
+#)
+#INPUT = (
+#    "{prefix_model}_desc-real_{parm}.gii"
+#)
+#OUTPUT = (
+#    "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/Averaged_{hemi}_desc-real_{parm}.gii"
+#)
+subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv')
 sub_num = len(subject_info["sub_id"])
 
 sum_data = []  # Initialize outside the loop
 for param in ["eccentricity", "polarangle"]:          
+#for param in ["rss","sigma"]:          
     for hemi in ["L", "R"]:
         # FORMAT PATHS FOR INPUT AND OUTPUT       
            
@@ -35,10 +51,10 @@ for param in ["eccentricity", "polarangle"]:
                     hemi=hemi,
                 )
                 output_path = OUTPUT.format(
-                    prefix_model=prefix_model, hemi=hemi, model=model, parm=param
+                    prefix_model=prefix_model, hemi=hemi, model=model, param=param
                 )
                 input_path =  INPUT.format(
-                    prefix_model=prefix_model, model=model, parm=param
+                    prefix_model=prefix_model, model=model, param=param
                 )
                 try:
                     ccf_v0 = surface.load_surf_data(input_path).astype(np.float64)

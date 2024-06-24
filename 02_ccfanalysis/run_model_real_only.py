@@ -1,4 +1,4 @@
-"""Runs cortical connective field modelling. 
+"""Runs cortical connective field modelling. (only for emperical dataset)
 For exact model description, see SPOT/documentation/CorticalConnectiveFields.pdf.
 
 # v_0: center voxel of connective field in V1
