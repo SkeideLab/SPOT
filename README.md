@@ -35,6 +35,7 @@ The data for this study are available after institutional registration through p
 ## Notes 
 
 - uses dHCP data (01_dataprep, 02_ccfanalysis, 03_retinotopyanalzsis), uses HCP data (00_HCP), group comparison (03_retinotopyanalysis) and visualization (04_visualizazion)
+- Please change the path before you run the code
 - more info see https://docs.google.com/document/d/1pcI7m-MnbXyYh-rkaZqW_hl4WtpSIwAdHC8ZdyhtiGs/edit?usp=sharing
 
 [^1]: [Developing Human Connectome Project](http://www.developingconnectome.org/data-release/second-data-release/)
