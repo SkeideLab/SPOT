@@ -1,3 +1,10 @@
+"""
+This file is to filter the HCP dataset with three criteria
+- no visual impairment
+- no QC issues from the HCP report
+- identical number of vertices in white and pial surfaces
+"""
+
 import pandas as pd
 import os
 import numpy as np
