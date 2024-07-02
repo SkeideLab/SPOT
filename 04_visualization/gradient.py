@@ -7,6 +7,18 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
+"""
+Color Scheme:
+Green: All components are positive.
+Blue: R and A components are positive.
+Cyan: A and S components are positive.
+Magenta: R and S components are positive.
+Red: Only the R component is positive.
+Orange: Only the A component is positive.
+Yellow: Only the S component is positive.
+Purple: No components are positive.
+"""
+
 os.environ['MALLOC_CHECK_'] = '2'
 
 VISPARC_PATH = ("/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/hemi-{hemi}_space-fsaverage_dens-164k_desc-visualtopographywang2015_label-maxprob_seg.label.gii")
@@ -34,6 +46,24 @@ def extract_roi_mesh(brain_mesh, indices):
     # Extract the ROI mesh
     roi_mesh = brain_mesh.extract_points(mask, include_cells=True)
     return roi_mesh
+
+def determine_color(vector):
+    if vector[0] > 0 and vector[1] > 0 and vector[2] > 0:
+        return 'green'  # All components positive
+    elif vector[0] > 0 and vector[1] > 0:
+        return 'blue'   # X and Y components positive
+    elif vector[1] > 0 and vector[2] > 0:
+        return 'cyan'   # Y and Z components positive
+    elif vector[0] > 0 and vector[2] > 0:
+        return 'magenta' # X and Z components positive
+    elif vector[0] > 0:
+        return 'red'    # Only X component positive
+    elif vector[1] > 0:
+        return 'orange' # Only Y component positive
+    elif vector[2] > 0:
+        return 'yellow' # Only Z component positive
+    else:
+        return 'purple' # No component positive
 
 # Create a plotter
 #plotter = pv.Plotter(shape=(6, 4),border=False, off_screen=True)
@@ -214,13 +244,17 @@ for param in ["eccentricity"]:
                 # Interpolate scalar data to fill the faces of the mesh
                 cell_data_mesh = mesh_delaunay.point_data_to_cell_data()
                 plotter = pv.Plotter(border=False, off_screen=True)
-
                 #plotter.subplot(row_p, col)
 
                 # Add the filled mesh with interpolated scalars
                 plotter.add_mesh(cell_data_mesh, scalars='Scalars', cmap='jet',clim = clim_range, opacity=0.9, show_scalar_bar=False)
+                
                 # Add the gradient vectors as arrows
-                plotter.add_arrows(mesh_delaunay.points, vectors, mag=6, color='red')  # Adjust 'mag' for scaling arrows            
+                #plotter.add_arrows(mesh_delaunay.points, vectors, mag=6, color='red')  # Adjust 'mag' for scaling arrows            
+                # Add arrows to the plotter with differentiated colors
+                for point, vector in zip(mesh_delaunay.points, vectors):
+                    color = determine_color(vector)
+                    plotter.add_arrows(point, vector, mag=6, color=color)
 
                 # Set background color (optional)
                 plotter.set_background('white')
@@ -276,46 +310,46 @@ for param in ["eccentricity"]:
 
 
                 # Show the plotter
-                screenshot_filename = f"/data/p_02915/dhcp_derivatives_SPOT/Figures_v2/{group}_{param}_{hemi}_{region}_gradient_org.png"
-                plotter.show(screenshot=screenshot_filename)
+                screenshot_filename = f"/data/p_02915/dhcp_derivatives_SPOT/Figures_v2/{group}_{param}_{hemi}_{region}_gradient_org.pdf"
+                plotter.save_graphic(screenshot_filename)  
 
 
 # Load the screenshot image into Matplotlib
 #img = mpimg.imread(screenshot_filename)
 
 # Create a Matplotlib figure and axis
-fig, ax = plt.subplots(figsize=(6, 8))  # Adjust size as needed
+#fig, ax = plt.subplots(figsize=(6, 8))  # Adjust size as needed
 
 # Display the screenshot image without empty spaces
-ax.imshow(img, extent=[0, img.shape[1], 0, img.shape[0]])
+#ax.imshow(img, extent=[0, img.shape[1], 0, img.shape[0]])
 # Define text and positions
-text_left = ['a', 'b','c', 'd', 'e', 'f']
-text_top_row1 = ['Left', 'Right']
-text_top_row2 = ['V2d', 'V2v', 'V2v', 'V2d']
+#text_left = ['a', 'b','c', 'd', 'e', 'f']
+#text_top_row1 = ['Left', 'Right']
+#text_top_row2 = ['V2d', 'V2v', 'V2v', 'V2d']
 
 
 # Set font properties
-fontsize = 12  # Adjust as needed
+#fontsize = 12  # Adjust as needed
 
 # Add text annotations
-for i, text in enumerate(text_left):
-    fig.text(0.06, 1 - (i * 0.09) - 0.25, text, ha='center', va='center', fontsize=12, weight='bold')
+#for i, text in enumerate(text_left):
+#    fig.text(0.06, 1 - (i * 0.09) - 0.25, text, ha='center', va='center', fontsize=12, weight='bold')
 
-for i, text in enumerate(text_top_row1):
-    fig.text((i * 0.48) + 0.255, 0.82, text, ha='center', va='center', fontsize=10)
+#for i, text in enumerate(text_top_row1):
+#    fig.text((i * 0.48) + 0.255, 0.82, text, ha='center', va='center', fontsize=10)
 
-for i, text in enumerate(text_top_row2):
-     fig.text((i * 0.23) + 0.16, 0.8, text, ha='center', va='center', fontsize=10)
+#for i, text in enumerate(text_top_row2):
+#     fig.text((i * 0.23) + 0.16, 0.8, text, ha='center', va='center', fontsize=10)
 
 
 # Remove axis ticks and labels
-ax.axis('off')
-output_filename = f"/data/p_02915/dhcp_derivatives_SPOT/Figures_v2/{param}_gradient_title.png"
+#ax.axis('off')
+#output_filename = f"/data/p_02915/dhcp_derivatives_SPOT/Figures_v2/{param}_gradient_title.png"
 # Make the figure tight
-plt.tight_layout()
+#plt.tight_layout()
 # Save or show the annotated plot
-plt.savefig(output_filename, bbox_inches='tight')
-plt.show()
+#plt.savefig(output_filename, bbox_inches='tight')
+#plt.show()
 
 
 
