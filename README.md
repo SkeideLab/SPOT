@@ -7,16 +7,18 @@
 
 ## Prerequisites
 
-- dHCP second release data[^1]
-- transformations from individual anatomical volume space to group anatomical volume space[^2]
-- 40 weeks anatomical template in volume space (must be the one that corresponds to the transformation)[^3]
-- target surface template[^4]
-- newMSM installation[^5]
-- workbench command installation[^6]
-- MIRTK installation[^7]
-- HCP templates "standard mesh atlases"[^8]
-- fsaverage subject from freesurfer[^9]
+- dHCP fourth release data[^1]
+- The Lifespan Human Connectome Project Development (HCP-D) 2.0 data [^2]
+- transformations from individual anatomical volume space to group anatomical volume space[^3]
+- 40 weeks anatomical template in volume space (must be the one that corresponds to the transformation)[^4]
+- target surface template[^5]
+- newMSM installation[^6]
+- workbench command installation[^7]
+- MIRTK installation[^8]
+- HCP templates "standard mesh atlases"[^9]
+- fsaverage subject from freesurfer[^10]
 - FSL installation, callable from command line
+- Developing Human Connectome Project spatio-temporal surface atlas of the fetal brain [^11]
 
 ## Prenatal data
 Run 01_dataprep/alignment/separte_nii_to_gii.py first before run the program.
@@ -38,22 +40,25 @@ The data for this study are available after institutional registration through p
 - Please change the path before you run the code
 - more info see https://docs.google.com/document/d/1pcI7m-MnbXyYh-rkaZqW_hl4WtpSIwAdHC8ZdyhtiGs/edit?usp=sharing
 
-[^1]: [Developing Human Connectome Project](http://www.developingconnectome.org/data-release/second-data-release/)
+[^1]: [Developing Human Connectome Project](https://biomedia.github.io/dHCP-release-notes/)
 
-[^2]: included in the dHCP data
+[^2]: [Human Connectome Project Development](https://www.humanconnectome.org/study/hcp-lifespan-development)
 
-[^3]: The group volumetric atlas used in the dHCP second release is called ['dhcp-volumetric-atlas-groupwise'](https://gin.g-node.org/BioMedIA/dhcp-volumetric-atlas-groupwise). Alternatively, the same atlas can be downloaded from Sean Fitzgibbon's ['augmented version'](https://git.fmrib.ox.ac.uk/seanf/dhcp-resources/-/blob/master/docs/dhcp-augmented-volumetric-atlas.md).
+[^3]: included in the dHCP data
 
-[^4]: The dHCP project has published the [dhcpSym atlas](https://brain-development.org/brain-atlases/atlases-from-the-dhcp-project/cortical-surface-template/), which can be used here.
+[^4]: The group volumetric atlas used in the dHCP second release is called ['dhcp-volumetric-atlas-groupwise'](https://gin.g-node.org/BioMedIA/dhcp-volumetric-atlas-groupwise). Alternatively, the same atlas can be downloaded from Sean Fitzgibbon's ['augmented version'](https://git.fmrib.ox.ac.uk/seanf/dhcp-resources/-/blob/master/docs/dhcp-augmented-volumetric-atlas.md).
 
-[^5]: newMSM runs on FSL and can be installed from Renato Besenczi's github repo [newMSM](https://github.com/rbesenczi/newMSM).
+[^5]: The dHCP project has published the [dhcpSym atlas](https://brain-development.org/brain-atlases/atlases-from-the-dhcp-project/cortical-surface-template/), which can be used here.
 
-[^6]: [Human Connectome Project Workbench Command](https://www.humanconnectome.org/software/workbench-command) 
+[^6]: newMSM runs on FSL and can be installed from Renato Besenczi's github repo [newMSM](https://github.com/rbesenczi/newMSM).
 
-[^7]: [Medical Image Registration ToolKit MIRTK](http://mirtk.github.io/), needs root access for installation.
+[^7]: [Human Connectome Project Workbench Command](https://www.humanconnectome.org/software/workbench-command) 
 
-[^8]: [Human Connectome Project templates](https://github.com/Washington-University/HCPpipelines/tree/master/global/templates/standard_mesh_atlases) can be downloaded from the HCPpipelines repo
+[^8]: [Medical Image Registration ToolKit MIRTK](http://mirtk.github.io/), needs root access for installation.
 
-[^9]: included in a freesurfer installation at `$FREESURFER_HOME/subjects/fsaverage`
+[^9]: [Human Connectome Project templates](https://github.com/Washington-University/HCPpipelines/tree/master/global/templates/standard_mesh_atlases) can be downloaded from the HCPpipelines repo
 
+[^10]: included in a freesurfer installation at `$FREESURFER_HOME/subjects/fsaverage`
+
+[^11]: Developing Human Connectome Project spatio-temporal surface atlas of the fetal brain (https://doi.gin.g-node.org/10.12751/g-node.qj5hs7/)
 [^10]: adapted from [dHCP template alignment repo](https://github.com/ecr05/dHCP_template_alignment)
