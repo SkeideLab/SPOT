@@ -25,11 +25,11 @@ PATH_SURFPIAL = (
 )
 PATH_FUNC = "{prefix_func}-Atlas-MSMAll_hp0_clean_bold.func.gii"
 PATH_SIMIMG = "{prefix_func}-Atlas-MSMAll_hp0_clean_bold_simulated.func.gii"
-#VISPARC_PATH = (
+# VISPARC_PATH = (
 #    "{derivatives_path}/hcp_surface/{sub}/anat/"
 #    "{sub}_hemi-{hemi}_mesh-native_dens-native_"
 #    "desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
-#)
+# )
 VISPARC_PATH = (
     "{derivatives_path}/"
     "hemi-{hemi}_mesh-native_dens-native_"
@@ -38,6 +38,7 @@ VISPARC_PATH = (
 
 LABELS_V1 = (1, 2)
 LABELS_V2 = (3, 4)
+
 
 def get_indices_roi(labels_area, visparc):
     """Get indices of vertices in gifti image that are located in a specific region of interest.
@@ -51,10 +52,12 @@ def get_indices_roi(labels_area, visparc):
     """
     indices_area = np.nonzero(
         np.logical_or(
-            visparc.agg_data() == labels_area[0], visparc.agg_data() == labels_area[1]
+            visparc.agg_data() == labels_area[0], visparc.agg_data(
+            ) == labels_area[1]
         )
     )[0]
     return indices_area
+
 
 def save_gifti_timeseries(data, out_path):
     """Save timeseries in gifti file format.
@@ -66,7 +69,8 @@ def save_gifti_timeseries(data, out_path):
 
     # save data as nifti with 1 data array with all vertices per timepoint
     # list of timepoint activation arrays
-    timepoint_arrays = [data[:, i_timepoint] for i_timepoint in range(data.shape[1])]
+    timepoint_arrays = [data[:, i_timepoint]
+                        for i_timepoint in range(data.shape[1])]
 
     # convert normal arrays into gifti arrays and collect in gifti image
     img = nib.gifti.GiftiImage(
@@ -78,6 +82,8 @@ def save_gifti_timeseries(data, out_path):
         ]
     )
     nib.save(img, out_path)
+
+
 def parse_args():
     """Parses arguments from the command line."""
 
@@ -103,11 +109,12 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+
 def main():
     args = parse_args()
-    anat_directory=args.anat_directory
-    derivatives_directory=args.derivatives_directory
-    sub=args.sub
+    anat_directory = args.anat_directory
+    derivatives_directory = args.derivatives_directory
+    sub = args.sub
 
     for hemi in ["L", "R"]:
 
@@ -126,11 +133,11 @@ def main():
         # save intermediary files as 'tmp'
         path_thissim = PATH_SIMIMG.format(prefix_func=prefix_func)
 
-        path_visparc=VISPARC_PATH.format(
+        path_visparc = VISPARC_PATH.format(
             sub=sub,
             hemi=hemi,
             derivatives_path="/data/p_02915/SPOT/00_HCP/template/",
-            )
+        )
 
         # load surface and functional data
         surf = surface.load_surf_mesh(path_thissurf)
@@ -144,32 +151,36 @@ def main():
         indices_v1 = get_indices_roi(LABELS_V1, visparc)
         indices_v2 = get_indices_roi(LABELS_V2, visparc)
 
-        #################################SIMULATING NOISE##############################
+        ################################# SIMULATING NOISE##############################
         print("Simulating data on the surface...")
-        
+
         # simulate data with mean 0, sigma 1, for all timepoints and nodes
         sim_data = random.default_rng().normal(size=(n_nodes, n_timepoints))
         func_v2 = sim_data[indices_v2, :].astype(np.float64)
         func_v1 = sim_data[indices_v1, :].astype(np.float64)
         func = np.vstack((func_v1, func_v2))
-        real_func = np.vstack((func_real[indices_v1, :].astype(np.float64), func_real[indices_v2, :].astype(np.float64)))    
-
+        real_func = np.vstack((func_real[indices_v1, :].astype(
+            np.float64), func_real[indices_v2, :].astype(np.float64)))
 
         # Step 2: Compute the correlation matrix
         correlation_matrix = np.corrcoef(func)
 
         # Step 3: Apply Gaussian filter to the correlation matrix
         sigma = 30  # Standard deviation for Gaussian kernel (30 mm)
-        smoothed_correlation_matrix = gaussian_filter(correlation_matrix, sigma=sigma) 
-        smoothed_correlation_matrix = smoothed_correlation_matrix + np.eye(smoothed_correlation_matrix.shape[0]) * 1e-6
+        smoothed_correlation_matrix = gaussian_filter(
+            correlation_matrix, sigma=sigma)
+        smoothed_correlation_matrix = smoothed_correlation_matrix + \
+            np.eye(smoothed_correlation_matrix.shape[0]) * 1e-6
 
         # Step 4: Adjust correlations to match the desired mean and variance
-        desired_mean = np.median(np.corrcoef(real_func))  # Desired mean correlation
+        # Desired mean correlation
+        desired_mean = np.median(np.corrcoef(real_func))
         current_mean = np.median(smoothed_correlation_matrix)
         smoothed_correlation_matrix += (desired_mean - current_mean)
 
         # Step 6: Perform Cholesky decomposition
-        cholesky_decomposition = np.linalg.cholesky(smoothed_correlation_matrix)
+        cholesky_decomposition = np.linalg.cholesky(
+            smoothed_correlation_matrix)
 
         # Step 7: Generate modified time courses
         modified_time_courses = cholesky_decomposition.T @ func

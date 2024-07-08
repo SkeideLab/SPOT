@@ -14,37 +14,38 @@ PREFIX_MODEL = (
 INPUT = (
     "{prefix_model}_label-{parm}_desc-{model}_roi-v2th00_metric.gii"
 )
-#INPUT = (
+# INPUT = (
 #    "{prefix_model}_desc-{model}_{param}.gii"
-#)
+# )
 OUTPUT = (
     "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/Averaged_younger_fetal_{hemi}_label-{param}_desc-{model}_roi-v2th00_metric.gii"
 )
-#OUTPUT = (
+# OUTPUT = (
 #    "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/Averaged_younger_fetal_{hemi}_desc-{model}_{param}.gii"
-#)
-#INPUT = (
+# )
+# INPUT = (
 #    "{prefix_model}_desc-real_{parm}.gii"
-#)
-#OUTPUT = (
+# )
+# OUTPUT = (
 #    "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/Averaged_{hemi}_desc-real_{parm}.gii"
-#)
-subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv')
+# )
+subject_info = pd.read_csv(
+    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv')
 sub_num = len(subject_info["sub_id"])
 
 sum_data = []  # Initialize outside the loop
-for param in ["eccentricity", "polarangle"]:          
-#for param in ["rss","sigma"]:          
+for param in ["eccentricity", "polarangle"]:
+    # for param in ["rss","sigma"]:
     for hemi in ["L", "R"]:
-        # FORMAT PATHS FOR INPUT AND OUTPUT       
-           
+        # FORMAT PATHS FOR INPUT AND OUTPUT
+
         for model in ["real"]:
-            sum_data=[]    
-            for index, row in subject_info.iterrows(): 
+            sum_data = []
+            for index, row in subject_info.iterrows():
                 sub_id = subject_info.at[index, "sub_id"]
                 sess_id = subject_info.at[index, "sess_id"]
-                sub = sub_id.replace('sub-','')
-                ses = sess_id.replace('ses-','')
+                sub = sub_id.replace('sub-', '')
+                ses = sess_id.replace('ses-', '')
                 prefix_model = PREFIX_MODEL.format(
                     sub=sub,
                     ses=ses,
@@ -53,11 +54,12 @@ for param in ["eccentricity", "polarangle"]:
                 output_path = OUTPUT.format(
                     prefix_model=prefix_model, hemi=hemi, model=model, param=param
                 )
-                input_path =  INPUT.format(
+                input_path = INPUT.format(
                     prefix_model=prefix_model, model=model, param=param
                 )
                 try:
-                    ccf_v0 = surface.load_surf_data(input_path).astype(np.float64)
+                    ccf_v0 = surface.load_surf_data(
+                        input_path).astype(np.float64)
                     sum_data.append(ccf_v0)
 
                 except ValueError:
@@ -73,15 +75,9 @@ for param in ["eccentricity", "polarangle"]:
             # save as gifti
             img_gifti = nib.gifti.GiftiImage(
                 darrays=[
-                    nib.gifti.GiftiDataArray(np.float32(np.squeeze(averaged_data)))
+                    nib.gifti.GiftiDataArray(
+                        np.float32(np.squeeze(averaged_data)))
                 ]
             )
 
             nib.save(img_gifti, output_path)
-
-
-                
-
-                
-                
-
