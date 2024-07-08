@@ -1,6 +1,6 @@
 # Population connective field modeling reveals retinotopic visual cortex organization in utero
 
-- creates registration from fsaverage to individual surfaces[^10]
+- creates registration from fsaverage to individual surfaces[^13]
 - resamples template of visual areas to individual surfaces
 - projects functional data to individual surfaces
 - applies cortical connective field model to functional data
@@ -13,15 +13,15 @@ Data and templates
 - transformations from individual anatomical volume space to group anatomical volume space[^3]
 - 40 weeks anatomical template in volume space (must be the one that corresponds to the transformation)[^4]
 - target surface template[^5]
-- fsaverage subject from freesurfer[^10]- 
-- Developing Human Connectome Project spatio-temporal surface atlas of the fetal brain [^11]
-- HCP templates "standard mesh atlases"[^9]
+- fsaverage subject from freesurfer[^6] 
+- Developing Human Connectome Project spatio-temporal surface atlas of the fetal brain [^7]
+- HCP templates "standard mesh atlases"[^8]
 
 Software
-- newMSM (v0.6.3-BETA) installation[^6]
-- workbench command (v2.0.0) installation[^7]
-- MIRTK (v0.20231123) installation[^8]
-- FSL (v6.0.3) installation, callable from command line
+- newMSM (v0.6.3-BETA) installation[^9]
+- workbench command (v2.0.0) installation[^10]
+- MIRTK (v0.20231123) installation[^11]
+- FSL (v6.0.3) installation, callable from command line[^12]
 
 # Code avaliabilty
 All data analysis was performed with custom software using Python 3.11 and various third-party packages (matplotlib 3.8.3, numpy 1.26.3, pandas 2.2.0, scipy 1.12.0, and nibabel  5.2.0). Brain surfaces were visualized with nilearn (0.10.4).
@@ -62,15 +62,19 @@ see scripts in `04_visualization`
 
 [^5]: The dHCP project has published the [dhcpSym atlas](https://brain-development.org/brain-atlases/atlases-from-the-dhcp-project/cortical-surface-template/), which can be used here.
 
-[^6]: newMSM runs on FSL and can be installed from Renato Besenczi's github repo [newMSM](https://github.com/rbesenczi/newMSM).
+[^6]: included in a freesurfer installation at `$FREESURFER_HOME/subjects/fsaverage`
 
-[^7]: [Human Connectome Project Workbench Command](https://www.humanconnectome.org/software/workbench-command) 
+[^7]: Developing Human Connectome Project spatio-temporal surface atlas of the fetal brain (https://doi.gin.g-node.org/10.12751/g-node.qj5hs7/)
 
-[^8]: [Medical Image Registration ToolKit MIRTK](http://mirtk.github.io/), needs root access for installation.
+[^8]: [Human Connectome Project templates](https://github.com/Washington-University/HCPpipelines/tree/master/global/templates/standard_mesh_atlases) can be downloaded from the HCPpipelines repo
 
-[^9]: [Human Connectome Project templates](https://github.com/Washington-University/HCPpipelines/tree/master/global/templates/standard_mesh_atlases) can be downloaded from the HCPpipelines repo
+[^9]: newMSM runs on FSL and can be installed from Renato Besenczi's github repo [newMSM](https://github.com/rbesenczi/newMSM).
 
-[^10]: included in a freesurfer installation at `$FREESURFER_HOME/subjects/fsaverage`
+[^10]: [Human Connectome Project Workbench Command](https://www.humanconnectome.org/software/workbench-command) 
 
-[^11]: Developing Human Connectome Project spatio-temporal surface atlas of the fetal brain (https://doi.gin.g-node.org/10.12751/g-node.qj5hs7/)
-[^10]: adapted from [dHCP template alignment repo](https://github.com/ecr05/dHCP_template_alignment)
+[^11]: [Medical Image Registration ToolKit MIRTK](http://mirtk.github.io/), needs root access for installation.
+
+[^12]: fsl installation link (https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
+
+[^13]: adapted from [dHCP template alignment repo](https://github.com/ecr05/dHCP_template_alignment)
+
