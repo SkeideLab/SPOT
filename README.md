@@ -38,9 +38,23 @@ The data for this study are available after institutional registration through p
 
 
 ## Notes 
-
-- uses dHCP data (01_dataprep, 02_ccfanalysis, 03_retinotopyanalzsis), uses HCP data (00_HCP), group comparison (03_retinotopyanalysis) and visualization (04_visualizazion)
 - Please change the path before you run the code
+
+# dHCP dataset (prenatal and neonates)
+
+run `run_all.py` which contains codes in (01_dataprep, 02_ccfanalysis, 03_retinotopyanalysis)
+
+# HCP dataset
+
+run `00_HCP/HCP_run_all.py`
+
+# Group comparison 
+
+see scripts in `03_retinotopyanalysis`
+
+# Visualization
+
+see scripts in `04_visualization`
 
 [^1]: [Developing Human Connectome Project](https://biomedia.github.io/dHCP-release-notes/)
 
