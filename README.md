@@ -7,18 +7,21 @@
 
 ## Prerequisites
 
+Data and templates
 - dHCP fourth release data[^1]
 - The Lifespan Human Connectome Project Development (HCP-D) 2.0 data [^2]
 - transformations from individual anatomical volume space to group anatomical volume space[^3]
 - 40 weeks anatomical template in volume space (must be the one that corresponds to the transformation)[^4]
 - target surface template[^5]
-- newMSM installation[^6]
-- workbench command installation[^7]
-- MIRTK installation[^8]
-- HCP templates "standard mesh atlases"[^9]
-- fsaverage subject from freesurfer[^10]
-- FSL installation, callable from command line
+- fsaverage subject from freesurfer[^10]- 
 - Developing Human Connectome Project spatio-temporal surface atlas of the fetal brain [^11]
+- HCP templates "standard mesh atlases"[^9]
+
+Software
+- newMSM (v0.6.3-BETA) installation[^6]
+- workbench command (v2.0.0) installation[^7]
+- MIRTK (v0.20231123) installation[^8]
+- FSL (v6.0.3) installation, callable from command line
 
 ## Prenatal data
 Run 01_dataprep/alignment/separte_nii_to_gii.py first before run the program.
