@@ -82,7 +82,8 @@ def get_indices_roi(labels_area, visparc_array):
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
     """
     indices_area = np.nonzero(
-        np.logical_or(visparc_array == labels_area[0], visparc_array == labels_area[1])
+        np.logical_or(visparc_array ==
+                      labels_area[0], visparc_array == labels_area[1])
     )[0]
     return indices_area
 
@@ -97,30 +98,32 @@ def calc_msd(param_area1, param_area2):
 
     return np.sum((param_area1 - param_area2) ** 2) / n1
 
+
 # Now `results` dictionary contains the output of `calc_msd` organized by subject, hemisphere, model combination, and parameter
 # You can access the results using appropriate keys corresponding to each level of the nested structure
-subject_info = pd.read_csv("/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_old.csv")
+subject_info = pd.read_csv(
+    "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_old.csv")
 path_derivatives = "/data/p_02915/dhcp_derivatives_SPOT/HCP-D"
 columns = ["Subject_ID",
-           "L_eccentricity_real_benson", 
-           "R_eccentricity_real_benson", 
-           "L_polarangle_real_benson", 
+           "L_eccentricity_real_benson",
+           "R_eccentricity_real_benson",
+           "L_polarangle_real_benson",
            "R_polarangle_real_benson",
-           "L_eccentricity_real_simulated", 
-           "R_eccentricity_real_simulated", 
-           "L_polarangle_real_simulated", 
+           "L_eccentricity_real_simulated",
+           "R_eccentricity_real_simulated",
+           "L_polarangle_real_simulated",
            "R_polarangle_real_simulated",]
 msd_value = pd.DataFrame(columns=columns)
 for index, row in subject_info.iterrows():
     sub_id = subject_info.at[index, "sub_id"]
-    sub = sub_id.replace('sub-','')
-    msd_value.at[index,"Subject_ID"] = sub
+    sub = sub_id.replace('sub-', '')
+    msd_value.at[index, "Subject_ID"] = sub
 
     retinotopy_dict = {}
     in_out = {
         "eccentricity": OUTPUT_ECC,
         "polarangle": OUTPUT_PANGLE,
-    }    
+    }
 
     for hemi in ["L", "R"]:
         hemi_results = {}  # Results for the current hemisphere
@@ -180,7 +183,7 @@ for index, row in subject_info.iterrows():
                     model=model,
                     threshold=str("0.0").replace(".", ""),
                 )
-                
+
                 # restrict to V1
                 ret_v1 = retinotopy_dict[(hemi, "benson", param)][indices_v1]
 
@@ -188,7 +191,8 @@ for index, row in subject_info.iterrows():
                 ret_v2 = ret_v1[centers_v2]
 
                 # make empty wholebrain
-                ret_wholeb = np.zeros(retinotopy_dict[(hemi, "benson", param)].shape)
+                ret_wholeb = np.zeros(
+                    retinotopy_dict[(hemi, "benson", param)].shape)
 
                 # fill retinotopy values into v2
                 ret_wholeb[indices_v2] = ret_v2
@@ -205,11 +209,13 @@ for index, row in subject_info.iterrows():
                         retinotopy_dict[(hemi, model_1, param)][indices_v2],
                         retinotopy_dict[(hemi, model_2, param)][indices_v2],
                     )
-                    msd_value.at[index,f"{hemi}_{param}_{model_1}_{model_2}"] = msd  # Store the result for the current param  
-                
+                    # Store the result for the current param
+                    msd_value.at[index,
+                                 f"{hemi}_{param}_{model_1}_{model_2}"] = msd
+
         except KeyError:
             print(
                 f"Data missing for hemisphere {hemi}, not calculating differences for this..."
-            )        
-       
+            )
+
 msd_value.to_csv('/data/p_02915/SPOT/MSD_HCP_old.csv')

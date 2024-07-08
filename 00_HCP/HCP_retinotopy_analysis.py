@@ -18,11 +18,11 @@ PREFIX_MODEL = (
     "{root_dir}/ccfmodel/{sub}/"
     "{sub}_hemi-{hemi}_mesh-native_dens-native"
 )
-#PREFIX_SUB_TEMPLATE = (
+# PREFIX_SUB_TEMPLATE = (
 #    "{root_dir}/hcp_surface/{sub}/anat/"
 #    "{sub}_hemi-{hemi}_mesh-native_dens-native"
-#)
-PREFIX_SUB_TEMPLATE= (
+# )
+PREFIX_SUB_TEMPLATE = (
     "{root_dir}/"
     "hemi-{hemi}_mesh-native_dens-native"
 )
@@ -86,7 +86,8 @@ def get_indices_roi(labels_area, visparc_array):
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
     """
     indices_area = np.nonzero(
-        np.logical_or(visparc_array == labels_area[0], visparc_array == labels_area[1])
+        np.logical_or(visparc_array ==
+                      labels_area[0], visparc_array == labels_area[1])
     )[0]
     return indices_area
 
@@ -149,7 +150,7 @@ def main():
             PATH_ANGLE.format(prefix_sub_template=prefix_sub_template)
         )
 
-        for model in ["real","simulated"]:
+        for model in ["real", "simulated"]:
 
             try:
                 ccf_v0 = surface.load_surf_data(
@@ -194,7 +195,8 @@ def main():
                 ret_v2 = ret_v1[centers_v2]
 
                 # make empty wholebrain
-                ret_wholeb = np.zeros(retinotopy_dict[(hemi, "benson", param)].shape)
+                ret_wholeb = np.zeros(
+                    retinotopy_dict[(hemi, "benson", param)].shape)
 
                 # fill retinotopy values into v2
                 ret_wholeb[indices_v2_success] = ret_v2
@@ -207,7 +209,8 @@ def main():
                     # save as gifti
                     img_gifti = nib.gifti.GiftiImage(
                         darrays=[
-                            nib.gifti.GiftiDataArray(np.float32(np.squeeze(ret_wholeb)))
+                            nib.gifti.GiftiDataArray(
+                                np.float32(np.squeeze(ret_wholeb)))
                         ]
                     )
 
@@ -215,7 +218,8 @@ def main():
                     print(f"Saving {retinotopy_out}...")
 
                 else:
-                    print(f"File {retinotopy_out} already exists. Skipping the save...")
+                    print(
+                        f"File {retinotopy_out} already exists. Skipping the save...")
 
         # CALCULATE DIFFERENCES BETWEEN MODELS PER HEMI
         # calculate mean square differences between models for eccentricity and angle

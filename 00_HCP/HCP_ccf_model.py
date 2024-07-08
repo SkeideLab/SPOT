@@ -61,7 +61,6 @@ LABELS_V1 = (1, 2)
 LABELS_V2 = (3, 4)
 
 
-
 def make_percent_signal_change(func):
     """Compute activation in percent signal change from intensity.
 
@@ -118,7 +117,8 @@ def get_indices_roi(labels_area, visparc):
     """
     indices_area = np.nonzero(
         np.logical_or(
-            visparc.agg_data() == labels_area[0], visparc.agg_data() == labels_area[1]
+            visparc.agg_data() == labels_area[0], visparc.agg_data(
+            ) == labels_area[1]
         )
     )[0]
     return indices_area
@@ -211,7 +211,8 @@ def main():
     args = parse_args()
 
     optimize_threshold = args.threshold  # model rsquared threshold for optimization
-    sigmas = np.linspace(3, 25, num=args.nsigma)  # ccf spreads to try in grid search
+    # ccf spreads to try in grid search
+    sigmas = np.linspace(3, 25, num=args.nsigma)
 
     # model both data sources (resting-state and simulated) per hemisphere
     for hemi in ["L", "R"]:
@@ -232,7 +233,8 @@ def main():
 
         # load distance between surface vertices
         distance_file = DISTANCEFILE_PATH.format(**ids)
-        distances_along_mesh = fetch_distancematrix(indices_v1, wm, distance_file)
+        distances_along_mesh = fetch_distancematrix(
+            indices_v1, wm, distance_file)
 
         # small toy example for debugging
         if args.debug:
@@ -248,7 +250,8 @@ def main():
             # get bold data for V1 and V2
             simulated = "_simulated" if datasource == "simulated" else ""
 
-            func = surface.load_surf_data(FUNC_PATH.format(**ids, simulated=simulated))
+            func = surface.load_surf_data(
+                FUNC_PATH.format(**ids, simulated=simulated))
 
             func_v2 = func[indices_v2, :].astype(np.float64)
             func_v1 = func[indices_v1, :].astype(np.float64)
