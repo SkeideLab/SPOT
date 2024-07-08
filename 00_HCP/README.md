@@ -5,7 +5,7 @@ Note, preprocessed HCP dataset is already in the fs_LR space so you only need a 
 
 # Folders
 
-`template´ : This folder has retinotopy templates (Benson's eccentricity and polarangle and Wang's template) on the fs_LR space and the transformation from fsaverage to fs_LR space.
+<sub>template<\sub> : This folder has retinotopy templates (Benson's eccentricity and polarangle and Wang's template) on the fs_LR space and the transformation from fsaverage to fs_LR space.
 - 'ccf_model': This folder has subcodes are included in 'HCP_ccf_model', it is same with 02_ccfanalysis>ccf_model
 
 # Sequence of code
