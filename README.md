@@ -23,12 +23,6 @@ Software
 - MIRTK (v0.20231123) installation[^8]
 - FSL (v6.0.3) installation, callable from command line
 
-## Prenatal data
-Run 01_dataprep/alignment/separte_nii_to_gii.py first before run the program.
-
-## HCP data
-Run 00_HCP/HCP_file_prep.sh first before run the program.
-
 # Code avaliabilty
 All data analysis was performed with custom software using Python 3.11 and various third-party packages (matplotlib 3.8.3, numpy 1.26.3, pandas 2.2.0, scipy 1.12.0, and nibabel  5.2.0). Brain surfaces were visualized with nilearn (0.10.4).
 
@@ -40,19 +34,21 @@ The data for this study are available after institutional registration through p
 ## Notes 
 - Please change the path before you run the code
 
-# dHCP dataset (prenatal and neonates)
+### dHCP dataset (prenatal and neonates)
 
+for prenatal dataset, run 01_dataprep/alignment/separte_nii_to_gii.py first before run the program.
 run `run_all.py` which contains codes in (01_dataprep, 02_ccfanalysis, 03_retinotopyanalysis)
 
-# HCP dataset
+### HCP dataset
 
+run 00_HCP/HCP_file_prep.sh first before run the program.
 run `00_HCP/HCP_run_all.py`
 
-# Group comparison 
+### Group comparison 
 
 see scripts in `03_retinotopyanalysis`
 
-# Visualization
+### Visualization
 
 see scripts in `04_visualization`
 
