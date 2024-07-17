@@ -98,7 +98,7 @@ for param in ["eccentricity"]:
             )
             AVER_MAP = (
                 "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/"
-                "Averaged_{hemi}_label-{param}_desc-real_roi-v2th00_metric_less_37.gii"
+                "Averaged_{hemi}_label-{param}_desc-real_roi-v2th00_metric_over_37.gii"
             )
             subject_info = pd.read_csv(
                 '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37.csv')
