@@ -92,7 +92,7 @@ LABELS_V2 = (3, 4)
 
 print(bin)
 df = pd.DataFrame()
-for param in ["_dens-164k_desc-real_rss", "_dens-164k_desc-real_sigma",
+for param in ["_dens-164k_desc-real_r", "_dens-164k_desc-real_sigma",
               "_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric",
               "_dens-164k_label-polarangle_desc-real_roi-v2th00_metric"]:
     results_list = []
