@@ -60,8 +60,8 @@ OUTPUT_PREFIX = (
     "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-{datasource}"
 )
-LABELS_V1 = (1, 2)
-LABELS_V2 = (3, 4)
+LABELS_V1 = [1, 2]
+LABELS_V2 = [3, 4, 5, 6]
 
 
 def visualize_connective_field(mesh, v1_indices, connective_fields, curv):
@@ -143,11 +143,16 @@ def get_indices_roi(labels_area, visparc):
     Returns:
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
     """
-    indices_area = np.nonzero(
-        np.logical_or(
-            visparc.agg_data() == labels_area[0], visparc.agg_data() == labels_area[1]
-        )
-    )[0]
+     # Ensure labels_area is a list
+    if not isinstance(labels_area, list):
+        labels_area = [labels_area]
+    
+    # Collect indices for all labels in labels_area
+    indices_area = np.concatenate([
+        np.nonzero(visparc.agg_data() == label)[0]
+        for label in labels_area
+    ])
+
     return indices_area
 
 

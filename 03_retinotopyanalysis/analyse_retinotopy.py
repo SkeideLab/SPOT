@@ -37,8 +37,8 @@ PATH_ANGLE = "{prefix_sub_template}_desc-angleretinotbenson2014_seg.shape.gii"
 PATH_VISPARC = (
     "{prefix_sub_template}_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
 )
-LABELS_V1 = (1, 2)
-LABELS_V2 = (3, 4)
+LABELS_V1 = [1, 2]
+LABELS_V2 = [3, 4, 5, 6]
 
 
 def parse_args():
@@ -76,21 +76,27 @@ def parse_args():
     return args
 
 
-def get_indices_roi(labels_area, visparc_array):
+def get_indices_roi(labels_area, visparc):
     """Get indices of vertices in gifti image that are located in a specific region of interest.
 
     Args:
         labels_area (list): labels for the region of interest as used in the parcellation
-        visparc (numpy.array): parcellation of brain surface into regions, using labels
+        visparc (nibabel.gifti.GiftiImage): parcellation of brain surface into regions, using labels
 
     Returns:
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
     """
-    indices_area = np.nonzero(
-        np.logical_or(visparc_array == labels_area[0], visparc_array == labels_area[1])
-    )[0]
-    return indices_area
+     # Ensure labels_area is a list
+    if not isinstance(labels_area, list):
+        labels_area = [labels_area]
+    
+    # Collect indices for all labels in labels_area
+    indices_area = np.concatenate([
+        np.nonzero(visparc.agg_data() == label)[0]
+        for label in labels_area
+    ])
 
+    return indices_area
 
 def calc_msd(param_area1, param_area2):
     # mean squared difference between two different model results in an area
