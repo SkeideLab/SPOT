@@ -1,6 +1,6 @@
-Data simulation according to alternative neural model
+# Data simulation according to alternative neural model
 
 - based on local spatial correlations
 - see Bock 2015 JNeurosci
 
-# TODO adjust kernel size to size of brain and age of subject
+Run simulated_model_smooth_surf for generating simulated model

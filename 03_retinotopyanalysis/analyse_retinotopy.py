@@ -195,7 +195,6 @@ def main():
                     threshold=str(args.threshold).replace(".", ""),
                 )
 
-                # TODO check if these really are the indices into just  v1
                 # restrict to V1
                 ret_v1 = retinotopy_dict[(hemi, "benson", param)][indices_v1]
 
@@ -203,7 +202,8 @@ def main():
                 ret_v2 = ret_v1[centers_v2]
 
                 # make empty wholebrain
-                ret_wholeb = np.zeros(retinotopy_dict[(hemi, "benson", param)].shape)
+                ret_wholeb = np.zeros(
+                    retinotopy_dict[(hemi, "benson", param)].shape)
 
                 # fill retinotopy values into v2
                 ret_wholeb[indices_v2_success] = ret_v2
@@ -216,7 +216,8 @@ def main():
                     # save as gifti
                     img_gifti = nib.gifti.GiftiImage(
                         darrays=[
-                            nib.gifti.GiftiDataArray(np.float32(np.squeeze(ret_wholeb)))
+                            nib.gifti.GiftiDataArray(
+                                np.float32(np.squeeze(ret_wholeb)))
                         ]
                     )
 
@@ -224,7 +225,8 @@ def main():
                     print(f"Saving {retinotopy_out}...")
 
                 else:
-                    print(f"File {retinotopy_out} already exists. Skipping the save...")
+                    print(
+                        f"File {retinotopy_out} already exists. Skipping the save...")
 
         # CALCULATE DIFFERENCES BETWEEN MODELS PER HEMI
         # calculate mean square differences between models for eccentricity and angle

@@ -31,7 +31,7 @@ for hemi in left right; do
 
     # output of previous step, see alignment folder
     # check if this exists, terminate otherwise
-    registration_from_native_to_dhcpSym="$path_output_data/sub-$sub/ses-$ses/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii"
+    registration_from_native_to_dhcpSym="$path_output_data/sub-$sub/ses-$ses/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-fetal_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii"
     if [ ! -f $registration_from_native_to_dhcpSym ]; then
         echo "Registration from native to dhcpSym is missing. Please execute alignment folder main script first."
         echo "Terminating..."
@@ -54,10 +54,9 @@ for hemi in left right; do
     pangle_native="${path_out_native_hemi}_desc-angleretinotbenson2014_seg.shape.gii"
 
     # 1. Combine registration from dhcpSym to fs_lr to fsaverage
-    # TODO check if 164k fsaverage should be used here???
     if [ ! -f $registration_from_dhcpSym_to_fsaverage ]; then
         wb_command -surface-sphere-project-unproject \
-            $path_script/standard_registrations/dHCP_HCP-YA.MSMStrain.sphere.reg.surf.gii `# sphere-in: sphere with desired output mesh: dhcpsym registered to fslr` \
+            $path_script/standard_registrations/dHCP_HCP-YA.MSMStrain.${hemi_upper}.sphere.reg.surf.gii `# sphere-in: sphere with desired output mesh: dhcpsym registered to fslr` \
             $path_HCPtemplates_standardmeshatlases/${hemi_upper}.sphere.32k_fs_LR.surf.gii `# sphere-project-to: sphere that aligns with sphere-in: fs_lr` \
             $path_HCPtemplates_standardmeshatlases/resample_fsaverage/fs_LR-deformed_to-fsaverage.${hemi_upper}.sphere.32k_fs_LR.surf.gii `# sphere-unproject-from: sphere-project-to deformed to desired output space: fs_lr registered to fsaverage` \
             $registration_from_dhcpSym_to_fsaverage`# sphere-out: output sphere`
@@ -67,7 +66,7 @@ for hemi in left right; do
     if [ ! -f $registration_from_native_to_fsaverage ]; then
         wb_command -surface-sphere-project-unproject \
             $registration_from_native_to_dhcpSym `# sphere-in: sphere with desired output mesh: native registered to dhcpSym` \
-            $path_surfacetemplate/week-40_hemi-${hemi}_space-dhcpSym_dens-32k_sphere.surf.gii `# sphere-project-to: sphere that aligns with sphere-in: dhcpSym` \
+            /data/p_02915/templates/template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template/week-40_hemi-${hemi}_space-dhcpSym_dens-32k_sphere.surf.gii `# sphere-project-to: sphere that aligns with sphere-in: dhcpSym` \
             $registration_from_dhcpSym_to_fsaverage`# sphere-unproject-from: sphere-project-to deformed to desired output space: dhcpSym registered to fsaverage` \
             $registration_from_native_to_fsaverage `# sphere-out: output sphere`
     fi
@@ -83,7 +82,7 @@ for hemi in left right; do
             $visareas_wang_native \
             -area-surfs \
             $path_fsaverage/surf/${hemi:0:1}h_midthickness_surf.gii \
-            $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii
+            $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi}_midthickness.surf.gii
     fi
     if [ ! -f $visareas_benson_native ]; then
         wb_command -label-resample \
@@ -94,7 +93,7 @@ for hemi in left right; do
             $visareas_benson_native \
             -area-surfs \
             $path_fsaverage/surf/${hemi:0:1}h_midthickness_surf.gii \
-            $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii
+            $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi}_midthickness.surf.gii
     fi
     if [ ! -f $ecc_native ]; then
         wb_command -metric-resample \
@@ -105,7 +104,7 @@ for hemi in left right; do
             $ecc_native \
             -area-surfs \
             $path_fsaverage/surf/${hemi:0:1}h_midthickness_surf.gii \
-            $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii
+            $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi}_midthickness.surf.gii
     fi
     if [ ! -f $pangle_native ]; then
         wb_command -metric-resample \
@@ -115,7 +114,7 @@ for hemi in left right; do
             ADAP_BARY_AREA \
             $pangle_native -area-surfs \
             $path_fsaverage/surf/${hemi:0:1}h_midthickness_surf.gii \
-            $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_space-T2w_midthickness.surf.gii
+            $path_bids_data/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi}_midthickness.surf.gii
     fi
 
 done

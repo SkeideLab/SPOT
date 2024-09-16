@@ -8,14 +8,23 @@ The main analysis is being conducted in native surface space of each participant
 
 ## Directory structure
 
-`alignment`: contains code and settings files for alignment of native surfaces to a group surface. Adapted from [dhcp template alignment](https://github.com/ecr05/dHCP_template_alignment).
+`run_surfaceprep.sh`: code to run everything in this directory and prepare all the data. This code containts following codes.
 
-`retinotopy`: contains code to produce retinotopy gifti files from mgz, to warp the templates to native space, to partition the visual areas, the retinotopy templates themselves, and registrations between standard spaces necessary to do the warping.
+-`alignment`: contains code and settings files for alignment of native surfaces to a group surface. Adapted from [dhcp template alignment](https://github.com/ecr05/dHCP_template_alignment).
+ 
+1. `pre_rotation.sh`: rotate native sphere to align with template sphere
+2. `align_to_template_2nd_release.sh`: calculate transformation from native sphere to dhcp-40week-template sphere
+      
+-`retinotopy`: contains code to produce retinotopy gifti files from mgz, to warp the templates to native space, to partition the visual areas, the retinotopy templates themselves, and registrations between     standard spaces necessary to do the warping.
+  
+3. `warp_templates_to_native.sh`: warp the templates (Benson's eccentricity and polar angle maps and Wang's template) from native space to fsaverage space
+    
+-`simulation_alternativemodel`: code to produce simulated surface data based on a model of random data and local spatial correlations.
+  
+4. `simulated_model_smooth_surf.py`
+    
+-`surfaceprojection`: code to project functional data to the surface.
+  
+5. `project_bold_to_surface.sh`
 
 `sanitycheck`: code for a quick default mode network analysis on the functional surface data to check their integrity.
-
-`simulation_alternativemodel`: code to produce simulated surface data based on a model of random data and local spatial correlations.
-
-`surfaceprojection`: code to project functional data to the surface.
-
-`run_surfaceprep.sh`: code to run everything in this directory and prepare all the data. 

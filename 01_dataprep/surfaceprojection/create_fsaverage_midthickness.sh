@@ -1,7 +1,7 @@
 #!/bin/bash
 set -u -x -e
 
-# TODO add this to flux/surfaceprep/make_fsavg_to_native_warp.sh
+# RUN THIS TO CREATE FSAVERAGE MIDTHICKNESS FILES IF NEEDED
 cd /data/p_02495/templates/template_fsaverage/fsaverage/surf
 FREESURFER mris_expand -thickness lh.white 0.5 lh.midthickness
 FREESURFER mris_expand -thickness rh.white 0.5 rh.midthickness
