@@ -8,17 +8,17 @@ import nibabel as nib
 import numpy as np
 
 PREFIX_MODEL = (
-    "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/sub-{sub}/ses-{ses}/"
+    "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k"
 )
+#INPUT = (
+#    "{prefix_model}_label-{param}_desc-{model}_roi-v2th00_metric.gii"
+#)
 INPUT = (
-    "{prefix_model}_label-{parm}_desc-{model}_roi-v2th00_metric.gii"
-)
-# INPUT = (
-#    "{prefix_model}_desc-{model}_{param}.gii"
-# )
+    "{prefix_model}_desc-{model}_{param}.gii"
+ )
 OUTPUT = (
-    "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/Averaged_younger_fetal_{hemi}_label-{param}_desc-{model}_roi-v2th00_metric.gii"
+    "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel/Averaged_older_n_{hemi}_label-{param}_desc-{model}_roi-v2th00_metric.gii"
 )
 # OUTPUT = (
 #    "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/Averaged_younger_fetal_{hemi}_desc-{model}_{param}.gii"
@@ -30,11 +30,12 @@ OUTPUT = (
 #    "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/Averaged_{hemi}_desc-real_{parm}.gii"
 # )
 subject_info = pd.read_csv(
-    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv')
+    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
 sub_num = len(subject_info["sub_id"])
 
 sum_data = []  # Initialize outside the loop
-for param in ["eccentricity", "polarangle"]:
+#for param in ["eccentricity", "polarangle"]:
+for param in ["sigma"]:
     # for param in ["rss","sigma"]:
     for hemi in ["L", "R"]:
         # FORMAT PATHS FOR INPUT AND OUTPUT
@@ -64,7 +65,7 @@ for param in ["eccentricity", "polarangle"]:
 
                 except ValueError:
                     print(
-                        f"No model results found under {INPUT.format(prefix_model=prefix_model, model=model, parm = param)}."
+                        f"No model results found under {INPUT.format(prefix_model=prefix_model, model=model, param = param)}."
                     )
                     print(" Skipping this...", flush=True)
                     continue

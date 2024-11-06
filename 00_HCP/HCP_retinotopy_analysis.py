@@ -39,10 +39,10 @@ OUTPUT_PANGLE = (
 PATH_ECCENTRICITY = "{prefix_sub_template}_desc-eccentretinotbenson2014_seg.shape.gii"
 PATH_ANGLE = "{prefix_sub_template}_desc-angleretinotbenson2014_seg.shape.gii"
 PATH_VISPARC = (
-    "{prefix_sub_template}_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+    "{prefix_sub_template}_desc-retinotbenson2014_label-visarea_dparc.label.gii"
 )
-LABELS_V1 = (1, 2)
-LABELS_V2 = (3, 4)
+LABELS_V1 = [1]
+LABELS_V2 = [2, 3]
 
 
 def parse_args():
@@ -75,20 +75,26 @@ def parse_args():
     return args
 
 
-def get_indices_roi(labels_area, visparc_array):
+def get_indices_roi(labels_area, visparc):
     """Get indices of vertices in gifti image that are located in a specific region of interest.
 
     Args:
         labels_area (list): labels for the region of interest as used in the parcellation
-        visparc (numpy.array): parcellation of brain surface into regions, using labels
+        visparc (nibabel.gifti.GiftiImage): parcellation of brain surface into regions, using labels
 
     Returns:
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
     """
-    indices_area = np.nonzero(
-        np.logical_or(visparc_array ==
-                      labels_area[0], visparc_array == labels_area[1])
-    )[0]
+     # Ensure labels_area is a list
+    if not isinstance(labels_area, list):
+        labels_area = [labels_area]
+    
+    # Collect indices for all labels in labels_area
+    indices_area = np.concatenate([
+        np.nonzero(visparc.agg_data() == label)[0]
+        for label in labels_area
+    ])
+
     return indices_area
 
 
@@ -136,7 +142,7 @@ def main():
         )
 
         # LOAD DATA
-        visparc = surface.load_surf_data(
+        visparc = nib.load(
             PATH_VISPARC.format(prefix_sub_template=prefix_sub_template)
         )
         indices_v1 = get_indices_roi(LABELS_V1, visparc)
@@ -204,22 +210,18 @@ def main():
                 # keep data for model comparisons later
                 retinotopy_dict[(hemi, model, param)] = ret_wholeb
 
-                if not Path(retinotopy_out).exists():
+                
 
-                    # save as gifti
-                    img_gifti = nib.gifti.GiftiImage(
-                        darrays=[
-                            nib.gifti.GiftiDataArray(
-                                np.float32(np.squeeze(ret_wholeb)))
-                        ]
-                    )
+                # save as gifti
+                img_gifti = nib.gifti.GiftiImage(
+                    darrays=[
+                        nib.gifti.GiftiDataArray(
+                            np.float32(np.squeeze(ret_wholeb)))
+                    ]
+                )
 
-                    nib.save(img_gifti, retinotopy_out)
-                    print(f"Saving {retinotopy_out}...")
-
-                else:
-                    print(
-                        f"File {retinotopy_out} already exists. Skipping the save...")
+                nib.save(img_gifti, retinotopy_out)
+                print(f"Saving {retinotopy_out}...")
 
         # CALCULATE DIFFERENCES BETWEEN MODELS PER HEMI
         # calculate mean square differences between models for eccentricity and angle

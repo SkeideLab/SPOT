@@ -25,6 +25,7 @@ PREFIX_SUB_TEMPLATE = (
 
 PATH_v0 = "{prefix_model}_desc-{model}_v0i.gii"
 PATH_r = "{prefix_model}_desc-{model}_r.gii"
+PATH_sigma = "{prefix_model}_desc-{model}_sigma.gii"
 OUTPUT_ECC = (
     "{prefix_model}_label-eccentricity_desc-{model}_roi-v2th{threshold}_metric.gii"
 )
@@ -32,13 +33,14 @@ OUTPUT_PANGLE = (
     "{prefix_model}_label-polarangle_desc-{model}_roi-v2th{threshold}_metric.gii"
 )
 
+
 PATH_ECCENTRICITY = "{prefix_sub_template}_desc-eccentretinotbenson2014_seg.shape.gii"
 PATH_ANGLE = "{prefix_sub_template}_desc-angleretinotbenson2014_seg.shape.gii"
 PATH_VISPARC = (
-    "{prefix_sub_template}_desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+    "{prefix_sub_template}_desc-retinotbenson2014_label-visarea_dparc.label.gii"
 )
-LABELS_V1 = [1, 2]
-LABELS_V2 = [3, 4, 5, 6]
+LABELS_V1 = [1]
+LABELS_V2 = [2, 3]
 
 
 def parse_args():
@@ -144,9 +146,8 @@ def main():
         )
 
         # LOAD DATA
-        visparc = surface.load_surf_data(
-            PATH_VISPARC.format(prefix_sub_template=prefix_sub_template)
-        )
+        visparc = nib.load(PATH_VISPARC.format(prefix_sub_template=prefix_sub_template))
+        
         indices_v1 = get_indices_roi(LABELS_V1, visparc)
         indices_v2 = get_indices_roi(LABELS_V2, visparc)
 
@@ -211,22 +212,18 @@ def main():
                 # keep data for model comparisons later
                 retinotopy_dict[(hemi, model, param)] = ret_wholeb
 
-                if not Path(retinotopy_out).exists():
+            
+                # save as gifti
+                img_gifti = nib.gifti.GiftiImage(
+                    darrays=[
+                        nib.gifti.GiftiDataArray(
+                            np.float32(np.squeeze(ret_wholeb)))
+                    ]
+                )
 
-                    # save as gifti
-                    img_gifti = nib.gifti.GiftiImage(
-                        darrays=[
-                            nib.gifti.GiftiDataArray(
-                                np.float32(np.squeeze(ret_wholeb)))
-                        ]
-                    )
+                nib.save(img_gifti, retinotopy_out)
+                print(f"Saving {retinotopy_out}...")
 
-                    nib.save(img_gifti, retinotopy_out)
-                    print(f"Saving {retinotopy_out}...")
-
-                else:
-                    print(
-                        f"File {retinotopy_out} already exists. Skipping the save...")
 
         # CALCULATE DIFFERENCES BETWEEN MODELS PER HEMI
         # calculate mean square differences between models for eccentricity and angle

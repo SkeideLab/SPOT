@@ -38,7 +38,7 @@ calc_shortestpath = ccfanalysis.ccf_model.meshgraph.calc_shortestpath
 VISPARC_PATH = (
     "/data/p_02915/SPOT/00_HCP/template/"
     "hemi-{hemi}_mesh-native_dens-native_"
-    "desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+    "desc-retinotbenson2014_label-visarea_dparc.label.gii"
 )
 WM_PATH = (
     "/data/pt_02880/HCP_D/fmriresults01/{sub}/MNINonLinear/fsaverage_LR32k/"
@@ -57,8 +57,8 @@ OUTPUT_PREFIX = (
     "{root_dir}/ccfmodel/{sub}/"
     "{sub}_hemi-{hemi}_mesh-native_dens-native_desc-{datasource}"
 )
-LABELS_V1 = (1, 2)
-LABELS_V2 = (3, 4)
+LABELS_V1 = [1]
+LABELS_V2 = [2, 3]
 
 
 def make_percent_signal_change(func):
@@ -115,12 +115,16 @@ def get_indices_roi(labels_area, visparc):
     Returns:
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
     """
-    indices_area = np.nonzero(
-        np.logical_or(
-            visparc.agg_data() == labels_area[0], visparc.agg_data(
-            ) == labels_area[1]
-        )
-    )[0]
+     # Ensure labels_area is a list
+    if not isinstance(labels_area, list):
+        labels_area = [labels_area]
+    
+    # Collect indices for all labels in labels_area
+    indices_area = np.concatenate([
+        np.nonzero(visparc.agg_data() == label)[0]
+        for label in labels_area
+    ])
+
     return indices_area
 
 

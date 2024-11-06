@@ -71,14 +71,14 @@ def perform_ccf_analysis(
     if OPTIMIZE:
         for targetvoxel_i, rsquared in enumerate(best_models[:, 3]):
             # if model found some signal (rsquared threshold), then optimize
-            if rsquared > optimize_threshold:
-                best_models[targetvoxel_i, :] = optimize_connfield(
-                    best_models[targetvoxel_i, 0],
-                    best_models[targetvoxel_i, 1],
-                    distances_along_mesh,
-                    timeseries_sources,
-                    timeseries_targets[targetvoxel_i, :],
-                )
+            #if rsquared > optimize_threshold:
+            best_models[targetvoxel_i, :] = optimize_connfield(
+                best_models[targetvoxel_i, 0],
+                best_models[targetvoxel_i, 1],
+                distances_along_mesh,
+                timeseries_sources,
+                timeseries_targets[targetvoxel_i, :],
+            )
 
     return {"best_models": best_models, "connfield_weights": connfield_weights}
 
@@ -145,6 +145,7 @@ def optimize_connfield(
             distances[[int(v0_i)], :],
             timeseries_sources,
         ),
+        bounds = [(0, None)]
     )
 
     # extract optimization results

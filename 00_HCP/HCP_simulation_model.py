@@ -33,11 +33,11 @@ PATH_SIMIMG = "{prefix_func}-Atlas-MSMAll_hp0_clean_bold_simulated.func.gii"
 VISPARC_PATH = (
     "{derivatives_path}/"
     "hemi-{hemi}_mesh-native_dens-native_"
-    "desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+    "desc-retinotbenson2014_label-visarea_dparc.label.gii"
 )
 
-LABELS_V1 = (1, 2)
-LABELS_V2 = (3, 4)
+LABELS_V1 = [1]
+LABELS_V2 = [2, 3]
 
 
 def get_indices_roi(labels_area, visparc):
@@ -50,14 +50,17 @@ def get_indices_roi(labels_area, visparc):
     Returns:
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
     """
-    indices_area = np.nonzero(
-        np.logical_or(
-            visparc.agg_data() == labels_area[0], visparc.agg_data(
-            ) == labels_area[1]
-        )
-    )[0]
-    return indices_area
+     # Ensure labels_area is a list
+    if not isinstance(labels_area, list):
+        labels_area = [labels_area]
+    
+    # Collect indices for all labels in labels_area
+    indices_area = np.concatenate([
+        np.nonzero(visparc.agg_data() == label)[0]
+        for label in labels_area
+    ])
 
+    return indices_area
 
 def save_gifti_timeseries(data, out_path):
     """Save timeseries in gifti file format.

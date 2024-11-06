@@ -23,7 +23,7 @@ path_wbcommand = "/bin/wb_command"
 path_mirtk = "/afs/cbs.mpg.de/software/mirtk/0.20231123/debian-bullseye-amd64/bin/mirtk"
 
 subject_info = pd.read_csv(
-    '/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_old.csv')
+    '/data/p_02915/SPOT/hcp_subj_path_SPOT_young.csv')
 sub_num = int(sys.argv[1])
 
 script_dir = Path(__file__).resolve().parent
@@ -36,7 +36,9 @@ fillretinotopy_script = str(
 project_results_script = str(
     script_dir / "HCP_native_to_fsaverage.sh"
 )
-
+project_results_script2 = str(
+    script_dir / "HCP_parameter_to_fsaverage.sh"
+)
 for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
     sub_id = subject_info.at[index, "sub_id"]
     path_anat_data = str(path_raw_data / sub_id /
@@ -56,7 +58,7 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
             path_wbcommand,
         ]
     ]
-    subprocess.run(cmd_fileprep, check=True)
+    #subprocess.run(cmd_fileprep, check=True)
 
     ############################### RESAMPLING RETINOTOPY TEMPLATE#############################
     cmd_warp_template = [
@@ -67,7 +69,7 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         str(path_HCPtemplates_standardmeshatlases),
         str(path_fsaverage),
     ]
-    subprocess.run(cmd_warp_template, check=True)
+    #subprocess.run(cmd_warp_template, check=True)
 
     ######################## SIMULATING ALTERNATIVE DATA###################################
     cmd_simulation_model = [
@@ -80,7 +82,7 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         "-sub",
         str(sub_id)
     ]
-    subprocess.run(cmd_simulation_model, check=True)
+    #subprocess.run(cmd_simulation_model, check=True)
 
     cmd_ccfmodel = [
         "python",
@@ -89,6 +91,8 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         str(path_derivatives),
         "-sub",
         sub_id,
+        "-th",
+        '0'
     ]
 
     subprocess.run(cmd_ccfmodel, check=True)
@@ -115,3 +119,15 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         str(path_wbcommand),
     ]
     subprocess.run(cmd_project_results, check=True)
+
+    cmd_project_results2 = [
+        project_results_script2,
+        str(sub_id),
+        str(path_anat_data),
+        str(path_derivatives),
+        str(path_HCPtemplates_standardmeshatlases),
+        str(path_fsaverage),
+        str(path_wbcommand),
+    ]
+    subprocess.run(cmd_project_results2, check=True)
+

@@ -64,14 +64,16 @@ def perform_ccf_analysis(
             timeseries_targetvoxel, timeseries_v0
         )
 
-    # replace sigma index with sigma value
-    best_models[:, 1] = [sigmas[int(sigma_i)] for sigma_i in best_models[:, 1]]
+    # replace sigma index with sigma value    
+    best_models[:, 1] = [sigmas[int(sigma_i)] if not np.isnan(sigma_i) else None for sigma_i in best_models[:, 1]]
 
+ 
     # ---------------------------------------------COMPUTE CONNECTIVE FIELDS-------------------
     if OPTIMIZE:
         for targetvoxel_i, rsquared in enumerate(best_models[:, 3]):
             # if model found some signal (rsquared threshold), then optimize
-            if rsquared > optimize_threshold:
+            #if rsquared > optimize_threshold:
+            if not np.isnan(best_models[targetvoxel_i, 0]):
                 best_models[targetvoxel_i, :] = optimize_connfield(
                     best_models[targetvoxel_i, 0],
                     best_models[targetvoxel_i, 1],
@@ -145,6 +147,7 @@ def optimize_connfield(
             distances[[int(v0_i)], :],
             timeseries_sources,
         ),
+        bounds = [(0, None)]
     )
 
     # extract optimization results

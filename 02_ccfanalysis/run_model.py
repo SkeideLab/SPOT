@@ -38,14 +38,14 @@ calc_shortestpath = ccfanalysis.ccf_model.meshgraph.calc_shortestpath
 VISPARC_PATH = (
     "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_"
-    "desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
+    "desc-retinotbenson2014_label-visarea_dparc.label.gii"
 )
 WM_PATH = (
     "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_space-bold_wm.surf.gii"
 )
 CURV_PATH = (
-    "/data/pt_02880/Package_1225541/fmriresults01/dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
+    "/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline/sub-{sub}/ses-{ses}/anat/"
     "sub-{sub}_ses-{ses}_hemi-{hemi_down}_curv.shape.gii"
 )
 DISTANCEFILE_PATH = (
@@ -60,8 +60,8 @@ OUTPUT_PREFIX = (
     "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_desc-{datasource}"
 )
-LABELS_V1 = [1, 2]
-LABELS_V2 = [3, 4, 5, 6]
+LABELS_V1 = [1]
+LABELS_V2 = [2, 3]
 
 
 def visualize_connective_field(mesh, v1_indices, connective_fields, curv):
@@ -308,10 +308,10 @@ def main():
                 sigmas,
             )
 
-            if not args.debug:
-                visualize_connective_field(
-                    wm, indices_v1, connfields["connfield_weights"], curv
-                )
+            #if not args.debug:
+            #    visualize_connective_field(
+            #        wm, indices_v1, connfields["connfield_weights"], curv
+            #    )
 
             save_results(
                 indices_v2=indices_v2,

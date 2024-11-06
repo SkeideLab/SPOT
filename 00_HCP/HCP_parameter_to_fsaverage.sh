@@ -13,7 +13,7 @@ threshold="00"
 
 for hemi in L R; do
 
-    for model in simulated; do
+    for model in real simulated; do
         for param in r rss sigma v0i; do
 
             sphere_native="/data/p_02915/templates/fs_LR_32-master/fs_LR.32k.${hemi}".sphere.surf.gii

@@ -62,162 +62,41 @@ def extract_roi_mesh(brain_mesh, indices):
 
 
 df = pd.DataFrame()
-for param in ["eccentricity", "polarangle"]:
-    results_list = []
-    print(param)
-    gradients = {}
-    for group in ["neonates<37", "neonates>37", "fetal<29", "fetal>29", "12-16y", "18-21y"]:
-        original_H_value = []
-        original_z_score = []
-        original_p_value = []
-        bootstrap_p_value = []
-        bootstrap_ci_lows = []
-        bootstrap_ci_highs = []
-        index_label = []
-        if group == "neonates<37":
-            PREFIX_MODEL = (
-                "/data/p_02915/dhcp_derivatives_SPOT/statistics/"
-                "{sub}_{ses}_{hemi}_{param}_gradient.gii"
-            )
-            AVER_MAP = (
-                "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/"
-                "Averaged_{hemi}_label-{param}_desc-real_roi-v2th00_metric_less_37.gii"
-            )
-            subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37.csv')
-            sub_num = len(subject_info["sub_id"])
-            row_p = 2
-        elif group == "neonates>37":
-            PREFIX_MODEL = (
-                "/data/p_02915/dhcp_derivatives_SPOT/statistics/"
-                "{sub}_{ses}_{hemi}_{param}_gradient.gii"
-            )
-            AVER_MAP = (
-                "/data/p_02915/dhcp_derivatives_SPOT/ccfmodel/"
-                "Averaged_{hemi}_label-{param}_desc-real_roi-v2th00_metric_less_37.gii"
-            )
-            subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37.csv')
-            sub_num = len(subject_info["sub_id"])
-            row_p = 3
-        elif group == "fetal<29":
-            PREFIX_MODEL = (
-                "/data/p_02915/dhcp_derivatives_SPOT/statistics/"
-                "{sub}_{ses}_{hemi}_{param}_gradient.gii"
-            )
-            AVER_MAP = (
-                "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/"
-                "Averaged_younger_fetal_{hemi}_label-{param}_desc-real_roi-v2th00_metric.gii"
-            )
-            subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv')
-            sub_num = len(subject_info["sub_id"])
-            row_p = 0
-        elif group == "fetal>29":
-            PREFIX_MODEL = (
-                "/data/p_02915/dhcp_derivatives_SPOT/statistics/"
-                "{sub}_{ses}_{hemi}_{param}_gradient.gii"
-            )
-            AVER_MAP = (
-                "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/"
-                "Averaged_older_fetal_{hemi}_label-{param}_desc-real_roi-v2th00_metric.gii"
-            )
-            subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_3.csv')
-            sub_num = len(subject_info["sub_id"])
-            row_p = 1
-        elif group == "12-16y":
-            PREFIX_MODEL = (
-                "/data/p_02915/dhcp_derivatives_SPOT/statistics/"
-                "{sub}_{hemi}_{param}_gradient.gii"
-            )
-            AVER_MAP = (
-                "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel/"
-                "Averaged_{hemi}_label-{param}_desc-real_roi-v2th00_metric_young.gii"
-            )
-            subject_info = pd.read_csv(
-                '/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_young.csv')
-            sub_num = len(subject_info["sub_id"])
-            row_p = 4
-        elif group == "18-21y":
-            PREFIX_MODEL = (
-                "/data/p_02915/dhcp_derivatives_SPOT/statistics/"
-                "{sub}_{hemi}_{param}_gradient.gii"
-            )
-            AVER_MAP = (
-                "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel/"
-                "Averaged_{hemi}_label-{param}_desc-real_roi-v2th00_metric_old.gii"
-            )
-            subject_info = pd.read_csv(
-                '/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_old.csv')
-            sub_num = len(subject_info["sub_id"])
-            row_p = 5
-
-        for axis in ["R", "A", "S"]:
-            if axis == "R":
-                ax = 0
-            elif axis == "A":
-                ax = 1
-            elif axis == "S":
-                ax = 2
-
-            for hemi in ["L", "R"]:
-                for region in ["v2v", "v2d"]:
-                    if region == "v2v":
-                        LABELS_V2 = 3
-                    elif region == "v2d":
-                        LABELS_V2 = 4
-                    group_name = f"{group}_{hemi}"
-                    parameters = []
-                    visparc = nib.load(VISPARC_PATH.format(hemi=hemi))
-                    indices_v2 = get_indices_roi(LABELS_V2, visparc)
-                # FORMAT PATHS FOR INPUT AND OUTPUT
-                    for index, row in subject_info.iterrows():
-                        if group == "12-16y" or group == "18-21y":
-                            sub_id = subject_info.at[index, "sub_id"]
-                            prefix_model = PREFIX_MODEL.format(
-                                sub=sub_id,
-                                hemi=hemi,
-                                param=param,
-                            )
-                            input_path = prefix_model
-                            ccf = surface.load_surf_data(input_path)
-                            ccf_v0 = ccf[ax, indices_v2].astype(np.float64)
-                            ccf_v0 = ccf_v0[~np.isnan(ccf_v0)]
-                            parameters.append(np.mean(ccf_v0))
-                        else:
-                            sub_id = subject_info.at[index, "sub_id"]
-                            sess_id = subject_info.at[index, "sess_id"]
-                            sub = sub_id.replace('sub-', '')
-                            ses = sess_id.replace('ses-', '')
-                            prefix_model = PREFIX_MODEL.format(
-                                sub=sub,
-                                ses=ses,
-                                hemi=hemi,
-                                param=param,
-                            )
-                            input_path = prefix_model
-                            ccf = surface.load_surf_data(input_path)
-                            ccf_v0 = ccf[ax, indices_v2].astype(np.float64)
-                            ccf_v0 = ccf_v0[~np.isnan(ccf_v0)]
-                            parameters.append(np.mean(ccf_v0))
-                    gradients[f"{group}_{hemi}_{region}_{axis}"] = np.array(
-                        parameters)
+for param in ["eccentricity", "polarangle"]:    
+    i = 0
+    original_H_value = []
+    original_z_score = []
+    original_p_value = []
+    bootstrap_p_value = []
+    bootstrap_ci_lows = []
+    bootstrap_ci_highs = []
+    index_label = []
 
     for hemi in ["L", "R"]:
-        for region in ["v2v", "v2d"]:
+        for area in ["V2v", "V2d", "V3v", "V3d"]:
             for axis in ["R", "A", "S"]:
                 n_bootstraps = 10000
-                groups_flatt = {
-                    'fetal_y': gradients[f"fetal<29_{hemi}_{region}_{axis}"],
-                    'fetal_o': gradients[f"fetal>29_{hemi}_{region}_{axis}"],
-                    'neonates_y': gradients[f"neonates<37_{hemi}_{region}_{axis}"],
-                    'neonates_o': gradients[f"neonates>37_{hemi}_{region}_{axis}"],
-                    'hcp_y': gradients[f"12-16y_{hemi}_{region}_{axis}"],
-                    'hcp_o': gradients[f"18-21y_{hemi}_{region}_{axis}"],
-                }
-
+                combat_harmonized = pd.read_csv(f"/data/p_02915/SPOT/combat_hemi-{hemi}_area-{area}_{param}_{axis}.csv", index_col=None).to_numpy()
+                covars = pd.read_csv(f"/data/p_02915/SPOT/covars_hemi-{hemi}.csv")
+                print(type(combat_harmonized))
+                groups_flatt = {               
+                            '2nd': combat_harmonized[:, covars[covars["group"] == "2nd"].index].flatten(),
+                            '3rd': combat_harmonized[:, covars[covars["group"] == "3rd"].index].flatten(),
+                            'preterm': combat_harmonized[:, covars[covars["group"] == "preterm"].index].flatten(),
+                            'fullterm': combat_harmonized[:, covars[covars["group"] == "fullterm"].index].flatten(),
+                            'adolescent': combat_harmonized[:, covars[covars["group"] == "adolescent"].index].flatten(),
+                            'adult': combat_harmonized[:, covars[covars["group"] == "adult"].index].flatten()
+                        }
+                groups = {
+                            '2nd': combat_harmonized[:, covars[covars["group"] == "2nd"].index].T,
+                            '3rd': combat_harmonized[:, covars[covars["group"] == "3rd"].index].T,
+                            'preterm': combat_harmonized[:, covars[covars["group"] == "preterm"].index].T,
+                            'fullterm': combat_harmonized[:, covars[covars["group"] == "fullterm"].index].T,
+                            'adolescent': combat_harmonized[:, covars[covars["group"] == "adolescent"].index].T,
+                            'adult': combat_harmonized[:, covars[covars["group"] == "adult"].index].T
+                        }
                 all_groups_flatt = list(groups_flatt.values())
+                
                 # Perform the original Kruskal-Wallis test
                 kruskal_statistic, kruskal_p_value = kruskal(*all_groups_flatt)
                 print(hemi)
@@ -270,7 +149,7 @@ for param in ["eccentricity", "polarangle"]:
                 bootstrap_p_value.append(bootstrap_kruskal_p_value)
                 bootstrap_ci_lows.append(bootstrap_ci_low)
                 bootstrap_ci_highs.append(bootstrap_ci_high)
-                index_label.append(f"{hemi}_{region}_{axis}")
+                index_label.append(f"{hemi}_{area}_{axis}")
 
     results_dict = {
         "Original H": original_H_value,

@@ -9,17 +9,19 @@ PREFIX_MODEL = (
 )
 # sub-CC00056XX07_ses-10700_hemi-L_mesh-fsaverage_dens-164k_label-polarangle_desc-real_roi-v2th00_metric
 INPUT = (
-    "{prefix_model}_label-{parm}_desc-{model}_roi-v2th00_metric.gii"
+    #"{prefix_model}_label-{parm}_desc-{model}_roi-v2th00_metric.gii"
+    "{prefix_model}_desc-{model}_{parm}.gii"
 )
 OUTPUT = (
-    "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel/Averaged_{hemi}_label-{parm}_desc-{model}_roi-v2th00_metric_old.gii"
+    "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel/Averaged_young_{hemi}_label-{parm}_desc-{model}_roi-v2th00_metric.gii"
 )
 subject_info = pd.read_csv(
-    '/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_old.csv')
+    '/data/p_02915/SPOT/hcp_subj_path_SPOT_young.csv')
 sub_num = len(subject_info["sub_id"])
 
 sum_data = []  # Initialize outside the loop
-for param in ["eccentricity", "polarangle"]:
+#for param in ["eccentricity", "polarangle"]:
+for param in ["sigma"]:
     for hemi in ["L", "R"]:
         # FORMAT PATHS FOR INPUT AND OUTPUT
 
