@@ -62,7 +62,7 @@ def bootstrap_resample_mannwhitney(n_resamples, combined_data, n_groupA, n_group
 def flatten(arr):
     return arr.flatten()
 
-for param in ["desc-real_sigma"]: #,"label-eccentricity_desc-real_roi-v2th00_metric","label-polarangle_desc-real_roi-v2th00_metric"
+for param in ["desc-real_r", "desc-real_sigma"]: #,"label-eccentricity_desc-real_roi-v2th00_metric","label-polarangle_desc-real_roi-v2th00_metric"
     if param =="desc-real_r":
         test_value = "r"
     elif param == "desc-real_sigma":
@@ -72,7 +72,7 @@ for param in ["desc-real_sigma"]: #,"label-eccentricity_desc-real_roi-v2th00_met
     elif param =="label-polarangle_desc-real_roi-v2th00_metric":
         test_value = "polarangle"
 
-    for area in ["V2", "V3"]:
+    for area in ["V2_V3"]:
         if area == "V2":
             LABELS_V2 = [2]
         elif area == "V3":
@@ -81,8 +81,8 @@ for param in ["desc-real_sigma"]: #,"label-eccentricity_desc-real_roi-v2th00_met
             LABELS_V2 = [2, 3]
 
         for hemi in ["L", "R"]:
-            combat_harmonized = pd.read_csv(f"/data/p_02915/SPOT/combat_hemi-{hemi}_area-{area}_{test_value}.csv", index_col=None).to_numpy()
-            covars = pd.read_csv(f"/data/p_02915/SPOT/covars_hemi-{hemi}.csv")
+            combat_harmonized = pd.read_csv(f"/data/p_02915/SPOT/Result/combat_hemi-{hemi}_area-{area}_{test_value}.csv", index_col=None).to_numpy()
+            covars = pd.read_csv(f"/data/p_02915/SPOT/Result/covars_hemi-{hemi}.csv")
             print(type(combat_harmonized))
             groups_flatt = {               
                         '2nd': combat_harmonized[:, covars[covars["group"] == "2nd"].index].flatten(),
