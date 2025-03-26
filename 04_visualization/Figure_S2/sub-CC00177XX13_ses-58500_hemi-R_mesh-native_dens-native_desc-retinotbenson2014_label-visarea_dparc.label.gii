@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GIFTI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://brainvis.wustl.edu/caret6/xml_schemas/GIFTI_Caret.xsd"
+       Version="1"
+       NumberOfDataArrays="1">
+   <MetaData>
+      <MD>
+         <Name><![CDATA[AnatomicalStructurePrimary]]></Name>
+         <Value><![CDATA[Invalid]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[ParentProvenance]]></Name>
+         <Value><![CDATA[/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/hemi-R_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii:
+wb_command -metric-label-import /data/u_kieslinger_software/code/spot/01_surfaceprep/templates_retinotopy/hemi-R_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg_metriclabel.gii /data/u_kieslinger_software/code/spot/01_surfaceprep/templates_retinotopy/labeltable_benson2014 /data/u_kieslinger_software/code/spot/01_surfaceprep/templates_retinotopy/hemi-R_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii
+
+/data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00177XX13/ses-58500/surface_transforms/sub-CC00177XX13_ses-58500_hemi-R_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii:
+wb_command -surface-sphere-project-unproject /data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00177XX13/ses-58500/surface_transforms/sub-CC00177XX13_ses-58500_hemi-R_from-native_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii /data/p_02915/templates/template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template/week-40_hemi-right_space-dhcpSym_dens-32k_sphere.surf.gii /data/p_02915/SPOT/01_dataprep/retinotopy/standard_registrations/hemi-R_from-dhcpSym_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii /data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00177XX13/ses-58500/surface_transforms/sub-CC00177XX13_ses-58500_hemi-R_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii
+
+]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[ProgramProvenance]]></Name>
+         <Value><![CDATA[Connectome Workbench
+Type: Command Line Application
+Version: 2.0.0
+Qt Compiled Version: 5.15.2
+Qt Runtime Version: 5.15.2
+Commit: unknown
+Commit Date: unknown
+Compiler: c++ (/usr/lib/ccache)
+Compiler Version: 10.2.1
+Compiled Debug: NO
+Operating System: Linux
+Compiled with OpenMP: YES
+]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[Provenance]]></Name>
+         <Value><![CDATA[wb_command -label-resample /data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/hemi-R_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii /data/u_yoos_software/HCPpipelines/global/templates/standard_mesh_atlases/resample_fsaverage/fsaverage_std_sphere.R.164k_fsavg_R.surf.gii /data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00177XX13/ses-58500/surface_transforms/sub-CC00177XX13_ses-58500_hemi-R_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii ADAP_BARY_AREA /data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00177XX13/ses-58500/anat/sub-CC00177XX13_ses-58500_hemi-R_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc.label.gii -area-surfs /data/p_02915/templates/template_fsaverage/fsaverage/surf/rh_midthickness_surf.gii /data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline/sub-CC00177XX13/ses-58500/anat/sub-CC00177XX13_ses-58500_hemi-right_midthickness.surf.gii]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[WorkingDirectory]]></Name>
+         <Value><![CDATA[/data/p_02915/SPOT]]></Value>
+      </MD>
+   </MetaData>
+   <LabelTable>
+      <Label Key="0" Red="1" Green="1" Blue="1" Alpha="0"><![CDATA[???]]></Label>
+      <Label Key="1" Red="0.960784" Green="0.756863" Blue="0.0352941" Alpha="1"><![CDATA[V1]]></Label>
+      <Label Key="2" Red="0.960784" Green="0.956863" Blue="0.694118" Alpha="1"><![CDATA[V2]]></Label>
+      <Label Key="3" Red="0.780392" Green="0.839216" Blue="0.501961" Alpha="1"><![CDATA[V3]]></Label>
+      <Label Key="4" Red="0.788235" Green="0.976471" Blue="0.756863" Alpha="1"><![CDATA[hV4]]></Label>
+      <Label Key="5" Red="0.988235" Green="0.345098" Blue="0.678431" Alpha="1"><![CDATA[VO1]]></Label>
+      <Label Key="6" Red="0.290196" Green="0.0941176" Blue="0.254902" Alpha="1"><![CDATA[VO2]]></Label>
+      <Label Key="7" Red="0.580392" Green="0.470588" Blue="0.831373" Alpha="1"><![CDATA[LO1]]></Label>
+      <Label Key="8" Red="0.831373" Green="0.0431373" Blue="0.94902" Alpha="1"><![CDATA[LO2]]></Label>
+      <Label Key="9" Red="0.870588" Green="0.0823529" Blue="0.27451" Alpha="1"><![CDATA[TO1]]></Label>
+      <Label Key="10" Red="0.513726" Green="0.513726" Blue="0.631373" Alpha="1"><![CDATA[TO2]]></Label>
+      <Label Key="11" Red="0.235294" Green="0.670588" Blue="0.235294" Alpha="1"><![CDATA[V3b]]></Label>
+      <Label Key="12" Red="0.807843" Green="0.305882" Blue="0.752941" Alpha="1"><![CDATA[V3a]]></Label>
+   </LabelTable>
+<DataArray Intent="NIFTI_INTENT_LABEL"
+           DataType="NIFTI_TYPE_INT32"
+           ArrayIndexingOrder="RowMajorOrder"
+           Dimensionality="1"
+           Dim0="49976"
+           Encoding="GZipBase64Binary"
+           Endian="LittleEndian"
+           ExternalFileName=""
+           ExternalFileOffset="0">
+   <MetaData>
+      <MD>
+         <Name><![CDATA[Name]]></Name>
+         <Value><![CDATA[#1]]></Value>
+      </MD>
+   </MetaData>
+   <Data>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</Data>
+</DataArray>
+</GIFTI>

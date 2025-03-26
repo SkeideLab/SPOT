@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GIFTI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://brainvis.wustl.edu/caret6/xml_schemas/GIFTI_Caret.xsd"
+       Version="1"
+       NumberOfDataArrays="1">
+   <MetaData>
+      <MD>
+         <Name><![CDATA[AnatomicalStructurePrimary]]></Name>
+         <Value><![CDATA[Invalid]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[ParentProvenance]]></Name>
+         <Value><![CDATA[/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/hemi-R_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii:
+wb_command -metric-label-import /data/u_kieslinger_software/code/spot/01_surfaceprep/templates_retinotopy/hemi-R_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg_metriclabel.gii /data/u_kieslinger_software/code/spot/01_surfaceprep/templates_retinotopy/labeltable_benson2014 /data/u_kieslinger_software/code/spot/01_surfaceprep/templates_retinotopy/hemi-R_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii
+
+/data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00320XX07/ses-102300/surface_transforms/sub-CC00320XX07_ses-102300_hemi-R_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii:
+wb_command -surface-sphere-project-unproject /data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00320XX07/ses-102300/surface_transforms/sub-CC00320XX07_ses-102300_hemi-R_from-native_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii /data/p_02915/templates/template_corticalsurfaceneonatessym_williams2023_dhcp/dhcpSym_template/week-40_hemi-right_space-dhcpSym_dens-32k_sphere.surf.gii /data/p_02915/SPOT/01_dataprep/retinotopy/standard_registrations/hemi-R_from-dhcpSym_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii /data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00320XX07/ses-102300/surface_transforms/sub-CC00320XX07_ses-102300_hemi-R_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii
+
+]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[ProgramProvenance]]></Name>
+         <Value><![CDATA[Connectome Workbench
+Type: Command Line Application
+Version: 2.0.0
+Qt Compiled Version: 5.15.2
+Qt Runtime Version: 5.15.2
+Commit: unknown
+Commit Date: unknown
+Compiler: c++ (/usr/lib/ccache)
+Compiler Version: 10.2.1
+Compiled Debug: NO
+Operating System: Linux
+Compiled with OpenMP: YES
+]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[Provenance]]></Name>
+         <Value><![CDATA[wb_command -label-resample /data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/hemi-R_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii /data/u_yoos_software/HCPpipelines/global/templates/standard_mesh_atlases/resample_fsaverage/fsaverage_std_sphere.R.164k_fsavg_R.surf.gii /data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00320XX07/ses-102300/surface_transforms/sub-CC00320XX07_ses-102300_hemi-R_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii ADAP_BARY_AREA /data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-CC00320XX07/ses-102300/anat/sub-CC00320XX07_ses-102300_hemi-R_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc.label.gii -area-surfs /data/p_02915/templates/template_fsaverage/fsaverage/surf/rh_midthickness_surf.gii /data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline/sub-CC00320XX07/ses-102300/anat/sub-CC00320XX07_ses-102300_hemi-right_midthickness.surf.gii]]></Value>
+      </MD>
+      <MD>
+         <Name><![CDATA[WorkingDirectory]]></Name>
+         <Value><![CDATA[/data/p_02915/SPOT]]></Value>
+      </MD>
+   </MetaData>
+   <LabelTable>
+      <Label Key="0" Red="1" Green="1" Blue="1" Alpha="0"><![CDATA[???]]></Label>
+      <Label Key="1" Red="0.960784" Green="0.756863" Blue="0.0352941" Alpha="1"><![CDATA[V1]]></Label>
+      <Label Key="2" Red="0.960784" Green="0.956863" Blue="0.694118" Alpha="1"><![CDATA[V2]]></Label>
+      <Label Key="3" Red="0.780392" Green="0.839216" Blue="0.501961" Alpha="1"><![CDATA[V3]]></Label>
+      <Label Key="4" Red="0.788235" Green="0.976471" Blue="0.756863" Alpha="1"><![CDATA[hV4]]></Label>
+      <Label Key="5" Red="0.988235" Green="0.345098" Blue="0.678431" Alpha="1"><![CDATA[VO1]]></Label>
+      <Label Key="6" Red="0.290196" Green="0.0941176" Blue="0.254902" Alpha="1"><![CDATA[VO2]]></Label>
+      <Label Key="7" Red="0.580392" Green="0.470588" Blue="0.831373" Alpha="1"><![CDATA[LO1]]></Label>
+      <Label Key="8" Red="0.831373" Green="0.0431373" Blue="0.94902" Alpha="1"><![CDATA[LO2]]></Label>
+      <Label Key="9" Red="0.870588" Green="0.0823529" Blue="0.27451" Alpha="1"><![CDATA[TO1]]></Label>
+      <Label Key="10" Red="0.513726" Green="0.513726" Blue="0.631373" Alpha="1"><![CDATA[TO2]]></Label>
+      <Label Key="11" Red="0.235294" Green="0.670588" Blue="0.235294" Alpha="1"><![CDATA[V3b]]></Label>
+      <Label Key="12" Red="0.807843" Green="0.305882" Blue="0.752941" Alpha="1"><![CDATA[V3a]]></Label>
+   </LabelTable>
+<DataArray Intent="NIFTI_INTENT_LABEL"
+           DataType="NIFTI_TYPE_INT32"
+           ArrayIndexingOrder="RowMajorOrder"
+           Dimensionality="1"
+           Dim0="73114"
+           Encoding="GZipBase64Binary"
+           Endian="LittleEndian"
+           ExternalFileName=""
+           ExternalFileOffset="0">
+   <MetaData>
+      <MD>
+         <Name><![CDATA[Name]]></Name>
+         <Value><![CDATA[#1]]></Value>
+      </MD>
+   </MetaData>
+   <Data>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</Data>
+</DataArray>
+</GIFTI>
