@@ -180,16 +180,103 @@ for hemi in left right; do
   elif [ $hemi = "right" ]; then
     hemi_upper="R"
   fi
-  func_on_surf="${output_dir_sub}/func/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_bold.func.gii"
-  # mapping MEAN and COV
-  for map in mean cov; do
 
-    # -volume-to-surface-mapping WITH -volume-roi
-    # NAME: ${map}_hemi-${hemi}_mesh-native.func.gii
+  func_on_surf="${output_dir_sub}/func/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_bold.func.gii"
+
+  # run only if final result file does not exist
+  if [ ! -f "$func_on_surf" ]; then
+    # inputs
+    midthickness=${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii
+    wm=${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii
+    pial=${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii
+    sphere=${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_sphere.surf.gii
+
+    # temp outputs if resampling is needed
+    wm_resamp=${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii
+    pial_resamp=${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii \
+
+    # try mapping once
+    echo ">>> Attempting direct volume-to-surface mapping"
+    if ! $path_wbcommand -volume-to-surface-mapping \
+        ${work_dir}/mean.nii.gz \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
+        ${work_dir}/mean_hemi-${hemi}_mesh-native.func.gii \
+        -ribbon-constrained \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii \
+        -volume-roi \
+        ${work_dir}/goodvoxels.nii.gz ; then
+
+      echo ">>> Mapping failed due to vertex correspondence, resampling surfaces..."
+
+      ${path_wbcommand} -surface-resample \
+        "$wm" "$sphere" "$sphere" BARYCENTRIC "$wm_resamp"
+
+      ${path_wbcommand} -surface-resample \
+        "$pial" "$sphere" "$sphere" BARYCENTRIC "$pial_resamp"
+
+      wm="$wm_resamp"
+      pial="$pial_resamp"
+    fi
+
+    # mapping MEAN and COV
+    for map in mean cov; do
+
+      $path_wbcommand -volume-to-surface-mapping \
+        ${work_dir}/${map}.nii.gz \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
+        ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
+        -ribbon-constrained \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii \
+        -volume-roi \
+        ${work_dir}/goodvoxels.nii.gz
+
+      $path_wbcommand -metric-dilate \
+        ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
+        10 \
+        ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
+        -nearest
+
+      $path_wbcommand -metric-mask \
+        ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
+        ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
+        ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii
+
+      $path_wbcommand -volume-to-surface-mapping \
+        ${work_dir}/${map}.nii.gz \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
+        ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii \
+        -ribbon-constrained \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
+        ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii
+
+      $path_wbcommand -metric-mask \
+        ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii \
+        ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
+        ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii
+    done
+
+    # mapping GOODVOXELS
     $path_wbcommand -volume-to-surface-mapping \
-      ${work_dir}/${map}.nii.gz \
+      ${work_dir}/goodvoxels.nii.gz \
       ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
-      ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
+      ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
+      -ribbon-constrained \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii
+
+    $path_wbcommand -metric-mask \
+      ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
+      ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
+      ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii
+
+    # ribbon constrained mapping of fMRI volume to native anatomical surface (in func space)
+    $path_wbcommand -volume-to-surface-mapping \
+      ${func} \
+      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
+      "$func_on_surf" \
       -ribbon-constrained \
       ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
       ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii \
@@ -197,72 +284,20 @@ for hemi in left right; do
       ${work_dir}/goodvoxels.nii.gz
 
     $path_wbcommand -metric-dilate \
-      ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
+      "$func_on_surf" \
       ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
       10 \
-      ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
+      "$func_on_surf" \
       -nearest
 
     $path_wbcommand -metric-mask \
-      ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii \
+      "$func_on_surf" \
       ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
-      ${work_dir}/${map}_hemi-${hemi}_mesh-native.func.gii
+      "$func_on_surf"
 
-    # -volume-to-surface-mapping WITHOUT -volume-roi
-    # NAME: ${map}_all_hemi-${hemi}_mesh-native.func.gii
-    $path_wbcommand -volume-to-surface-mapping \
-      ${work_dir}/${map}.nii.gz \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
-      ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii \
-      -ribbon-constrained \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
-      ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii
-
-    $path_wbcommand -metric-mask \
-      ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii \
-      ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
-      ${work_dir}/${map}_all_hemi-${hemi}_mesh-native.func.gii
-  done
-
-  # mapping GOODVOXELS
-  # NAME: goodvoxels_hemi-${hemi}_mesh-native.shape.gii
-  $path_wbcommand -volume-to-surface-mapping \
-    ${work_dir}/goodvoxels.nii.gz \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
-    ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
-    -ribbon-constrained \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii
-
-  $path_wbcommand -metric-mask \
-    ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii \
-    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
-    ${work_dir}/goodvoxels_hemi-${hemi}_mesh-native.shape.gii
-
-  #  ribbon constrained mapping of fMRI volume to native anatomical surface (in func space)
-  # NAME: func_hemi-${hemi}_mesh-native.func.gii
-  $path_wbcommand -volume-to-surface-mapping \
-    ${func} \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
-    "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
-    -ribbon-constrained \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_wm.surf.gii \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_pial.surf.gii \
-    -volume-roi \
-    ${work_dir}/goodvoxels.nii.gz
-
-  $path_wbcommand -metric-dilate \
-    "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
-    ${output_dir_sub}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi_upper}_mesh-native_space-bold_midthickness.surf.gii \
-    10 \
-    "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
-    -nearest
-
-  $path_wbcommand -metric-mask \
-    "${func_on_surf/\{hemi_upper\}/$hemi_upper}" \
-    ${sub_anat}/anat/sub-${subid}_ses-${sesid}_hemi-${hemi}_desc-medialwall_mask.shape.gii \
-    "${func_on_surf/\{hemi_upper\}/$hemi_upper}"
+  fi
 
 done
+
 
 rm -rf "${work_dir}"

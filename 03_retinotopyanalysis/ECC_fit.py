@@ -97,23 +97,23 @@ sub_id_list, group_list, hemi_list, area_list, r2_linear_list, slope_list, y_shi
 for group in ["preterm", "fullterm", "2nd", "3rd", "adolescent", "adult", "benson"]:
     if group == "preterm":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel/sub-{sub}/ses-{ses}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel_var/sub-{sub}/ses-{ses}/"
             "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric.gii"
         )
         subject_info = pd.read_csv(
-            '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
+            '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_no_drop_v2.csv')
         sub_num = len(subject_info["sub_id"])
     elif group == "fullterm":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel/sub-{sub}/ses-{ses}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel_var/sub-{sub}/ses-{ses}/"
             "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric.gii"
         )
         subject_info = pd.read_csv(
-            '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
+            '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_no_drop_v2.csv')
         sub_num = len(subject_info["sub_id"])
     elif group == "2nd":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/sub-{sub}/ses-{ses}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel_var/sub-{sub}/ses-{ses}/"
             "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric.gii"
         )
         subject_info = pd.read_csv(
@@ -121,7 +121,7 @@ for group in ["preterm", "fullterm", "2nd", "3rd", "adolescent", "adult", "benso
         sub_num = len(subject_info["sub_id"])
     elif group == "3rd":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/sub-{sub}/ses-{ses}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel_var/sub-{sub}/ses-{ses}/"
             "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric.gii"
         )
         subject_info = pd.read_csv(
@@ -129,7 +129,7 @@ for group in ["preterm", "fullterm", "2nd", "3rd", "adolescent", "adult", "benso
         sub_num = len(subject_info["sub_id"])
     elif group == "adolescent":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel/{sub}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel_var/{sub}/"
             "{sub}_hemi-{hemi}_mesh-fsaverage_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric.gii"
         )
         subject_info = pd.read_csv(
@@ -137,7 +137,7 @@ for group in ["preterm", "fullterm", "2nd", "3rd", "adolescent", "adult", "benso
         sub_num = len(subject_info["sub_id"])
     elif group == "adult":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel/{sub}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel_var/{sub}/"
             "{sub}_hemi-{hemi}_mesh-fsaverage_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric.gii"
         )
         subject_info = pd.read_csv(

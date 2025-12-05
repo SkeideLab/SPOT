@@ -20,14 +20,14 @@ def flatten(arr):
 parameters_L = []
 parameters_R = []
 
-for group in ["12-16y", "18-21y"]: #, "neonates<37", "neonates>37", "fetal<29", "fetal>29"]
+for group in ["neonates<37", "neonates>37", "fetal<29", "fetal>29", "12-16y", "18-21y"]: #, "neonates<37", "neonates>37", "fetal<29", "fetal>29"]
     results_list = []    
     if group == "neonates<37":
         PREFIX_MODEL = "/data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_bold.func.gii"
-        subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
+        subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_no_drop_v2.csv')
     elif group == "neonates>37":
         PREFIX_MODEL = "/data/p_02915/dhcp_derivatives_SPOT/Neonates/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_bold.func.gii"
-        subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
+        subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_no_drop_v2.csv')
     elif group == "fetal<29":
         PREFIX_MODEL = "/data/p_02915/dhcp_derivatives_SPOT/fetal/dhcp_surface/sub-{sub}/ses-{ses}/func/sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_bold.func.gii"
         subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_young.csv')

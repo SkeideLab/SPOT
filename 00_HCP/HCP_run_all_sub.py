@@ -16,7 +16,7 @@ fillretinotopy_script_2 = str(
     script_dir / "HCP_filter_sigma.py"
 )
 project_results_script2 = str(
-    script_dir / "HCP_parameter_to_fsaverage.sh"
+    script_dir / "HCP_tsnr_to_fsaverage.sh"
 )
 path_derivatives = Path("/data/p_02915/dhcp_derivatives_SPOT/HCP-D")
 path_raw_data = Path("/data/pt_02880/HCP_D/fmriresults01")  # path_derivatives / "dhcp_anat_pipeline"
@@ -58,7 +58,7 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         "-th",
         '01',
     ]
-    subprocess.run(cmd_fillretinotopy, check=True)
+    #subprocess.run(cmd_fillretinotopy, check=True)
 
     cmd_fillretinotopy_2 = [
         "python",
@@ -70,7 +70,7 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         "-th",
         '01',
     ]
-    subprocess.run(cmd_fillretinotopy_2, check=True)
+   #subprocess.run(cmd_fillretinotopy_2, check=True)
 
     cmd_project_results = [
         project_results_script,
@@ -81,7 +81,7 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
         str(path_fsaverage),
         str(path_wbcommand),
     ]
-    subprocess.run(cmd_project_results, check=True)
+    #subprocess.run(cmd_project_results, check=True)
 
     cmd_project_results2 = [
         project_results_script2,

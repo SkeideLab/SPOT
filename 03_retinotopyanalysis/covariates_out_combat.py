@@ -31,11 +31,11 @@ def get_indices_roi(labels_area, visparc):
 
 
 PREFIX_MODEL = (
-    "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
+    "{root_dir}/ccfmodel_var/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k"
 )
 PREFIX_MODEL_2 = (
-    "{root_dir}/ccfmodel/{sub}/"
+    "{root_dir}/ccfmodel_var/{sub}/"
     "{sub}_hemi-{hemi}_mesh-fsaverage_dens-164k"
 )
 PREFIX_SUB_TEMPLATE = (
@@ -47,7 +47,7 @@ PREFIX_SUB_TEMPLATE = (
 PATH_v0 = "{prefix_model}_{param}.gii"
 
 
-for param in ["desc-real_r", "desc-real_sigma"]: #  "label-eccentricity_desc-real_roi-v2th00_metric", "label-polarangle_desc-real_roi-v2th00_metric"
+for param in ["desc-real_r"]: #  
     if param =="desc-real_r":
         test_value = "r"
     elif param == "desc-real_sigma":
@@ -79,11 +79,11 @@ for param in ["desc-real_r", "desc-real_sigma"]: #  "label-eccentricity_desc-rea
             for group in ["2nd", "3rd", "preterm", "fullterm", "adolescent", "adult"]:
                 if group == "preterm":
                     subject_info = pd.read_csv(
-                        '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
+                        '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_no_drop_v2.csv')
                     sub_num = len(subject_info["sub_id"])
                 elif group == "fullterm":
                     subject_info = pd.read_csv(
-                        '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
+                        '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_no_drop_v2.csv')
                     sub_num = len(subject_info["sub_id"])           
                 elif group == "2nd":
                     subject_info = pd.read_csv(
@@ -153,7 +153,7 @@ for param in ["desc-real_r", "desc-real_sigma"]: #  "label-eccentricity_desc-rea
                         ccf_v0 = ccf[indices_v2].astype(np.float64)
                         parameters.append(ccf_v0)
                 print(group)
-                print(np.nanmean(parameters))
+                print(np.nanmean(np.vstack(parameters)>0))
 
             processed_parameters = []
 
@@ -169,6 +169,12 @@ for param in ["desc-real_r", "desc-real_sigma"]: #  "label-eccentricity_desc-rea
 
             combined_subject_data = np.vstack(processed_parameters)
             if test_value == "r":
+                group_avg_r = np.mean(combined_subject_data, axis=0)  # average for each vertex
+                r_min = np.min(group_avg_r)
+                r_max = np.max(group_avg_r)
+                print(f"Group-averaged r-values for hemi-{hemi}, area-{area}:")
+                print(f"  → r_min = {r_min:.6f}, r_max = {r_max:.6f}")
+
                 # Clip the data to avoid r values exactly equal to -1 or 1 (which would cause division by zero)
                 combined_subject_data_clipped = np.clip(combined_subject_data, -0.9999, 0.9999)
 
@@ -177,11 +183,11 @@ for param in ["desc-real_r", "desc-real_sigma"]: #  "label-eccentricity_desc-rea
 
                 # Save the Fisher-transformed data
                 save_fisher_data = pd.DataFrame(fisher_transformed_data.T)
-                save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
+                #save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
             else:
                 fisher_transformed_data  = combined_subject_data
                 save_fisher_data = pd.DataFrame(combined_subject_data.T)
-                save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
+                #save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
 
 
             #epsilon = 1e-6  # Small constant to avoid zero variance
@@ -207,6 +213,6 @@ for param in ["desc-real_r", "desc-real_sigma"]: #  "label-eccentricity_desc-rea
                                             continuous_cols=['age'],     # Preserve 'age'
                                             categorical_cols=['sex'])["data"] # Preserve 'gender'
             save_combat_data = pd.DataFrame(combat_harmonized)
-            save_combat_data.to_csv(f"/data/p_02915/SPOT/Result/combat_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
+            #save_combat_data.to_csv(f"/data/p_02915/SPOT/Result/combat_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
         
 

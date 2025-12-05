@@ -81,34 +81,34 @@ for hemi in ["L", "R"]:
         msd_simul_value = []
         for group in ["neonates<37", "neonates>37", "fetal<29", "fetal>29", "12-16y", "18-21y"]:
             if group == "neonates<37":
-                MSD = pd.read_csv("/data/p_02915/SPOT/MSD_less_37.csv")
+                MSD = pd.read_csv("/data/p_02915/SPOT/MSD_neonates_young.csv")
                 subject_info = pd.read_csv(
-                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37.csv')
+                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
                 sub_num = len(subject_info["sub_id"])
             elif group == "neonates>37":
-                MSD = pd.read_csv("/data/p_02915/SPOT/MSD_over_37.csv")
+                MSD = pd.read_csv("/data/p_02915/SPOT/MSD_neonates_old.csv")
                 subject_info = pd.read_csv(
-                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37.csv')
+                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
                 sub_num = len(subject_info["sub_id"])
             elif group == "fetal<29":
                 MSD = pd.read_csv("/data/p_02915/SPOT/MSD_fetal_young.csv")
                 subject_info = pd.read_csv(
-                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv')
+                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_young.csv')
                 sub_num = len(subject_info["sub_id"])
             elif group == "fetal>29":
                 MSD = pd.read_csv("/data/p_02915/SPOT/MSD_fetal_old.csv")
                 subject_info = pd.read_csv(
-                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_3.csv')
+                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_old.csv')
                 sub_num = len(subject_info["sub_id"])
             elif group == "12-16y":
                 MSD = pd.read_csv("/data/p_02915/SPOT/MSD_HCP_young.csv")
                 subject_info = pd.read_csv(
-                    '/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_young.csv')
+                    '/data/p_02915/SPOT/hcp_subj_path_SPOT_young.csv')
                 sub_num = len(subject_info["sub_id"])
             elif group == "18-21y":
                 MSD = pd.read_csv("/data/p_02915/SPOT/MSD_HCP_old.csv")
                 subject_info = pd.read_csv(
-                    '/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_old.csv')
+                    '/data/p_02915/SPOT/hcp_subj_path_SPOT_old.csv')
                 sub_num = len(subject_info["sub_id"])
 
             msd_real = MSD[f"{hemi}_{model}_real_benson"]
@@ -272,4 +272,4 @@ for hemi in ["L", "R"]:
         results_df = pd.DataFrame(results_dict, index=index_label)
 
         # Save the DataFrame to a CSV file
-        # results_df.to_csv(f'/data/p_02915/SPOT/01_results_MSD_{model}_{hemi}.csv')
+        results_df.to_csv(f'/data/p_02915/SPOT/01_results_MSD_{model}_{hemi}.csv')

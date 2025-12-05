@@ -31,34 +31,36 @@ except ValueError:  # Already removed
 
 ccfanalysis = importlib.import_module("00_HCP")
 perform_ccf_analysis = ccfanalysis.ccf_model.ccfprocedures.perform_ccf_analysis
+perform_ccf_analysis_cross = ccfanalysis.ccf_model.ccfprocedures.perform_ccf_analysis_cross
 calc_shortestpath = ccfanalysis.ccf_model.meshgraph.calc_shortestpath
 # HACKEND
 # ------------------------------------------------------------------------#
 
 VISPARC_PATH = (
-    "/data/p_02915/SPOT/00_HCP/template/"
-    "hemi-{hemi}_mesh-native_dens-native_"
+    "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_surface/{sub}/anat/"
+    "{sub}_hemi-{hemi}_mesh-native_dens-native_"
     "desc-retinotbenson2014_label-visarea_dparc.label.gii"
 )
 WM_PATH = (
-    "/data/pt_02880/HCP_D/fmriresults01/{sub}/MNINonLinear/fsaverage_LR32k/"
-    "{sub}.{hemi}.white_MSMAll.32k_fs_LR.surf.gii"
+    "/data/pt_02880/HCP_D/fmriresults01/{sub}/MNINonLinear/Native/"
+    "{sub}.{hemi}.white.native.surf.gii"
 )
 
 DISTANCEFILE_PATH = (
-    "{root_dir}/ccfmodel/{sub}/"
-    "{sub}_hemi-{hemi}_space-T2w_desc-V1_dijkstra.npy"
+    "{root_dir}/ccfmodel_var/{sub}/"
+    "{sub}_hemi-{hemi}_space-native_desc-V1_dijkstra_164k.npy"
 )
 FUNC_PATH = (
     "{root_dir}/hcp_surface/{sub}/func/"
-    "{sub}_hemi-{hemi}-Atlas-MSMAll_hp0_clean_bold{simulated}.func.gii"
+    "{sub}_hemi-{hemi}_mesh-native_bold{simulated}.func.gii"
 )
 OUTPUT_PREFIX = (
-    "{root_dir}/ccfmodel/{sub}/"
+    "{root_dir}/ccfmodel_var/{sub}/"
     "{sub}_hemi-{hemi}_mesh-native_dens-native_desc-{datasource}"
 )
 LABELS_V1 = [1]
 LABELS_V2 = [2, 3]
+#LABELS_V2 = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 
 def make_percent_signal_change(func):
@@ -104,6 +106,37 @@ def save_results(indices_v2, best_models, n_total_nodes, out_prefix):
         print(f"Saving results in {out_prefix}_{param}.gii...")
         nib.save(params_img, f"{out_prefix}_{param}.gii")
 
+#for cross validation
+def save_results_cross(indices_v2, best_models, n_total_nodes, out_prefix):
+    """Save cross-validation model results to gifti files.
+
+    Args:
+        indices_v2 (numpy.array): indices of V2 vertices in whole hemisphere
+        best_models (numpy.array): n_vertices_v2 x (v0, sigma, RSS_first, R²_first, R²_second)
+        n_total_nodes (int): size of total hemisphere mesh
+        out_prefix (str): path prefix for result files
+    """
+
+    Path(out_prefix).parent.mkdir(exist_ok=True, parents=True)
+
+    # empty mesh of whole hemisphere
+    param_full_mesh = np.zeros(n_total_nodes)
+
+    # Map column indices to parameter names
+    parameters = ("v0", "sigma", "rss_first", "r2_first", "r2_second")
+
+    for i, param in enumerate(parameters):
+        param_full_mesh[:] = 0  # reset
+        param_full_mesh[indices_v2] = best_models[:, i]
+
+        if param == "v0":
+            darray = nib.gifti.GiftiDataArray(np.int32(param_full_mesh))
+        else:
+            darray = nib.gifti.GiftiDataArray(np.float32(param_full_mesh))
+
+        params_img = nib.gifti.GiftiImage(darrays=[darray])
+        print(f"Saving results in {out_prefix}_{param}_cross.gii...")
+        nib.save(params_img, f"{out_prefix}_{param}_cross.gii")
 
 def get_indices_roi(labels_area, visparc):
     """Get indices of vertices in gifti image that are located in a specific region of interest.
@@ -199,7 +232,6 @@ def fetch_distancematrix(indices_v1, wm, distance_file):
             distances_along_mesh = np.load(f)
 
     else:
-
         print("Distances between surface vertices are being calculated...")
         distances_along_mesh = calc_shortestpath(wm, indices_v1)
 
@@ -228,7 +260,7 @@ def main():
         }
 
         # load retinotopy data
-        visparc = nib.load(VISPARC_PATH.format(hemi=hemi))
+        visparc = nib.load(VISPARC_PATH.format(sub=args.sub, hemi=hemi))
         indices_v1 = get_indices_roi(LABELS_V1, visparc)
         indices_v2 = get_indices_roi(LABELS_V2, visparc)
 
@@ -248,21 +280,30 @@ def main():
             sigmas = sigmas[[0]]
             optimize_threshold = 0
 
-        for datasource in ["real", "simulated"]:
+        for datasource in ["real", 'simulated']: #, "simulated"
             print(f"Modeling {datasource} data on hemisphere {hemi}.")
 
             # get bold data for V1 and V2
             simulated = "_simulated" if datasource == "simulated" else ""
-
-            func = surface.load_surf_data(
-                FUNC_PATH.format(**ids, simulated=simulated))
-
+            func = surface.load_surf_data(FUNC_PATH.format(**ids, simulated=simulated))            
+            n_cols = func.shape[1]
+            half = n_cols // 2
             func_v2 = func[indices_v2, :].astype(np.float64)
             func_v1 = func[indices_v1, :].astype(np.float64)
+            func_v2_first = func[indices_v2, :half].astype(np.float64)
+            func_v2_second = func[indices_v2, half:].astype(np.float64)            
+            func_v1_first = func[indices_v1, :half].astype(np.float64)
+            func_v1_second = func[indices_v1, half:].astype(np.float64)
+        
+
             # ----------------------MODELING-------------------------------------------------------
             # prepare functional data for timeseries computation
             func_v1 = make_percent_signal_change(func_v1)
             func_v2 = make_percent_signal_change(func_v2)
+            func_v1_first = make_percent_signal_change(func_v1_first)
+            func_v2_first = make_percent_signal_change(func_v2_first)
+            func_v1_second = make_percent_signal_change(func_v1_second)
+            func_v2_second = make_percent_signal_change(func_v2_second)
             connfields = perform_ccf_analysis(
                 args.optimize,
                 optimize_threshold,
@@ -271,6 +312,28 @@ def main():
                 func_v2,
                 sigmas,
             )
+            if datasource == "real":
+                connfields_cross = perform_ccf_analysis_cross(
+                    args.optimize,
+                    optimize_threshold,
+                    distances_along_mesh,
+                    func_v1_first,
+                    func_v1_second,
+                    func_v2_first,
+                    func_v2_second,
+                    sigmas,
+                )
+                save_results_cross(
+                    indices_v2=indices_v2,
+                    best_models=connfields_cross["best_models"],
+                    n_total_nodes=wm.coordinates.shape[0],
+                    out_prefix=OUTPUT_PREFIX.format(**ids, datasource=datasource),
+                )
+
+            #if not args.debug:
+            #    visualize_connective_field(
+            #        wm, indices_v1, connfields["connfield_weights"], curv
+            #    )
 
             save_results(
                 indices_v2=indices_v2,
@@ -278,6 +341,8 @@ def main():
                 n_total_nodes=wm.coordinates.shape[0],
                 out_prefix=OUTPUT_PREFIX.format(**ids, datasource=datasource),
             )
+            
+
 
 
 if __name__ == "__main__":

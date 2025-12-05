@@ -12,7 +12,7 @@ from nilearn import surface
 
 # FIXED INPUT AND OUTPUT STRUCTURE
 PREFIX_MODEL = (
-    "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
+    "{root_dir}/ccfmodel_var/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native"
 )
 PREFIX_SUB_TEMPLATE = (
@@ -39,7 +39,7 @@ PATH_VISPARC = (
     "{prefix_sub_template}_desc-retinotbenson2014_label-visarea_dparc.label.gii"
 )
 LABELS_V1 = [1]
-LABELS_V2 = [2, 3]
+LABELS_V2 = [2]
 
 
 def parse_args():
@@ -112,21 +112,21 @@ def calc_msd(param_area1, param_area2):
 
 # Now `results` dictionary contains the output of `calc_msd` organized by subject, hemisphere, model combination, and parameter
 # You can access the results using appropriate keys corresponding to each level of the nested structure
-subject_info = pd.read_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv")
+subject_info = pd.read_csv("/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_no_drop_v2.csv")
 path_derivatives = "/data/p_02915/dhcp_derivatives_SPOT/Neonates"
 columns = ["Subject_ID",
-           "L_sigma_real_benson",
-           "R_sigma_real_benson",
-           "L_sigma_real_simulated",
-           "R_sigma_real_simulated",
-           #"L_eccentricity_real_benson", 
-           #"R_eccentricity_real_benson", 
-           #"L_polarangle_real_benson", 
-           #"R_polarangle_real_benson",
-           #"L_eccentricity_real_simulated", 
-           #"R_eccentricity_real_simulated", 
-           #"L_polarangle_real_simulated", 
-           #"R_polarangle_real_simulated",
+           #"L_sigma_real_benson",
+           #"R_sigma_real_benson",
+           #"L_sigma_real_simulated",
+           #"R_sigma_real_simulated",
+           "L_eccentricity_real_benson", 
+           "R_eccentricity_real_benson", 
+           "L_polarangle_real_benson", 
+           "R_polarangle_real_benson",
+           "L_eccentricity_real_simulated", 
+           "R_eccentricity_real_simulated", 
+           "L_polarangle_real_simulated", 
+           "R_polarangle_real_simulated",
            ]
 msd_value = pd.DataFrame(columns=columns)
 for index, row in subject_info.iterrows():
@@ -138,9 +138,9 @@ for index, row in subject_info.iterrows():
 
     retinotopy_dict = {}
     in_out = {
-        #"eccentricity": OUTPUT_ECC,
-        #"polarangle": OUTPUT_PANGLE,
-        "sigma": OUTPUT_SIGMA,
+        "eccentricity": OUTPUT_ECC,
+        "polarangle": OUTPUT_PANGLE,
+        #"sigma": OUTPUT_SIGMA,
     }    
 
     for hemi in ["L", "R"]:
@@ -166,26 +166,26 @@ for index, row in subject_info.iterrows():
         indices_v1 = get_indices_roi(LABELS_V1, visparc)
         indices_v2 = get_indices_roi(LABELS_V2, visparc)
 
-        retinotopy_dict[(hemi, "benson", "sigma")] = surface.load_surf_data(
+        retinotopy_dict[(hemi, "benson", "eccentricity")] = surface.load_surf_data(
             PATH_ECCENTRICITY.format(prefix_sub_template=prefix_sub_template)
         )
 
-        #retinotopy_dict[(hemi, "benson", "polarangle")] = surface.load_surf_data(
-        #    PATH_ANGLE.format(prefix_sub_template=prefix_sub_template)
-        #)
+        retinotopy_dict[(hemi, "benson", "polarangle")] = surface.load_surf_data(
+            PATH_ANGLE.format(prefix_sub_template=prefix_sub_template)
+        )
 
         for model in ["real", "simulated"]:
 
-            retinotopy_dict[(hemi, model, 'sigma')] = surface.load_surf_data(
+            retinotopy_dict[(hemi, model, 'eccentricity')] = surface.load_surf_data(
                 OUTPUT_ECC.format(prefix_model=prefix_model, model = model)
             )
-            #retinotopy_dict[(hemi, model, "polarangle")] = surface.load_surf_data(
-            #   OUTPUT_PANGLE.format(prefix_model=prefix_model, model=model)
-            #)
+            retinotopy_dict[(hemi, model, "polarangle")] = surface.load_surf_data(
+               OUTPUT_PANGLE.format(prefix_model=prefix_model, model=model)
+            )
 
         try:
             for model_1, model_2 in [("real", "benson"), ("real", "simulated")]:
-                for param in ["sigma"]:
+                for param in ["eccentricity", "polarangle"]:
                     msd = calc_msd(
                         retinotopy_dict[(hemi, model_1, param)][indices_v2],
                         retinotopy_dict[(hemi, model_2, param)][indices_v2],
@@ -197,4 +197,4 @@ for index, row in subject_info.iterrows():
                 f"Data missing for hemisphere {hemi}, not calculating differences for this..."
             )        
        
-msd_value.to_csv('/data/p_02915/SPOT/MSD_sigma_neonates_old.csv')
+msd_value.to_csv('/data/p_02915/SPOT/MSD_neonates_old_V2.csv')

@@ -48,11 +48,19 @@ for axis in axes:
             combat_harmonized = pd.read_csv(f"{file_path}/raw_hemi-{hemi}_area-{area}_{param}_{axis}.csv", index_col=None).to_numpy()
             if area =="V2v":
                 title = "ventral"
+                area1="v"
                 raw_harmonized = pd.read_csv(f"{file_path}/raw_hemi-{hemi}_area-V3v_{param}_{axis}.csv", index_col=None).to_numpy()
             elif area =="V2d":
+                area1="d"
                 raw_harmonized = pd.read_csv(f"{file_path}/raw_hemi-{hemi}_area-V3d_{param}_{axis}.csv", index_col=None).to_numpy()
                 title = "dorsal"
             covars = pd.read_csv(f"{file_path}/covars_hemi-L.csv")
+            # Load original model statistics:
+            model_stats = pd.read_csv(f"/data/p_02915/SPOT/01_results_gradient_hemi-{hemi}_area-{area1}_{param}_S.csv")
+            original_p_values = model_stats.iloc[:,4].values   # first column
+
+            # Determine significance flag
+            significant = original_p_values < 0.001
 
             # Initialize dictionaries to store averages for each group
             groups_mean = {
@@ -104,6 +112,8 @@ for axis in axes:
             ax = axs[area_index, hemi_index]
             ax.set_title(f"{hemi_lower} {title}", fontsize=22)
 
+            
+
             # Use hue to differentiate between Combat and Raw data
             pt.RainCloud(x="Group", y="Direction", data=df_combined, 
                         hue='Data Type', bw=.2, width_viol=.6, ax=ax, orient="h", 
@@ -122,6 +132,7 @@ for axis in axes:
                 ax.set_yticks([])
                 ax.tick_params(axis='x', which='major', labelsize=18)  # Major tick labels
             ax.set_xlim(-5, 5)  
+            ax.legend_.remove()
             hue_order=['V2', "V3"]
             pairs=[
                 (("tri-2 \n prenatal", "V2"), ("tri-2 \n prenatal", "V3")),
@@ -131,18 +142,20 @@ for axis in axes:
                 (("adolescent", "V2"), ("adolescent", "V3")),
                 (("adult", "V2"), ("adult", "V3")),
                 ]
-            # Use x="tSNR" and y="Group" since it's horizontal
-            #annotator = Annotator(ax, pairs, data=df_combined, x="Direction", y="Group", hue='Data Type', orient='h')
+                # Loop through all groups
+            unique_groups = df_combined["Group"].unique()
 
-            # Configure the annotator (no need for perform_stat_test or custom_p_values here)
-            #annotator.configure(test='Wilcoxon', text_format='star', comparisons_correction="Bonferroni", pvalue_thresholds=[(1, ""), (0.001, "*")], loc="outside")
-            #annotator.apply_test()
-            #ax, test_results = annotator.annotate()
-            #ax.set_xticks([-5, -2.5, 0.0, 2.5, 5])
-            # Set the tick labels to show min and max values (you can format them as needed)
-            #ax.set_xticklabels([-5, -2.5, 0.0, 2.5, 5])
+            for i, group in enumerate(unique_groups):
+                if significant[i]:
+                    ax.text(
+                        0,                       # near right edge
+                        i-0.5,                         # y-position at group index
+                        "*",                       # mark
+                        fontsize=15,
+                        color="black",
+                        va="center"
+                    )
 
-            ax.legend_.remove()
 
     
     plt.tight_layout()
