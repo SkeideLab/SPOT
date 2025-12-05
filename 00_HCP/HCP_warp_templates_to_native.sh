@@ -32,7 +32,7 @@ for hemi in left right; do
     #midthickness_from_fsLR="${path_bids_data}/${sub_id}.${hemi_upper}.midthickness_MSMAll.32k_fs_LR.surf.gii"
     #fs_LR_sphere="${path_bids_data}/${sub_id}.${hemi_upper}.sphere.32k_fs_LR.surf.gii"
     midthickness_from_fsLR="/data/p_02915/templates/fs_LR_32-master/fs_LR.32k.${hemi_upper}.midthickness.surf.gii"
-    fs_LR_sphere="/data/p_02915/templates/fs_LR_32-master/fs_LR.32k.${hemi_upper}".sphere.surf.gii
+    fs_LR_sphere="/data/p_02915/templates/fs_LR_32-master/fs_LR.32k.${hemi_upper}.sphere.surf.gii"
 
     # templates in fsaverage space
     # come with the repo, for more info see templates_retinotopy README

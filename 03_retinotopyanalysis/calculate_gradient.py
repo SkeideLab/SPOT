@@ -75,48 +75,48 @@ sub_num = int(sys.argv[2])
 group_num = int(sys.argv[1])
 group = groups[group_num]
 df = pd.DataFrame()
-for param in ["_dens-164k_label-polarangle_desc-real_roi-v2th00_metric", "_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric"]: #"_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric",              
+for param in ["_dens-164k_label-polarangle_desc-real_roi-v2th00_metric"]: #"_dens-164k_label-eccentricity_desc-real_roi-v2th00_metric",              
     results_list = []    
     print(param)
     #for group in ["neonates>37", "fetal<29", "fetal>29", "12-16y", "18-21y"]:
     if group == "neonates<37":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel/sub-{sub}/ses-{ses}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel_var/sub-{sub}/ses-{ses}/"
             "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage{param}.gii"
         )
-        subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
+        subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_no_drop_v2.csv')
         sub_num = len(subject_info["sub_id"])   
     elif group == "neonates>37":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel/sub-{sub}/ses-{ses}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/Neonates/ccfmodel_var/sub-{sub}/ses-{ses}/"
             "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage{param}.gii"
         )
-        subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
+        subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_no_drop_v2.csv')
         sub_num = len(subject_info["sub_id"])
     elif group == "fetal<29":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/sub-{sub}/ses-{ses}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel_var/sub-{sub}/ses-{ses}/"
             "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage{param}.gii"
         )
         subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_young.csv')
         sub_num = len(subject_info["sub_id"])        
     elif group == "fetal>29":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel/sub-{sub}/ses-{ses}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel_var/sub-{sub}/ses-{ses}/"
             "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage{param}.gii"
         )
         subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_old.csv')
         sub_num = len(subject_info["sub_id"])
     elif group == "12-16y":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel/{sub}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel_var/{sub}/"
             "{sub}_hemi-{hemi}_mesh-fsaverage{param}.gii"
         )
         subject_info = pd.read_csv('/data/p_02915/SPOT/hcp_subj_path_SPOT_young.csv')
         sub_num = len(subject_info["sub_id"])
     elif group == "18-21y":
         PREFIX_MODEL = (
-            "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel/{sub}/"
+            "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/ccfmodel_var/{sub}/"
             "{sub}_hemi-{hemi}_mesh-fsaverage{param}.gii"
         )
         subject_info = pd.read_csv('/data/p_02915/SPOT/hcp_subj_path_SPOT_old.csv')

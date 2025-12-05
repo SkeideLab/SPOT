@@ -85,12 +85,36 @@ def create_cf_fit(
         float/dict : value of model rss or dict consisting of rss and rsquared
     """
     sigma = x[0]
+
+    # build CF weights and predict timecourse
     weights_cf = define_connfield_candidates(distances, [sigma])
     timeseries_cf = create_cf_timecourse(timeseries_sources, np.squeeze(weights_cf))
+    timeseries_cf = np.squeeze(timeseries_cf)
+
+    # residuals
+    residuals = timeseries_targetvoxel - timeseries_cf
+    rss = np.sum(residuals**2)
+
+    # correlation
+    r = calc_correlation(timeseries_targetvoxel, timeseries_cf)
+
+    # variance explained (R²)
+    tss = np.sum((timeseries_targetvoxel - np.mean(timeseries_targetvoxel))**2)
+    rsquared = 1 - (rss / tss)
 
     if return_modelfit:
-        return calc_correlation(timeseries_targetvoxel, np.squeeze(timeseries_cf))
-    return 1 - calc_correlation(timeseries_targetvoxel, np.squeeze(timeseries_cf))
+        return {
+            "rss": rss,
+            "r": r,
+            "rsquared": rsquared,
+            "prediction": timeseries_cf,
+        }
+
+    return rss  # only RSS is minimized
+
+    #if return_modelfit:
+    #    return calc_correlation(timeseries_targetvoxel, np.squeeze(timeseries_cf))
+    #return 1 - calc_correlation(timeseries_targetvoxel, np.squeeze(timeseries_cf))
 
 
 def calc_correlation(timeseries_targetvoxel, timeseries_cf):

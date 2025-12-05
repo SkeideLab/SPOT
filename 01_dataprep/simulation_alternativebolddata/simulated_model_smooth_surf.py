@@ -30,7 +30,6 @@ VISPARC_PATH = (
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_"
     "desc-retinotbenson2014_label-visarea_dparc.label.gii"
 )
-
 LABELS_V1 = [1]
 LABELS_V2 = [2, 3]
 

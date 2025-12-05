@@ -133,15 +133,23 @@ for param_index, param in enumerate(param):
             bootstrap_ci_highs = []
             index_label = []
             df = pd.DataFrame()
-            combat_harmonized = pd.read_csv(f"/data/p_02915/SPOT/raw_hemi-{hemi}_area-V2{area}_{param}_S.csv", index_col=None).to_numpy()
-            raw_harmonized = pd.read_csv(f"/data/p_02915/SPOT/raw_hemi-{hemi}_area-V3{area}_{param}_S.csv", index_col=None).to_numpy()
+            combat_harmonized = pd.read_csv(f"/data/p_02915/SPOT/raw_hemi-{hemi}_area-V2{area}_{param}_S.csv",index_col=False, header=None).to_numpy()
+            raw_harmonized = pd.read_csv(f"/data/p_02915/SPOT/raw_hemi-{hemi}_area-V3{area}_{param}_S.csv",index_col=False, header=None).to_numpy()
+
             for model_idx, model in enumerate(["2nd", "3rd", "preterm", "fullterm", "adolescent", "adult"]):
                 parameters=[]
                 parameters2=[]       
-                covars = pd.read_csv(f"/data/p_02915/SPOT/covars_hemi-L.csv")
-                parameters = np.nanmean(combat_harmonized[:, covars[covars["group"] == model].index], axis=0)
-                parameters2 = np.nanmean(raw_harmonized[:, covars[covars["group"] == model].index], axis=0)
+                covars = pd.read_csv(f"/data/p_02915/SPOT/Result/covars_hemi-L.csv")
                 print(model)
+                print(area)
+                print(combat_harmonized.shape)
+                print(raw_harmonized.shape)
+                print(len(covars))
+                print(max(covars.index))
+                print(min(covars.index))
+                parameters = np.nanmean(combat_harmonized[covars[covars["group"] == model].index,:], axis=1)
+                parameters2 = np.nanmean(raw_harmonized[covars[covars["group"] == model].index,:], axis=1)
+                
                 real_mean.append(np.nanmean(parameters))
                 simul_mean.append(np.nanmean(parameters2))
                 # Replace NaN values with 0

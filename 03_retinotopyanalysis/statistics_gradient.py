@@ -51,7 +51,7 @@ def flatten(arr):
 
 VISPARC_PATH = (
     "/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/hemi-{hemi}_space-fsaverage_dens-164k_desc-visualtopographywang2015_label-maxprob_seg.label.gii")
-LABELS_V2 = (3, 4)
+LABELS_V2 = (3, 4, 5, 6)
 original_mean = []
 bootstrap_mean_all = []
 bootstrap_p_value = []
@@ -70,7 +70,7 @@ for param in ["eccentricity", "polarangle"]:
             )
 
             subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37.csv')
+                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
             sub_num = len(subject_info["sub_id"])
         elif group == "neonates>37":
             PREFIX_MODEL = (
@@ -79,7 +79,7 @@ for param in ["eccentricity", "polarangle"]:
             )
 
             subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37.csv')
+                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
             sub_num = len(subject_info["sub_id"])
         elif group == "fetal<29":
             PREFIX_MODEL = (
@@ -88,7 +88,7 @@ for param in ["eccentricity", "polarangle"]:
             )
 
             subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_4.csv')
+                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_young.csv')
             sub_num = len(subject_info["sub_id"])
         elif group == "fetal>29":
             PREFIX_MODEL = (
@@ -97,7 +97,7 @@ for param in ["eccentricity", "polarangle"]:
             )
 
             subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_3.csv')
+                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_fetal_old.csv')
             sub_num = len(subject_info["sub_id"])
         elif group == "12-16y":
             PREFIX_MODEL = (
@@ -106,7 +106,7 @@ for param in ["eccentricity", "polarangle"]:
             )
 
             subject_info = pd.read_csv(
-                '/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_young.csv')
+                '/data/p_02915/SPOT/hcp_subj_path_SPOT_young.csv')
             sub_num = len(subject_info["sub_id"])
         elif group == "18-21y":
             PREFIX_MODEL = (
@@ -115,7 +115,7 @@ for param in ["eccentricity", "polarangle"]:
             )
 
             subject_info = pd.read_csv(
-                '/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_subj_path_SPOT_old.csv')
+                '/data/p_02915/SPOT/hcp_subj_path_SPOT_old.csv')
             sub_num = len(subject_info["sub_id"])
 
         for hemi in ["L", "R"]:
@@ -123,10 +123,14 @@ for param in ["eccentricity", "polarangle"]:
             indices_v2 = get_indices_roi(LABELS_V2, visparc)
             indices_v2v = get_indices_roi_v1(LABELS_V2[0], visparc)
             indices_v2d = get_indices_roi_v1(LABELS_V2[1], visparc)
+            indices_v3v = get_indices_roi_v1(LABELS_V2[2], visparc)
+            indices_v3d = get_indices_roi_v1(LABELS_V2[3], visparc)
             group_name = f"{group}_{hemi}"
             parameters = []
-            parameters_ventral = []
-            parameters_dorsal = []
+            parameters_v2_ventral = []
+            parameters_v2_dorsal = []
+            parameters_v3_ventral = []
+            parameters_v3_dorsal = []
         # FORMAT PATHS FOR INPUT AND OUTPUT
             for index, row in subject_info.iterrows():
                 if group == "12-16y" or group == "18-21y":
@@ -142,9 +146,13 @@ for param in ["eccentricity", "polarangle"]:
                     ccf_v0 = ccf[:, indices_v2].astype(np.float64)
                     ccf_v1 = ccf[:, indices_v2v].astype(np.float64)
                     ccf_v2 = ccf[:, indices_v2d].astype(np.float64)
+                    ccf_v3 = ccf[:, indices_v3v].astype(np.float64)
+                    ccf_v4 = ccf[:, indices_v3d].astype(np.float64)
                     parameters.append(ccf_v0)
-                    parameters_ventral.append(ccf_v1)
-                    parameters_dorsal.append(ccf_v2)
+                    parameters_v2_ventral.append(ccf_v1)
+                    parameters_v2_dorsal.append(ccf_v2)
+                    parameters_v3_ventral.append(ccf_v3)
+                    parameters_v3_dorsal.append(ccf_v4)
                 else:
                     sub_id = subject_info.at[index, "sub_id"]
                     sess_id = subject_info.at[index, "sess_id"]
@@ -162,10 +170,13 @@ for param in ["eccentricity", "polarangle"]:
                     ccf_v0 = ccf[:, indices_v2].astype(np.float64)
                     ccf_v1 = ccf[:, indices_v2v].astype(np.float64)
                     ccf_v2 = ccf[:, indices_v2d].astype(np.float64)
+                    ccf_v3 = ccf[:, indices_v3v].astype(np.float64)
+                    ccf_v4 = ccf[:, indices_v3d].astype(np.float64)
                     parameters.append(ccf_v0)
-                    parameters_ventral.append(ccf_v1)
-                    parameters_dorsal.append(ccf_v2)
-
+                    parameters_v2_ventral.append(ccf_v1)
+                    parameters_v2_dorsal.append(ccf_v2)
+                    parameters_v3_ventral.append(ccf_v3)
+                    parameters_v3_dorsal.append(ccf_v4)
             n_bootstraps = 10000
 
             R_v2v = []
@@ -174,15 +185,30 @@ for param in ["eccentricity", "polarangle"]:
             R_v2d = []
             A_v2d = []
             S_v2d = []
-            for j in range(len(parameters_ventral)):
-                R_v2v.append(parameters_ventral[j][0, :])
-                A_v2v.append(parameters_ventral[j][1, :])
-                S_v2v.append(parameters_ventral[j][2, :])
-                R_v2d.append(parameters_dorsal[j][0, :])
-                A_v2d.append(parameters_dorsal[j][1, :])
-                S_v2d.append(parameters_dorsal[j][2, :])
 
-            for testdata in [R_v2v, A_v2v, S_v2v, R_v2d, A_v2d, S_v2d]:
+            R_v3v = []
+            A_v3v = []
+            S_v3v = []
+            R_v3d = []
+            A_v3d = []
+            S_v3d = []
+            for j in range(len(parameters_v2_ventral)):
+                R_v2v.append(parameters_v2_ventral[j][0, :])
+                A_v2v.append(parameters_v2_ventral[j][1, :])
+                S_v2v.append(parameters_v2_ventral[j][2, :])
+                R_v2d.append(parameters_v2_dorsal[j][0, :])
+                A_v2d.append(parameters_v2_dorsal[j][1, :])
+                S_v2d.append(parameters_v2_dorsal[j][2, :])
+
+                R_v3v.append(parameters_v3_ventral[j][0, :])
+                A_v3v.append(parameters_v3_ventral[j][1, :])
+                S_v3v.append(parameters_v3_ventral[j][2, :])
+                R_v3d.append(parameters_v3_dorsal[j][0, :])
+                A_v3d.append(parameters_v3_dorsal[j][1, :])
+                S_v3d.append(parameters_v3_dorsal[j][2, :])
+                
+
+            for testdata in [R_v2v, A_v2v, S_v2v, R_v2d, A_v2d, S_v2d, R_v3v, A_v3v, S_v3v, R_v3d, A_v3d, S_v3d]:
                 if testdata is R_v2v:
                     test_name = "R_v2v"
                 elif testdata is A_v2v:
@@ -195,6 +221,18 @@ for param in ["eccentricity", "polarangle"]:
                     test_name = "A_v2d"
                 elif testdata is S_v2d:
                     test_name = "S_v2d"
+                elif testdata is R_v3v:
+                    test_name = "R_v3v"
+                elif testdata is A_v3v:
+                    test_name = "A_v3v"
+                elif testdata is S_v3v:
+                    test_name = "S_v3v"
+                elif testdata is R_v3d:
+                    test_name = "R_v3d"
+                elif testdata is A_v3d:
+                    test_name = "A_v3d"
+                elif testdata is S_v3d:
+                    test_name = "S_v3d"
                 bootstrap_mean_list = []
                 for _ in range(n_bootstraps):
                     # Resample the combined data

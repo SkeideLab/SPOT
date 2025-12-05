@@ -13,8 +13,8 @@ def get_age(index, subject_info):
 
 
 path_derivatives = Path("/data/p_02915/dhcp_derivatives_SPOT/Neonates")
-path_anat_data = Path("/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline")  # path_derivatives / "dhcp_anat_pipeline"
-path_func_data = Path("/data/pt_02880/Package_1225541/fmriresults01/rel3_derivatives/rel3_dhcp_fmri_pipeline/") # path_derivatives / "dhcp_fmri_pipeline"
+path_anat_data = Path("/data/pt_02880/dHCP/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline")  # path_derivatives / "dhcp_anat_pipeline"
+path_func_data = Path("/data/pt_02880/dHCP/fmriresults01/rel3_derivatives/rel3_dhcp_fmri_pipeline/") # path_derivatives / "dhcp_fmri_pipeline"
 path_output_data = path_derivatives / "dhcp_surface"
 path_templates = Path("/data/p_02915/templates")
 
@@ -35,11 +35,11 @@ path_HCPtemplates_standardmeshatlases = (
     "global/templates/standard_mesh_atlases"
 )
 # --------------PATHS TO SOFTWARE--------------------------------------------------
-path_newmsm = "/data/p_02915/Chello/fsl/bin/msm-env/bin/newmsm"
+path_newmsm = "/data/p_02915/fsl/bin/msm-env/bin/newmsm"
 path_wbcommand = "/bin/wb_command"
-path_mirtk = "/afs/cbs.mpg.de/software/mirtk/0.20231123/debian-bullseye-amd64/bin/mirtk"
+path_mirtk = "/data/p_02915/mirtk"
 
-subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
+subject_info = pd.read_csv('/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_no_drop_v2.csv')
 sub_num = int(sys.argv[1])
 
 script_dir = Path(__file__).resolve().parent
@@ -47,9 +47,6 @@ surfaceprep_script = str(script_dir / "01_dataprep" / "run_surfaceprep.sh")
 ccfmodel_script = str(script_dir / "02_ccfanalysis" / "run_model.py")
 fillretinotopy_script = str(
     script_dir / "03_retinotopyanalysis" / "analyse_retinotopy.py"
-)
-fillretinotopy_script_2 = str(
-    script_dir / "03_retinotopyanalysis" / "filter_sigma.py"
 )
 project_results_script = str(
     script_dir / "03_retinotopyanalysis" / "project_ccf_to_fsaverage.sh"
@@ -69,32 +66,32 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
     
 
 
-    #cmd_surfaceprep = [
-    #    str(option)
-    #    for option in [
-    #        surfaceprep_script,
-    #        sub,
-    #        ses,
-    #        age,
-    #        path_derivatives,
-    #        path_anat_data,
-    #        path_func_data,
-    #        path_output_data,
-    #        file_volume_template_40wks,
-    #        name_volume_template_40wks,
-    #        path_surface_template,
-    #        name_surface_template,
-    #        path_HCPtemplates_standardmeshatlases,
-    #        path_fsaverage,
-    #        path_newmsm,
-    #        path_wbcommand,
-    #        path_mirtk,
-    #    ]
-    #]
+    cmd_surfaceprep = [
+       str(option)
+       for option in [
+           surfaceprep_script,
+           sub,
+           ses,
+           age,
+           path_derivatives,
+           path_anat_data,
+           path_func_data,
+           path_output_data,
+           file_volume_template_40wks,
+           name_volume_template_40wks,
+           path_surface_template,
+           name_surface_template,
+           path_HCPtemplates_standardmeshatlases,
+           path_fsaverage,
+           path_newmsm,
+           path_wbcommand,
+           path_mirtk,
+       ]
+    ]
     #subprocess.run(cmd_surfaceprep, check=True)
 
     cmd_ccfmodel = [
-        "python",
+        "/data/u_yoos_software/miniforge3/envs/SPOT/bin/python",
         ccfmodel_script,
         "-d",
         str(path_derivatives),
@@ -108,7 +105,7 @@ for index, row in subject_info.iloc[sub_num:sub_num + 1].iterrows():
     subprocess.run(cmd_ccfmodel, check=True)
 
     cmd_fillretinotopy = [
-        "python",
+        "/data/u_yoos_software/miniforge3/envs/SPOT/bin/python",
         fillretinotopy_script,
         "-d",
         str(path_derivatives),

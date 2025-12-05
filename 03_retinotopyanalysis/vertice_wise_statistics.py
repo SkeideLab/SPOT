@@ -87,11 +87,11 @@ VISPARC_PATH = ("/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/
 LABELS_V2 = (2, 3)
 
 PREFIX_MODEL = (
-    "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
+    "{root_dir}/ccfmodel_var/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k"
 )
 PREFIX_MODEL_2 = (
-    "{root_dir}/ccfmodel/{sub}/"
+    "{root_dir}/ccfmodel_var/{sub}/"
     "{sub}_hemi-{hemi}_mesh-fsaverage_dens-164k"
 )
 PREFIX_SUB_TEMPLATE = (
@@ -136,11 +136,11 @@ for param in ["label-eccentricity_desc-real_roi-v2th00_metric", "label-polarangl
             parameters = []
             if group == "preterm":
                 subject_info = pd.read_csv(
-                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
+                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_no_drop_v2.csv')
                 sub_num = len(subject_info["sub_id"])
             elif group == "fullterm":
                 subject_info = pd.read_csv(
-                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
+                    '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_no_drop_v2.csv')
                 sub_num = len(subject_info["sub_id"])           
             elif group == "2nd":
                 subject_info = pd.read_csv(
@@ -248,7 +248,7 @@ for param in ["label-eccentricity_desc-real_roi-v2th00_metric", "label-polarangl
                 if mw_p_value < 0.001:
                     mu_deri[vertex_index] = 1
 
-            output_path=f'/data/p_02915/dhcp_derivatives_SPOT/statistics/{groupA_name}_{groupB_name}_{hemi}_{test_value}_vertexwise.gii'
+            output_path=f'/data/p_02915/dhcp_derivatives_SPOT/statistics/{groupA_name}_{groupB_name}_{hemi}_{test_value}_vertexwise.shape.gii'
             darray = nib.gifti.GiftiDataArray(np.float32(mu_deri))
             params_img = nib.gifti.GiftiImage(darrays=[darray])
             nib.save(params_img, output_path)

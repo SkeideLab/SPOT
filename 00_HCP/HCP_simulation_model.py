@@ -20,21 +20,16 @@ PREFIX_FUNC = (
     "{sub}_hemi-{hemi}"
 )
 PATH_SURFPIAL = (
-    "{derivatives_path}/"
-    "{sub}.{hemi}.pial_MSMAll.32k_fs_LR.surf.gii"
+    "/data/pt_02880/HCP_D/fmriresults01/{sub}/MNINonLinear/Native/"
+    "{sub}.{hemi}.pial.native.surf.gii"
 )
-PATH_FUNC = "{prefix_func}-Atlas-MSMAll_hp0_clean_bold.func.gii"
-PATH_SIMIMG = "{prefix_func}-Atlas-MSMAll_hp0_clean_bold_simulated.func.gii"
-# VISPARC_PATH = (
-#    "{derivatives_path}/hcp_surface/{sub}/anat/"
-#    "{sub}_hemi-{hemi}_mesh-native_dens-native_"
-#    "desc-visualtopographywang2015_label-maxprob_dparc.label.gii"
-# )
+PATH_FUNC = "{prefix_func}_mesh-native_bold.func.gii"
+PATH_SIMIMG = "{prefix_func}_mesh-native_bold_simulated.func.gii"
 VISPARC_PATH = (
-    "{derivatives_path}/"
-    "hemi-{hemi}_mesh-native_dens-native_"
+    "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_surface/{sub}/anat/"
+    "{sub}_hemi-{hemi}_mesh-native_dens-native_"
     "desc-retinotbenson2014_label-visarea_dparc.label.gii"
-)
+ )
 
 LABELS_V1 = [1]
 LABELS_V2 = [2, 3]
@@ -139,7 +134,7 @@ def main():
         path_visparc = VISPARC_PATH.format(
             sub=sub,
             hemi=hemi,
-            derivatives_path="/data/p_02915/SPOT/00_HCP/template/",
+            derivatives_path="/data/p_02915/dhcp_derivatives_SPOT/00_HCP/template/",
         )
 
         # load surface and functional data

@@ -20,8 +20,8 @@ labeltable_benson = parentdir / "labeltable_benson2014"
 print(f"Using labeltables: {labeltable_benson}.")
 templates = [
     (
-        "/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy//{hemi}h.benson14_sigma.v4_0.mgz",
-        "hemi-{hemi}_space-fsaverage_dens-164k_desc-sigmaretinotbenson2014_seg.shape.gii",
+        "/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/{hemi}h.fit1_ecc.mgz",
+        "hemi-{hemi}_space-fsaverage_dens-164k_desc-eccentretinotbenson2018_seg.shape.gii",
         np.float32,
     ),
 ]
