@@ -49,18 +49,18 @@ individuals = [
      'surf_rh': f'{file_path}/sub-CC00320XX07_ses-102300_hemi-right_sphere.surf.gii', 
      'sulc_rh': f'{file_path}/sub-CC00320XX07_ses-102300_hemi-right_sulc.shape.gii', 
      'atlas_rh': f'{file_path}/sub-CC00320XX07_ses-102300_hemi-R_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc.label.gii'},
-    {'surf_lh': f'{file_path}/fs_LR.32k.L.sphere.surf.gii', 
-     'sulc_lh': f'{file_path}/fs_LR.32k.L.sulc.shape.gii', 
-     'atlas_lh': f'{file_path}/hemi-L_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc_fsLR.label.gii',
-     'surf_rh': f'{file_path}/fs_LR.32k.R.sphere.surf.gii', 
-     'sulc_rh': f'{file_path}/fs_LR.32k.R.sulc.shape.gii', 
-     'atlas_rh': f'{file_path}/hemi-R_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc_fsLR.label.gii'},
-     {'surf_lh': f'{file_path}/fs_LR.32k.L.sphere.surf.gii', 
-     'sulc_lh': f'{file_path}/fs_LR.32k.L.sulc.shape.gii', 
-     'atlas_lh': f'{file_path}/hemi-L_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc_fsLR.label.gii',
-     'surf_rh': f'{file_path}/fs_LR.32k.R.sphere.surf.gii', 
-     'sulc_rh': f'{file_path}/fs_LR.32k.R.sulc.shape.gii', 
-     'atlas_rh': f'{file_path}/hemi-R_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc_fsLR.label.gii'},
+    {'surf_lh': f'{file_path}/HCD0478356_V1_MR.L.sphere.rot.native.surf.gii', 
+     'sulc_lh': f'{file_path}/HCD0478356_V1_MR.L.sulc.native.shape.gii', 
+     'atlas_lh': f'{file_path}/HCD0478356_V1_MR_hemi-L_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc.label.gii',
+     'surf_rh': f'{file_path}/HCD0478356_V1_MR.R.sphere.rot.native.surf.gii', 
+     'sulc_rh': f'{file_path}/HCD0478356_V1_MR.R.sulc.native.shape.gii', 
+     'atlas_rh': f'{file_path}/HCD0478356_V1_MR_hemi-R_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc.label.gii'},
+     {'surf_lh': f'{file_path}/HCD2336346_V1_MR.L.sphere.rot.native.surf.gii', 
+     'sulc_lh': f'{file_path}/HCD2336346_V1_MR.L.sulc.native.shape.gii', 
+     'atlas_lh': f'{file_path}/HCD2336346_V1_MR_hemi-L_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc.label.gii',
+     'surf_rh': f'{file_path}/HCD2336346_V1_MR.R.sphere.rot.native.surf.gii', 
+     'sulc_rh': f'{file_path}/HCD2336346_V1_MR.R.sulc.native.shape.gii', 
+     'atlas_rh': f'{file_path}/HCD2336346_V1_MR_hemi-R_mesh-native_dens-native_desc-retinotbenson2014_label-visarea_dparc.label.gii'},
     {'surf_lh': fsaverage.sphere_left, 
      'sulc_lh': fs_sulc_l, 
      'atlas_lh': f'{file_path}/hemi-L_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii',
@@ -126,7 +126,7 @@ for i, ind in enumerate(individuals):
     
     # Plot left hemisphere surface
     plotting.plot_surf_roi(surf_lh, roi_map=texture_lh, hemi='left', view=left_view[i], bg_map=lh_sulc_map_binary, 
-                           axes=ax_lh, figure=fig, cmap='viridis')
+                           axes=ax_lh, figure=fig, cmap='viridis', colorbar=False, threshold=0.001)
     ax_lh.set_xlim(lim[i])
     ax_lh.set_ylim(lim[i])
     ax_lh.set_zlim(lim[i])
@@ -152,7 +152,7 @@ for i, ind in enumerate(individuals):
 
     # Plot right hemisphere surface
     plotting.plot_surf_roi(surf_rh, roi_map=texture_rh, hemi='right', view=right_view[i], bg_map=rh_sulc_map_binary,
-                           axes=ax_rh, figure=fig, cmap='viridis')
+                           axes=ax_rh, figure=fig, cmap='viridis', colorbar=False, threshold=0.001)
     ax_rh.set_xlim(lim[i])
     ax_rh.set_ylim(lim[i])
     ax_rh.set_zlim(lim[i])

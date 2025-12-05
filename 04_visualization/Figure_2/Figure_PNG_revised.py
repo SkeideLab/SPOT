@@ -84,8 +84,8 @@ rh_sulc = surface.load_surf_data(
     f"{file_path}/rh.curv")
 lh_sulc_map_binary = np.where(lh_sulc < 0.0, 0.25, 0.6)
 rh_sulc_map_binary = np.where(rh_sulc < 0.0, 0.25, 0.6)# Load the surface files for left and right hemispheres
-indices_left_v1 = get_indices_roi([1, 2, 3, 4, 5, 6], left_temp)
-indices_right_v1 = get_indices_roi([1, 2, 3, 4, 5, 6], right_temp)
+indices_left_v1 = get_indices_roi([1, 2, 3], left_temp)
+indices_right_v1 = get_indices_roi([1, 2, 3], right_temp)
 
 # Assuming `bin` is defined and `df` contains your data
 fig = plt.figure(figsize=(11, 8))

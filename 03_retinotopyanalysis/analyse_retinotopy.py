@@ -15,7 +15,7 @@ from nilearn import surface
 
 # FIXED INPUT AND OUTPUT STRUCTURE
 PREFIX_MODEL = (
-    "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
+    "{root_dir}/ccfmodel_var/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native"
 )
 PREFIX_SUB_TEMPLATE = (
@@ -41,6 +41,7 @@ PATH_VISPARC = (
 )
 LABELS_V1 = [1]
 LABELS_V2 = [2, 3]
+#LABELS_V2 = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 
 def parse_args():
@@ -159,7 +160,7 @@ def main():
             PATH_ANGLE.format(prefix_sub_template=prefix_sub_template)
         )
 
-        for model in ["real", "simulated"]:
+        for model in ["real", 'simulated']:
 
             try:
                 ccf_v0 = surface.load_surf_data(
@@ -232,12 +233,12 @@ def main():
         # can these two datasets be compared then?
         # 'inactive' vertices get filled with 0, this could bias the msd
         # use intersection of active vertices instead?
-        try:
-            print_differences(retinotopy_dict, hemi, indices_v2)
-        except KeyError:
-            print(
-                f"Data missing for hemisphere {hemi}, not calculating differences for this..."
-            )
+        #try:
+        #    print_differences(retinotopy_dict, hemi, indices_v2)
+        #except KeyError:
+        #    print(
+        #        f"Data missing for hemisphere {hemi}, not calculating differences for this..."
+        #    )
 
 
 if __name__ == "__main__":

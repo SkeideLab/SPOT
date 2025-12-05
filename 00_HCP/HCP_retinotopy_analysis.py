@@ -15,7 +15,7 @@ from nilearn import surface
 
 # FIXED INPUT AND OUTPUT STRUCTURE
 PREFIX_MODEL = (
-    "{root_dir}/ccfmodel/{sub}/"
+    "{root_dir}/ccfmodel_var/{sub}/"
     "{sub}_hemi-{hemi}_mesh-native_dens-native"
 )
 # PREFIX_SUB_TEMPLATE = (
@@ -23,8 +23,8 @@ PREFIX_MODEL = (
 #    "{sub}_hemi-{hemi}_mesh-native_dens-native"
 # )
 PREFIX_SUB_TEMPLATE = (
-    "{root_dir}/"
-    "hemi-{hemi}_mesh-native_dens-native"
+    "/data/p_02915/dhcp_derivatives_SPOT/HCP-D/hcp_surface/{sub}/anat/"
+    "{sub}_hemi-{hemi}_mesh-native_dens-native"
 )
 
 PATH_v0 = "{prefix_model}_desc-{model}_v0i.gii"
@@ -43,6 +43,7 @@ PATH_VISPARC = (
 )
 LABELS_V1 = [1]
 LABELS_V2 = [2, 3]
+#LABELS_V2 = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 
 def parse_args():
@@ -156,7 +157,7 @@ def main():
             PATH_ANGLE.format(prefix_sub_template=prefix_sub_template)
         )
 
-        for model in ["real", "simulated"]:
+        for model in ["real", 'simulated']:
 
             try:
                 ccf_v0 = surface.load_surf_data(
@@ -230,12 +231,12 @@ def main():
         # can these two datasets be compared then?
         # 'inactive' vertices get filled with 0, this could bias the msd
         # use intersection of active vertices instead?
-        try:
-            print_differences(retinotopy_dict, hemi, indices_v2)
-        except KeyError:
-            print(
-                f"Data missing for hemisphere {hemi}, not calculating differences for this..."
-            )
+        #try:
+        #    print_differences(retinotopy_dict, hemi, indices_v2)
+        #except KeyError:
+        #    print(
+        #        f"Data missing for hemisphere {hemi}, not calculating differences for this..."
+        #    )
 
 
 if __name__ == "__main__":

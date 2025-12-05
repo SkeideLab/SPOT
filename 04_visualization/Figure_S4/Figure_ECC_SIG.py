@@ -195,14 +195,14 @@ for i, group in enumerate(groups):
         ax.plot(x, recon_values, color=color, linewidth=2, linestyle="-", label=group, zorder=1)
     
     
-    process_data(axs[0, 0], indices_left_v2d, [0, 10, 20], [0, 5, 10, 15], (0, 15), "L", "V2d", group, left_eccentricity, left_sigma, colors[group])
-    process_data(axs[1, 0], indices_left_v2v, [0, 10, 20], [0, 5, 10, 15], (0, 15), "L", "V2v", group, left_eccentricity, left_sigma, colors[group])
-    process_data(axs[2, 0], indices_left_v3d, [0, 10, 20], [0, 5, 10, 15], (0, 15), "L", "V3d", group, left_eccentricity, left_sigma, colors[group])
-    process_data(axs[3, 0], indices_left_v3v, [0, 10, 20], [0, 5, 10, 15], (0, 15), "L", "V3v", group, left_eccentricity, left_sigma, colors[group])
-    process_data(axs[0, 1], indices_right_v2d, [0, 10, 20], [0, 5, 10, 15], (0, 15), "R", "V2d", group, right_eccentricity, right_sigma, colors[group])
-    process_data(axs[1, 1], indices_right_v2v, [0, 10, 20], [0, 5, 10, 15], (0, 15), "R", "V2v", group, right_eccentricity, right_sigma, colors[group])
-    process_data(axs[2, 1], indices_right_v3d, [0, 10, 20], [0, 5, 10, 15], (0, 15), "R", "V3d", group, right_eccentricity, right_sigma, colors[group])
-    process_data(axs[3, 1], indices_right_v3v, [0, 10, 20], [0, 5, 10, 15], (0, 15), "R", "V3v", group, right_eccentricity, right_sigma, colors[group])
+    process_data(axs[0, 0], indices_left_v2d, [0, 10, 20], [0, 0.05, 0.1, 0.15, 0.2], (0, 0.2), "L", "V2d", group, left_eccentricity, left_sigma, colors[group])
+    process_data(axs[1, 0], indices_left_v2v, [0, 10, 20], [0, 0.05, 0.1, 0.15, 0.2], (0, 0.2), "L", "V2v", group, left_eccentricity, left_sigma, colors[group])
+    process_data(axs[2, 0], indices_left_v3d, [0, 10, 20], [0, 0.05, 0.1, 0.15, 0.2], (0, 0.2),"L", "V3d", group, left_eccentricity, left_sigma, colors[group])
+    process_data(axs[3, 0], indices_left_v3v, [0, 10, 20], [0, 0.05, 0.1, 0.15, 0.2], (0, 0.2), "L", "V3v", group, left_eccentricity, left_sigma, colors[group])
+    process_data(axs[0, 1], indices_right_v2d, [0, 10, 20], [0, 0.05, 0.1, 0.15, 0.2], (0, 0.2), "R", "V2d", group, right_eccentricity, right_sigma, colors[group])
+    process_data(axs[1, 1], indices_right_v2v, [0, 10, 20], [0, 0.05, 0.1, 0.15, 0.2], (0, 0.2), "R", "V2v", group, right_eccentricity, right_sigma, colors[group])
+    process_data(axs[2, 1], indices_right_v3d, [0, 10, 20], [0, 0.05, 0.1, 0.15, 0.2], (0, 0.2), "R", "V3d", group, right_eccentricity, right_sigma, colors[group])
+    process_data(axs[3, 1], indices_right_v3v, [0, 10, 20], [0, 0.05, 0.1, 0.15, 0.2], (0, 0.2), "R", "V3v", group, right_eccentricity, right_sigma, colors[group])
 
 plt.tight_layout(rect=[0.1, 0.1, 1, 0.95])
 fig.text(0.56, 0.945, "V2", ha='center', va='center', fontsize=24, weight='bold')
@@ -213,7 +213,7 @@ fig.text(0.05, 0.43, "dorsal", ha='center', va='center', fontsize=20, weight='bo
 fig.text(0.05, 0.215, "ventral", ha='center', va='center', fontsize=20, weight='bold')
 # Add legend at the bottom
 handles = [plt.Line2D([0], [0], color=colors[group], linewidth=2, linestyle="-", label=text_label[group]) for group in groups]
-fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.56, -0.02), ncol=3, fontsize=18, frameon=False)
+fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.56, 0.02), ncol=3, fontsize=18, frameon=False)
 
 plt.subplots_adjust(hspace=0.4, wspace=0.3)
 plt.show()

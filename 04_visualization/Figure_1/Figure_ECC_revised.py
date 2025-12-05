@@ -317,7 +317,7 @@ for i, group in enumerate(groups):
         lh, average_left_log, bg_map=lh_sulc_map_binary,
         hemi='left', view=(0, 290), axes=ax1, darkness=1.0,
         colorbar=False, cmap="jet", vmax=log_vmax, vmin=log_vmin,
-        threshold=log_vmin)    
+        )    
     
     plotting.plot_surf_contours(
         surf_mesh=lh, roi_map=atlas_data_l, hemi='left',
@@ -327,7 +327,7 @@ for i, group in enumerate(groups):
         lh, average_left_log, bg_map=lh_sulc_map_binary,
         hemi='left', view=(-10, -70.0), axes=ax2, darkness=1.0,
         colorbar=False, cmap="jet", vmax=log_vmax, vmin=log_vmin,
-        threshold=log_vmin)    
+        )    
     plotting.plot_surf_contours(
         surf_mesh=lh, roi_map=atlas_data_l, hemi='left',
         view=(-10, -70), axes=ax2, levels=[2, 1, 3], colors=['k', 'k', 'k'],
@@ -337,7 +337,7 @@ for i, group in enumerate(groups):
         rh, average_right_log, bg_map=rh_sulc_map_binary,
         hemi='right', view=(-10, -110.0), axes=ax3, darkness=1.0,
         colorbar=False, cmap="jet", vmax=log_vmax, vmin=log_vmin,
-        threshold=log_vmin)
+        )
     plotting.plot_surf_contours(
         surf_mesh=rh, roi_map=atlas_data_r, hemi='right',
         view=(-10, -110), axes=ax3, levels=[2, 1, 3], colors=['k', 'k', 'k'],
@@ -346,7 +346,7 @@ for i, group in enumerate(groups):
         rh, average_right_log, bg_map=rh_sulc_map_binary,
         hemi='right', view=(0, 250), axes=ax4, darkness=1.0,
         colorbar=False, cmap="jet", vmax=log_vmax, vmin=log_vmin,
-        threshold=log_vmin)
+        )
     plotting.plot_surf_contours(
         surf_mesh=rh, roi_map=atlas_data_r, hemi='right',
         view=(0, 250), axes=ax4, levels=[2, 1, 3], colors=['k', 'k','k'],

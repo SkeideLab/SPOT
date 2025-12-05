@@ -17,6 +17,9 @@ path_fsaverage=$7
 path_out_native=$path_output_data/sub-$sub/ses-$ses/anat
 mkdir -p $path_out_native
 
+sub_output_dir=$path_output_data/sub-$sub/ses-$ses
+mkdir -p $sub_output_dir/volume_dofs $sub_output_dir/surface_transforms
+
 for hemi in left right; do
     if [ $hemi = "left" ]; then
         hemi_upper="L"
@@ -32,7 +35,8 @@ for hemi in left right; do
     # output of previous step, see alignment folder
     # check if this exists, terminate otherwise
     # should be changed for fetal
-    registration_from_native_to_dhcpSym="$path_output_data/sub-$sub/ses-$ses/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii"
+    #registration_from_native_to_dhcpSym="$path_outputdata/sub-$sub/ses-$ses/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi_upper}_from-native_to-dhcpSym40_dens-32k_mode-sphere.reg40.surf.gii"
+    registration_from_native_to_dhcpSym="$path_bids_data/sub-$sub/ses-$ses/xfm/sub-${sub}_ses-${ses}_hemi-${hemi}_from-native_to-dhcpSym40_dens-32k_mode-sphere.surf.gii"
     if [ ! -f $registration_from_native_to_dhcpSym ]; then
         echo "Registration from native to dhcpSym is missing. Please execute alignment folder main script first."
         echo "Terminating..."

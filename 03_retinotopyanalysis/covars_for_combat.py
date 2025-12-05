@@ -31,11 +31,11 @@ def flatten(arr):
     return arr.flatten()
 
 PREFIX_MODEL = (
-    "{root_dir}/ccfmodel/sub-{sub}/ses-{ses}/"
+    "{root_dir}/ccfmodel_var/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k"
 )
 PREFIX_MODEL_2 = (
-    "{root_dir}/ccfmodel/{sub}/"
+    "{root_dir}/ccfmodel_var/{sub}/"
     "{sub}_hemi-{hemi}_mesh-fsaverage_dens-164k"
 )
 PREFIX_SUB_TEMPLATE = (
@@ -47,7 +47,7 @@ PREFIX_SUB_TEMPLATE = (
 PATH_v0 = "{prefix_model}_desc-{model}_v0i.gii"
 
 LABELS_V1 = [1]
-LABELS_V2 = [2]
+LABELS_V2 = [2,3]
 LABELS_V3 = [3]
 
 
@@ -68,12 +68,12 @@ for hemi in ["L", "R"]:
     for group in ["2nd", "3rd", "preterm", "fullterm", "adolescent", "adult"]:
         if group == "preterm":
             subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_v2.csv')
+                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_less_37_no_drop_v2.csv')
             sub_num = len(subject_info["sub_id"])
             subject_info["sex"] = subject_info['sex'].map({"male": 0, "female": 1})
         elif group == "fullterm":
             subject_info = pd.read_csv(
-                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_v2.csv')
+                '/data/p_02915/SPOT/dhcp_subj_path_SPOT_over_37_no_drop_v2.csv')
             sub_num = len(subject_info["sub_id"])            
             subject_info["sex"] = subject_info['sex'].map({"male": 0, "female": 1})
         elif group == "2nd":
@@ -162,13 +162,13 @@ for hemi in ["L", "R"]:
             tsnr_v2 = tSNR[indices_v2]
             tsnr_v3 = tSNR[indices_v3]
             tsnr_v2_v1 = np.full_like(tsnr_v2, np.mean(tsnr_v1))
-            #tsnr_roi = np.hstack([tsnr_v1, tsnr_v2])            
+            tsnr_roi = np.mean(np.hstack([tsnr_v1, tsnr_v2]))            
 
             subject_data = [group, site, age, sex, np.mean(tsnr_v1), np.mean(tsnr_v2)]
             subject_data_list.append(subject_data)
             #tsnr_v2_v1_list.append(tsnr_v2_v1)
             tsnr_v2_list.append(tsnr_v2)
-            #tsnr_roi_list.append(tsnr_roi)
+            tsnr_roi_list.append(tsnr_roi)
             tsnr_v1_list.append(tsnr_v1)
             tsnr_v3_list.append(tsnr_v3)
 
@@ -177,22 +177,22 @@ for hemi in ["L", "R"]:
     # Convert any numpy array to pandas DataFrame
     #arr_tsnr_v2_v1 = np.vstack(tsnr_v2_v1_list)
     arr_tsnr_v2 = np.vstack(tsnr_v2_list)
-    #arr_tsnr_roi = np.vstack(tsnr_roi_list)
+    arr_tsnr_roi = np.vstack(tsnr_roi_list)
     arr_tsnr_v3 = np.vstack(tsnr_v3_list)
     arr_tsnr_v1 = np.vstack(tsnr_v1_list)
 
 
-    #combined_subject_data = pd.DataFrame(subject_data_list, columns=["group", "site", "age", "sex", "tsnr1", "tsnr2"])
-    #combined_subject_data.to_csv(f"/data/p_02915/SPOT/covars_hemi-{hemi}.csv")
+    combined_subject_data = pd.DataFrame(subject_data_list, columns=["group", "site", "age", "sex", "tsnr1", "tsnr2"])
+    combined_subject_data.to_csv(f"/data/p_02915/SPOT/Result/covars_hemi-{hemi}.csv")
     #df_tsnr_v2_v1 = pd.DataFrame(arr_tsnr_v2_v1)
     #df_tsnr_v2_v1.to_csv(f"/data/p_02915/SPOT/covars_hemi-{hemi}_tsnr_v2_v1.csv")
     df_tsnr_v2 = pd.DataFrame(arr_tsnr_v2)
-    df_tsnr_v2.to_csv(f"/data/p_02915/SPOT/covars_hemi-{hemi}_tsnr_v2.csv")
-    #df_tsnr_roi = pd.DataFrame(arr_tsnr_roi)
-    #df_tsnr_roi.to_csv(f"/data/p_02915/SPOT/covars_hemi-{hemi}_tsnr_roi.csv")
+    df_tsnr_v2.to_csv(f"/data/p_02915/SPOT/Result/covars_hemi-{hemi}_tsnr_v2.csv")
+    df_tsnr_roi = pd.DataFrame(arr_tsnr_roi)
+    df_tsnr_roi.to_csv(f"/data/p_02915/SPOT/Result/covars_hemi-{hemi}_tsnr_roi.csv")
     df_tsnr_v3 = pd.DataFrame(arr_tsnr_v3)
-    df_tsnr_v3.to_csv(f"/data/p_02915/SPOT/covars_hemi-{hemi}_tsnr_v3.csv")
+    df_tsnr_v3.to_csv(f"/data/p_02915/SPOT/Result/covars_hemi-{hemi}_tsnr_v3.csv")
     df_tsnr_v1 = pd.DataFrame(arr_tsnr_v1)
-    df_tsnr_v1.to_csv(f"/data/p_02915/SPOT/covars_hemi-{hemi}_tsnr_v1.csv")
+    df_tsnr_v1.to_csv(f"/data/p_02915/SPOT/Result/covars_hemi-{hemi}_tsnr_v1.csv")
     
 

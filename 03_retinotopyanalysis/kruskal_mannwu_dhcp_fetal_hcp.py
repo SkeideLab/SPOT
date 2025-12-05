@@ -62,7 +62,7 @@ def bootstrap_resample_mannwhitney(n_resamples, combined_data, n_groupA, n_group
 def flatten(arr):
     return arr.flatten()
 
-for param in ["desc-real_r", "desc-real_sigma"]: #,"label-eccentricity_desc-real_roi-v2th00_metric","label-polarangle_desc-real_roi-v2th00_metric"
+for param in ["desc-real_r", "desc-real_sigma","label-eccentricity_desc-real_roi-v2th00_metric","label-polarangle_desc-real_roi-v2th00_metric"]: #
     if param =="desc-real_r":
         test_value = "r"
     elif param == "desc-real_sigma":
