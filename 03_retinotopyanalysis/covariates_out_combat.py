@@ -47,7 +47,7 @@ PREFIX_SUB_TEMPLATE = (
 PATH_v0 = "{prefix_model}_{param}.gii"
 
 
-for param in ["desc-real_r"]: #  
+for param in ["desc-real_r", "desc-real_sigma"]: #  "label-eccentricity_desc-real_roi-v2th00_metric", "label-polarangle_desc-real_roi-v2th00_metric"
     if param =="desc-real_r":
         test_value = "r"
     elif param == "desc-real_sigma":
@@ -154,7 +154,6 @@ for param in ["desc-real_r"]: #
                         parameters.append(ccf_v0)
                 print(group)
                 print(np.nanmean(np.vstack(parameters)>0))
-
             processed_parameters = []
 
             for par in parameters:
@@ -183,13 +182,11 @@ for param in ["desc-real_r"]: #
 
                 # Save the Fisher-transformed data
                 save_fisher_data = pd.DataFrame(fisher_transformed_data.T)
-                #save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
+                save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
             else:
                 fisher_transformed_data  = combined_subject_data
                 save_fisher_data = pd.DataFrame(combined_subject_data.T)
-                #save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
-
-
+                save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
             #epsilon = 1e-6  # Small constant to avoid zero variance
             #combined_subject_data = combined_subject_data + epsilon
             #save_raw_data = pd.DataFrame(combined_subject_data.T)
@@ -213,6 +210,6 @@ for param in ["desc-real_r"]: #
                                             continuous_cols=['age'],     # Preserve 'age'
                                             categorical_cols=['sex'])["data"] # Preserve 'gender'
             save_combat_data = pd.DataFrame(combat_harmonized)
-            #save_combat_data.to_csv(f"/data/p_02915/SPOT/Result/combat_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
+            save_combat_data.to_csv(f"/data/p_02915/SPOT/Result/combat_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
         
 

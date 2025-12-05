@@ -13,12 +13,15 @@ Retinotopy analysis consists of projecting V1 retinotopy template values to V2 b
 
 - `calculate_dvars.py`: calculate dvars 
 - `calculate_gradient.py`: calculate gradient
+- `calculate_tSNR.py`: calculate tSNR
+- `calculate_slice_SNR.py`: calculate sSNR
 
 # Statistical analysis across the groups (kruskal (6-class) and mann-whitney-u tests (group pairs))
 
 - `kruskal_mannwu_dhcp_fetal_hcp.py`: group comparison of r, sigma, eccentricity, and polar angle
 - `kruskal_mannwu_dhcp_fetal_hcp_FD.py`: group comparison of dvars
 - `kruskal_mannwu_dhcp_fetal_hcp_gradient.py`: group comparison of gradient
+- `kruskal_mannwu_dhcp_fetal_hcp_tSNR.py`: group comparison of tSNR and sSNR
 
 # Statistical analysis between real and simulated (Wilcoxon signed-rank test)
 
