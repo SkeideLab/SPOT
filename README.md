@@ -1,4 +1,4 @@
-# Population connective field modeling reveals retinotopic visual cortex organization in utero
+# Population connective field modeling reveals proto-retinotopic visual cortex organization in the prenatal human brain 
 
 - creates registration from fsaverage to individual surfaces[^13]
 - resamples template of visual areas to individual surfaces
