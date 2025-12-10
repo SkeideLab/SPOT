@@ -116,7 +116,7 @@ def create_cf_fit(
     #    return calc_correlation(timeseries_targetvoxel, np.squeeze(timeseries_cf))
     #return 1 - calc_correlation(timeseries_targetvoxel, np.squeeze(timeseries_cf))
 
-
+ 
 def calc_correlation(timeseries_targetvoxel, timeseries_cf):
     r = np.corrcoef(timeseries_targetvoxel, timeseries_cf)[0, 1]
     return r

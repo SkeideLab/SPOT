@@ -164,7 +164,7 @@ def optimize_connfield(
             timeseries_sources,
         ),
         bounds = [(0.1, None)]
-    )
+    ) 
 
     # extract optimization results
     sigma = res.x[0]

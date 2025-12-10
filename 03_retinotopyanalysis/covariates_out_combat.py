@@ -187,14 +187,7 @@ for param in ["desc-real_r"]: #
             else:
                 fisher_transformed_data  = combined_subject_data
                 save_fisher_data = pd.DataFrame(combined_subject_data.T)
-<<<<<<< HEAD
-<<<<<<< HEAD
                 save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
-=======
-                #save_fisher_data.to_csv(f"/data/p_02915/SPOT/Result/raw_hemi-{hemi}_area-{area}_{test_value}.csv", index=False, header=False)
-
-
->>>>>>> recover_lost_files
             #epsilon = 1e-6  # Small constant to avoid zero variance
             #combined_subject_data = combined_subject_data + epsilon
             #save_raw_data = pd.DataFrame(combined_subject_data.T)

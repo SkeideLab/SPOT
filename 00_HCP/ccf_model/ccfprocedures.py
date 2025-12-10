@@ -116,7 +116,7 @@ def perform_ccf_analysis(
     timeseries_targets,
     sigmas,
     n_jobs=30,
-):
+): 
     """
     Parallel + shared-memory cortical connective field analysis.
     UPDATED: Uses float64 (default) to prevent precision loss.
