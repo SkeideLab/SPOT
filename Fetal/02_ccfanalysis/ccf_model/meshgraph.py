@@ -20,7 +20,7 @@ def find_neighbours(mesh):
     """
     n_vertices = mesh.coordinates.shape[0]
     neighbours = np.zeros((n_vertices, n_vertices), dtype=np.int8)
-
+ 
     for face in mesh.faces:
         # a face consists of 3 edges and forms a triangle
         # note which vertices are direct neighbours in a triangle

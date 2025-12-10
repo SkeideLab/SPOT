@@ -13,7 +13,7 @@ path_HCPtemplates_standardmeshatlases=$5
 path_surfacetemplate=$6
 path_fsaverage=$7
 path_wbcommand=$8
-
+ 
 # prepare output directory for subject in T2w space
 path_out_native=$path_output_data/sub-$sub/ses-$ses/func
 mkdir -p $path_out_native

@@ -180,3 +180,4 @@ def optimize_connfield(
     )
 
     return (v0_i, sigma, rss, rsquared)
+ 

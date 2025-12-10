@@ -23,7 +23,7 @@ if [ ! -f $out_doftxt ]; then
 else
     echo "dof exists!"
 fi
-
+ 
 intermediate_sphere=$(echo $in_sphere | sed 's/.surf.gii/tmp_rot.surf.gii/g')
 
 $wb_command -surface-apply-affine $in_sphere $out_doftxt $intermediate_sphere

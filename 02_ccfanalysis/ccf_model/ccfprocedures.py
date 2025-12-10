@@ -326,4 +326,4 @@ def perform_ccf_analysis_cross(
     shm_sources_first.close(); shm_sources_first.unlink()
     shm_sources_second.close(); shm_sources_second.unlink()
 
-    return {"best_models": best_models, "connfield_weights": connfield_weights}
+    return {"best_models": best_models, "connfield_weights": connfield_weights} 

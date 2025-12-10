@@ -21,7 +21,7 @@ PREFIX_MODEL = (
 PREFIX_SUB_TEMPLATE = (
     "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native"
-)
+) 
 
 PATH_v0 = "{prefix_model}_desc-{model}_v0i.gii"
 PATH_r = "{prefix_model}_desc-{model}_r.gii"

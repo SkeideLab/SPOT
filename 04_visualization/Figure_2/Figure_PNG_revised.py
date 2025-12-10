@@ -15,7 +15,7 @@ file_path = os.path.dirname(os.path.abspath(__file__))
 
 def get_indices_roi(labels_area, visparc):
     """Get indices of vertices in gifti image that are located in a specific region of interest.
-
+ 
     Args:
         labels_area (list): labels for the region of interest as used in the parcellation
         visparc (nibabel.gifti.GiftiImage): parcellation of brain surface into regions, using labels

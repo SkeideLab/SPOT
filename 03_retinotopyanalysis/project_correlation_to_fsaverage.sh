@@ -18,7 +18,7 @@ for hemi in L R; do
     elif [ $hemi = "R" ]; then
         hemi_down="right"
     fi
-
+ 
     for model in real simulated; do
         for param in r rss sigma v0i; do
 

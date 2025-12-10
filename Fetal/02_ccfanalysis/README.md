@@ -8,3 +8,4 @@ Runs cortical connective field modelling based on V1 vertices fitting with data 
 Input: Wang's template, white matter surface, curv surface, functional image
 Output: center voxel of connective field in V1 (v0), distance from the seeds along cortical surface (sigma), correlation coefficient between V1 seed vertex and V2 vertex (rss), r^2 (r)
 
+ 

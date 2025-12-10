@@ -16,7 +16,7 @@ def calc_CF(distances, sigma):
         numpy.array: n_nodes_center x n_nodes_all. n_nodes_center=n_nodes_from,
             n_nodes_all=n_nodes_to.
             Cortical fields centered on all 'from' nodes with weights for all nodes.
-    """
+    """ 
     return np.exp(-(distances**2 / (2 * sigma**2)))
 
 

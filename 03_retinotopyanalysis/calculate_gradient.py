@@ -235,4 +235,4 @@ for param in ["_dens-164k_label-polarangle_desc-real_roi-v2th00_metric"]: #"_den
                 darray = nib.gifti.GiftiDataArray(np.float32(mu_deri))
                 params_img = nib.gifti.GiftiImage(darrays=[darray])
                 nib.save(params_img, output_path)
-                print(output_path)
+                print(output_path) 

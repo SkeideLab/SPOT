@@ -17,7 +17,7 @@ sub_ses = {
     if "sub-" in str(item) and "ses-" in str(item)
 }
 work_dir = base_dir / "dhcp_intermed"
-
+ 
 for sub, ses in sub_ses:
     for hemi in ["left", "right"]:
         func_surf_path = (

@@ -18,7 +18,7 @@ VISPARC_PATH = (
     "/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/"
     "hemi-{hemi}_space-fsaverage_dens-164k_desc-visualtopographywang2015_label-maxprob_seg.label.gii"
 )
-
+ 
 for hemi in ["L", "R"]:
     visparc = nib.load(VISPARC_PATH.format(hemi=hemi))
     coords, faces = nib.freesurfer.io.read_geometry(

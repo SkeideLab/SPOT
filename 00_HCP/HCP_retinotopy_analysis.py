@@ -223,7 +223,7 @@ def main():
 
                 nib.save(img_gifti, retinotopy_out)
                 print(f"Saving {retinotopy_out}...")
-
+ 
         # CALCULATE DIFFERENCES BETWEEN MODELS PER HEMI
         # calculate mean square differences between models for eccentricity and angle
         # TODO decide how to deal with the thresholded vertices

@@ -122,7 +122,7 @@ for param in ["t", "s"]:  # Loop for both tSNR and sSNR
     axs[0].set_ylabel(None)
     axs[1].set_ylabel(None)
 
-
+ 
 # Adjust plot layout
 #plt.tight_layout()  # Keep margins
 fig.savefig(f"{file_path}/FigureS3.png", dpi=300, bbox_inches='tight')

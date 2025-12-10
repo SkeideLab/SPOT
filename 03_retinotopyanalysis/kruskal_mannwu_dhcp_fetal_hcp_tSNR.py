@@ -20,7 +20,7 @@ def bootstrap_kruskal_resample(n_resamples, group_sizes, combined_data):
         bootstrap_H_statistics.append(bootstrap_H_statistic)
     
     return bootstrap_H_statistics
-
+ 
 def bootstrap_resample_mannwhitney(n_resamples, combined_data, n_groupA):
     """Performs bootstrap resampling for Mann-Whitney U test."""
     bootstrap_mannwhitney_statistics = []

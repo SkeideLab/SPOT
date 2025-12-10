@@ -9,7 +9,7 @@ set -u -x -e
 #path_output_data=$3
 #path_HCPtemplates_standardmeshatlases=$4
 #path_fsaverage=$5
-
+ 
 path_output_data="/data/p_02915/SPOT/00_HCP/template"
 path_HCPtemplates_standardmeshatlases="/data/u_yoos_software/HCPpipelines/global/templates/standard_mesh_atlases/"
 path_fsaverage="/data/p_02915/templates/template_fsaverage/fsaverage/"

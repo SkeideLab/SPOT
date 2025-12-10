@@ -13,3 +13,4 @@ FREESURFER mris_convert \
 FREESURFER mris_convert \
     /data/p_02495/templates/template_fsaverage/fsaverage/surf/rh.midthickness \
     /data/p_02495/templates/template_fsaverage/fsaverage/surf/rh_midthickness_surf.gii
+ 

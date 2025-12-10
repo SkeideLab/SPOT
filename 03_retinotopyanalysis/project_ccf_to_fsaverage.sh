@@ -17,7 +17,7 @@ for hemi in L R; do
     elif [ $hemi = "R" ]; then
         hemi_down="right"
     fi
-
+ 
     for model in real simulated; do
         for param in eccentricity polarangle; do
             sphere_native="${path_anat_data}/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi_down}_sphere.surf.gii"

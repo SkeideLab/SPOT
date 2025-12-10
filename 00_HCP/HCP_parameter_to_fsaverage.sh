@@ -10,7 +10,7 @@ path_fsaverage=$5
 path_wbcommand=$6
 
 threshold="00"
-
+ 
 for hemi in L R; do
 
     for model in real simulated; do

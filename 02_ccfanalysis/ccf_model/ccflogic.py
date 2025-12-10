@@ -101,7 +101,7 @@ def create_cf_fit(
     # variance explained (R²)
     tss = np.sum((timeseries_targetvoxel - np.mean(timeseries_targetvoxel))**2)
     rsquared = 1 - (rss / tss)
-
+ 
     if return_modelfit:
         return {
             "rss": rss,

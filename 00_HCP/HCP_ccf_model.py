@@ -44,7 +44,7 @@ VISPARC_PATH = (
 WM_PATH = (
     "/data/pt_02880/HCP_D/fmriresults01/{sub}/MNINonLinear/Native/"
     "{sub}.{hemi}.white.native.surf.gii"
-)
+) 
 
 DISTANCEFILE_PATH = (
     "{root_dir}/ccfmodel_var/{sub}/"

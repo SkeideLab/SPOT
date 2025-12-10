@@ -15,7 +15,7 @@ import nibabel as nib
 import numpy as np
 
 from nilearn import plotting, surface
-
+ 
 # -d /data/p_02495/dhcp_derivatives -sub CC00069XX12 -ses 26300
 # HACK
 # ---------------------import workarounds to make repo structure work --------------------------#

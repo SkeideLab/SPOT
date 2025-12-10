@@ -11,7 +11,9 @@ Note, preprocessed HCP dataset is already in the fs_LR space so you only need a 
 # Sequence of code
 1. `HCP_run_all` : Contains following codes 
    - `HCP_file_prep`: convert cifti to gifti
-   - `HCP_warp_templates to native`: transformation from fsaverage to fsLR
+   - `surface_prep`: contains code `HCP_warp_tempates to native` and `project_bold2surf`
+      - `HCP_warp_templates to native`: transformation from fsaverage to native
+      - `project_bold2surf`: project functional data from volume to surface
    - `HCP_simulation_model`: generate simulated data on V1 and V2
    - `HCP_ccf_model`: run cortical connective field modeling
    - `HCP_retinotopy_analysis`: project V1 retinotopy template values to V2 based on cortico-connective field results
@@ -21,3 +23,4 @@ Note, preprocessed HCP dataset is already in the fs_LR space so you only need a 
 3. `averaged_retinotopy`: average eccentricity and polar angle maps
 4. `HCP_median_correlation`: calculate median correlation
 5. `HCP_MSD`: calculate mean square difference between real and simulated data
+ 

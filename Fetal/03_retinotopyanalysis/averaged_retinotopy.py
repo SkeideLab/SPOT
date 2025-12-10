@@ -32,7 +32,7 @@ def get_indices_roi(labels_area, visparc):
 VISPARC_PATH = (
     "/data/p_02915/SPOT/01_dataprep/retinotopy/templates_retinotopy/hemi-{hemi}_space-fsaverage_dens-164k_desc-retinotbenson2014_label-visarea_seg.label.gii")
 LABELS_V2 = [2, 3]
-
+ 
 PREFIX_MODEL = (
     "/data/p_02915/dhcp_derivatives_SPOT/fetal/ccfmodel_var1/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-fsaverage_dens-164k"

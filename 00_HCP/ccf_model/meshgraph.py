@@ -58,7 +58,7 @@ def calc_3d_dist(mesh, neighbours):
         neighbour_distances[j, i] = dist
 
     return neighbour_distances
-
+ 
  
 def calc_shortestpath(mesh, indices_of_interest):
     """Calculate the shortest path between all pairs of vertices in a graph mesh

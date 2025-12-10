@@ -162,7 +162,7 @@ for param in parameters:
     fig.text(0.895, 1 - 0.103, 
              "V2-", ha='center', va='center', fontsize=6, backgroundcolor = "w", bbox=dict(facecolor='w', edgecolor='none', pad=0.1))
 
-
+ 
     if param =="eccentricity":
         fig_name = "S6"
     elif param == "polarangle":

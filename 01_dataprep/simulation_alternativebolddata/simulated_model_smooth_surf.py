@@ -18,7 +18,7 @@ from nilearn import surface
 PREFIX_FUNC = (
     "{derivatives_path}/dhcp_surface/sub-{sub}/ses-{ses}/func/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}"
-)
+) 
 PATH_SURFPIAL = (
     "{derivatives_path}/sub-{sub}/ses-{ses}/anat/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_pial.surf.gii"

@@ -9,7 +9,7 @@ set -u -x -e
 # --------------------------------------------
 
 # As this is a derivative of the HCP Surface Pipeline, the terms of the HCP license also apply:
-
+ 
 # Human Connectome Project Pipelines = THIS SOFTWARE
 # Copyright (c) 2011-2021 The Human Connectome Project and The Connectome Coordination Facility
 # Redistribution and use in source and binary forms, with or without modification,

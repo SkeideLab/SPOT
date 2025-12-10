@@ -33,7 +33,7 @@ VISPARC_PATH = (
 
 LABELS_V1 = [1]
 LABELS_V2 = [2, 3]
-
+ 
 
 def get_indices_roi(labels_area, visparc):
     """Get indices of vertices in gifti image that are located in a specific region of interest.

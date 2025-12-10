@@ -17,7 +17,7 @@ def find_neighbours(mesh):
         numpy.array: array of the form n_vertices x n_vertices. Symmetric.
             1 if two vertices are direct neighbours,
             0 otherwise.
-    """
+    """ 
     n_vertices = mesh.coordinates.shape[0]
     neighbours = np.zeros((n_vertices, n_vertices), dtype=np.int8)
 

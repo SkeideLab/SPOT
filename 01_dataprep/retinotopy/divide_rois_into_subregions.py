@@ -32,7 +32,7 @@ OUTSUFFIX_MIDDLE = "_desc-middle_roi.shape.gii"
 OUTSUFFIX_PERIPHERAL = "_desc-peripheral_roi.shape.gii"
 OUTSUFFIX_DORSAL = "_desc-dorsal_roi.shape.gii"
 OUTSUFFIX_VENTRAL = "_desc-ventral_roi.shape.gii"
-
+ 
 
 def parse_args():
     """Parses arguments from the command line."""

@@ -120,3 +120,4 @@ def create_cf_fit(
 def calc_correlation(timeseries_targetvoxel, timeseries_cf):
     r = np.corrcoef(timeseries_targetvoxel, timeseries_cf)[0, 1]
     return r
+ 

@@ -20,7 +20,7 @@ save_raw_data = pd.DataFrame(combined_subject_data.T)
 save_raw_data.to_csv(f"/data/p_02915/SPOT/Result/raw_ssnr.csv", index=False, header=False)
 # Check unique values in covariates
 print(covars[['site', 'age', 'sex']].nunique())
-
+ 
 # Ensure all necessary columns are of appropriate type
 covars['site'] = covars['site'].astype('category')
 covars['sex'] = covars['sex'].astype('category')

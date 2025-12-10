@@ -19,7 +19,7 @@ path_fsaverage=${13}
 path_newmsm=${14}
 path_wbcommand=${15}
 path_mirtk=${16}
-
+ 
 #######################################################################################
 path_script=$(dirname $0)
 logfile=$path_output_data/sub-${subject_label}/ses-${session_label}/logs/surfaceprep_$(date +%Y-%m-%dT%H%M).log

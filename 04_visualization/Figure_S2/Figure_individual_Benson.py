@@ -123,7 +123,7 @@ for i, ind in enumerate(individuals):
     mask_lh = np.isin(atlas_lh, labels_to_display)
     texture_lh = np.zeros_like(atlas_lh)
     texture_lh[mask_lh] = atlas_lh[mask_lh]
-    
+      
     # Plot left hemisphere surface
     plotting.plot_surf_roi(surf_lh, roi_map=texture_lh, hemi='left', view=left_view[i], bg_map=lh_sulc_map_binary, 
                            axes=ax_lh, figure=fig, cmap='viridis', colorbar=False, threshold=0.001)

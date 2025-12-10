@@ -89,4 +89,4 @@ for param_index, param in enumerate(param):
         fig_name = "S9"
     elif param == "polarangle":
         fig_name = "S12"
-    fig.savefig(f"{file_path}/Figure{fig_name}.png")
+    fig.savefig(f"{file_path}/Figure{fig_name}.png") 

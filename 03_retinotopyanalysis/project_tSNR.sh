@@ -18,7 +18,7 @@ for hemi in L R; do
     elif [ $hemi = "R" ]; then
         hemi_down="right"
     fi
-
+ 
     sphere_native="${path_anat_data}/sub-$sub/ses-$ses/anat/sub-${sub}_ses-${ses}_hemi-${hemi_down}_sphere.surf.gii"
     registration_from_native_to_fsaverage="${path_output_dir}/dhcp_surface/sub-$sub/ses-$ses/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi}_from-native_to-fsaverage32k_dens-32k_mode-sphere_reg.surf.gii"
     registration_from_fsaverage_to_native="${path_output_dir}/dhcp_surface/sub-$sub/ses-$ses/surface_transforms/sub-${sub}_ses-${ses}_hemi-${hemi}_from-fsaverage_to-nativeT2w_dens-164k_mode-sphere_reg.surf.gii"

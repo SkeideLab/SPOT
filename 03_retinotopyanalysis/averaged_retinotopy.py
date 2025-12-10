@@ -13,7 +13,7 @@ PREFIX_MODEL = (
 )
 INPUT = (
     "{prefix_model}_label-{param}_desc-{model}_roi-v2th00_metric.gii"
-)
+) 
 #INPUT = (
 #    "{prefix_model}_desc-{model}_{param}.gii"
 # )

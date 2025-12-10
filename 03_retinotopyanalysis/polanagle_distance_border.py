@@ -17,7 +17,7 @@ def get_indices_roi(labels_area, visparc):
      # Ensure labels_area is a list
     if not isinstance(labels_area, list):
         labels_area = [labels_area]
-    
+     
     # Collect indices for all labels in labels_area
     indices_area = np.concatenate([
         np.nonzero(visparc.agg_data() == label)[0]

@@ -168,7 +168,7 @@ def perform_ccf_analysis(
         for f in as_completed(futures):
             idx, model = f.result()
             best_models[idx, :] = model
-
+ 
     # --- 5. Cleanup
     shm_v0.close(); shm_v0.unlink()
     shm_dist.close(); shm_dist.unlink()

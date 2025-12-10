@@ -11,7 +11,7 @@ path_fsaverage=$6
 path_wbcommand=$7
 
 threshold="00"
-
+ 
 for hemi in L R; do
     if [ $hemi = "L" ]; then
         hemi_down="left"

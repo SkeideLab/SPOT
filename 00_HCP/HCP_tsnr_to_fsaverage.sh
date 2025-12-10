@@ -8,7 +8,7 @@ path_output_dir=$3
 path_HCPtemplates_standardmeshatlases=$4
 path_fsaverage=$5
 path_wbcommand=$6
-
+ 
 threshold="00"
 
 for hemi in L R; do

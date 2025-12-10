@@ -177,7 +177,7 @@ for param in ["desc-real_r", "desc-real_sigma","label-eccentricity_desc-real_roi
                 groupB = groups[groupB_name]
                 groupA_flatt = groups_flatt[groupA_name]
                 groupB_flatt = groups_flatt[groupB_name]
-
+ 
                 # Combine data for Kruskal-Wallis test
                 combined_data = np.concatenate([groupA, groupB])
                 n_groupA = len(groupA)

@@ -35,7 +35,7 @@ perform_ccf_analysis_cross = ccfanalysis.ccf_model.ccfprocedures.perform_ccf_ana
 calc_shortestpath = ccfanalysis.ccf_model.meshgraph.calc_shortestpath
 # HACKEND
 # ------------------------------------------------------------------------#
-
+ 
 VISPARC_PATH = (
     "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native_"

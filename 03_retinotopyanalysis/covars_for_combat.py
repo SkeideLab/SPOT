@@ -125,7 +125,7 @@ for hemi in ["L", "R"]:
                     sub=sub,
                     ses=ses,
                     hemi=hemi,
-                )
+                ) 
                 ccf_v0 = surface.load_surf_data(
                     PATH_v0.format(prefix_model=prefix_model, model="real")
                 ).astype(int, copy=False)

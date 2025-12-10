@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import numpy as np
 import nibabel as nib
-
+ 
 def get_folders_in_directory(directory):
     folders = []
     for item in os.listdir(directory):

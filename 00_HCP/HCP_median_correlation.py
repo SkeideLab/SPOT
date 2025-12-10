@@ -14,7 +14,7 @@ def get_indices_roi(labels_area, visparc):
     Args:
         labels_area (list): labels for the region of interest as used in the parcellation
         visparc (nibabel.gifti.GiftiImage): parcellation of brain surface into regions, using labels
-
+ 
     Returns:
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
     """

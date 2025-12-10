@@ -199,7 +199,7 @@ for param in ["label-eccentricity_desc-real_roi-v2th00_metric", "label-polarangl
                     prefix_model = PREFIX_MODEL.format(
                         root_dir="/data/p_02915/dhcp_derivatives_SPOT/fetal",
                         sub=sub,
-                        ses=ses,
+                        ses=ses, 
                         hemi=hemi,
                     )
                     

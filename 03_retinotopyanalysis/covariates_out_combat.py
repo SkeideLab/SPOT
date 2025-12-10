@@ -199,7 +199,7 @@ for param in ["desc-real_r"]: #
             
             # Check unique values in covariates
             print(covars[['site', 'age', 'sex', 'tsnr1', 'tsnr2']].nunique())
-
+ 
             # Ensure all necessary columns are of appropriate type
             covars['site'] = covars['site'].astype('category')
             covars['sex'] = covars['sex'].astype('category')

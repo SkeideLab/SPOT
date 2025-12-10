@@ -17,7 +17,7 @@ path_fsaverage = path_templates / "template_fsaverage/fsaverage"
 path_HCPtemplates_standardmeshatlases = (
     "/data/u_yoos_software/HCPpipelines/"
     "global/templates/standard_mesh_atlases"
-)
+) 
 # --------------PATHS TO SOFTWARE--------------------------------------------------
 path_newmsm = "/data/u_yoos_software/fsl/bin/msm-env/bin/newmsm"
 path_wbcommand = "/bin/wb_command"

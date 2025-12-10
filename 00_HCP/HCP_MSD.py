@@ -126,7 +126,7 @@ columns = ["Subject_ID",
            #"R_eccentricity_real_simulated",
            #"L_polarangle_real_simulated",
            #"R_polarangle_real_simulated",
-           ]
+           ] 
 msd_value = pd.DataFrame(columns=columns)
 for index, row in subject_info.iterrows():
     sub_id = subject_info.at[index, "sub_id"]

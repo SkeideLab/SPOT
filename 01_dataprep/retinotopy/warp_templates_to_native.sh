@@ -19,7 +19,7 @@ mkdir -p $path_out_native
 
 sub_output_dir=$path_output_data/sub-$sub/ses-$ses
 mkdir -p $sub_output_dir/volume_dofs $sub_output_dir/surface_transforms
-
+ 
 for hemi in left right; do
     if [ $hemi = "left" ]; then
         hemi_upper="L"

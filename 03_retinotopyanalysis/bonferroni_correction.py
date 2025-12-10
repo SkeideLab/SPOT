@@ -16,7 +16,7 @@ p_values = [0.005497656356,
 0.9263802457,
 0.0754501538,
 0.015531649]
-
+ 
 # Bonferroni correction
 alpha = 0.05
 corrected_alpha = alpha / 15

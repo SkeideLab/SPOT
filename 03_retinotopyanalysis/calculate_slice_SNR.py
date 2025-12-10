@@ -19,7 +19,7 @@ def flatten(arr):
 # Lists to store results
 parameters_L = []
 parameters_R = []
-
+ 
 for group in ["neonates<37", "neonates>37", "fetal<29", "fetal>29", "12-16y", "18-21y"]: #, "neonates<37", "neonates>37", "fetal<29", "fetal>29"]
     results_list = []    
     if group == "neonates<37":

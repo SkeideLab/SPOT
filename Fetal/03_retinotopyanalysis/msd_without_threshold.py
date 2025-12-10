@@ -14,7 +14,7 @@ from nilearn import surface
 PREFIX_MODEL = (
     "{root_dir}/ccfmodel_var/sub-{sub}/ses-{ses}/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native"
-)
+) 
 PREFIX_SUB_TEMPLATE = (
     "{root_dir}/dhcp_surface/sub-{sub}/ses-{ses}/anat/"
     "sub-{sub}_ses-{ses}_hemi-{hemi}_mesh-native_dens-native"

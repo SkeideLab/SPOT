@@ -11,7 +11,7 @@ def get_age(index, subject_info):
         age = 36
     return f"{age:.0f}"  # round to whole week
 
-
+ 
 path_derivatives = Path("/data/p_02915/dhcp_derivatives_SPOT/Neonates")
 path_anat_data = Path("/data/pt_02880/dHCP/fmriresults01/rel3_derivatives/rel3_dhcp_anat_pipeline")  # path_derivatives / "dhcp_anat_pipeline"
 path_func_data = Path("/data/pt_02880/dHCP/fmriresults01/rel3_derivatives/rel3_dhcp_fmri_pipeline/") # path_derivatives / "dhcp_fmri_pipeline"

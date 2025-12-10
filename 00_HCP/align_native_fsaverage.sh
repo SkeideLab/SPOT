@@ -15,7 +15,7 @@ Usage() {
     echo "mirtk bin : mirtk binary "
     echo "output: surface registrations"
 }
-
+ 
 if [ "$#" -lt 7 ]; then
     echo "$#"
     Usage

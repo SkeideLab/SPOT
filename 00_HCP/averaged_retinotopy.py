@@ -42,7 +42,7 @@ for param in ["eccentricity", "polarangle"]:
                         input_path).astype(np.float64)                   
 
                     sum_data.append(ccf)
-
+ 
                 except ValueError:
                     print(
                         f"No model results found under {INPUT.format(prefix_model=prefix_model, model=model, parm = param)}."

@@ -17,7 +17,7 @@ def bootstrap_kruskal_resample(n_resamples, group_sizes, combined_data):
         resampled_indices = np.random.choice(
             len(combined_data), size=len(combined_data), replace=True)
         resampled_data = combined_data[resampled_indices]
-
+ 
         # Split the resampled data back into groups of the original sizes
         resampled_groups = []
         start_idx = 0

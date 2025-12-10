@@ -23,7 +23,7 @@ def bootstrap_kruskal_resample(n_resamples, group_sizes, combined_data):
         for size in group_sizes:
             resampled_groups.append(resampled_data[start_idx:start_idx + size])
             start_idx += size
-
+ 
         # Compute the Kruskal-Wallis statistic for the resampled groups
         bootstrap_H_statistic, _ = kruskal(*resampled_groups)
         bootstrap_H_statistics.append(bootstrap_H_statistic)

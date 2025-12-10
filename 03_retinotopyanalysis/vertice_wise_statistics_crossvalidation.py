@@ -169,7 +169,7 @@ for hemi in ["L", "R"]:
             # --------------------------------------------
             diff = roi_first - roi_second
             abs_diff = np.abs(diff)
-
+ 
             # remove zeros (ties) for proper RBC computation
             nonzero = abs_diff > 0
             ranks = rankdata(abs_diff[nonzero])

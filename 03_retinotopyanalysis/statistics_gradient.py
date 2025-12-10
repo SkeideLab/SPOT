@@ -19,7 +19,7 @@ def get_indices_roi(labels_area, visparc):
 
     Returns:
         numpy.array: n_vertices_roi. Indices of vertices that lie in the ROI.
-    """
+    """ 
     indices_area = np.nonzero(
         np.logical_or(
             visparc.agg_data() == labels_area[0], visparc.agg_data(
